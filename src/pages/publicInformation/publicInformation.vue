@@ -7,21 +7,25 @@
      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
        <el-form-item label="公司名称" class="ml-10">
          <el-select v-model="ruleForm.companyName" size="small" placeholder="请选择活动区域">
-           <el-option label="江苏天晴" value="jiangsu"></el-option>
-           <el-option label="南京天晴" value="nanjing"></el-option>
+           <el-option label="全部" value=""></el-option>
+           <el-option label="1" value="1"></el-option>
+           <el-option label="(NULL)为其全文" value="为其全文"></el-option>
+           <el-option label="a2341134" value="a2341134"></el-option>
          </el-select>
        </el-form-item>
        <el-form-item label="日期">
-         <el-col :span="11">
-           <el-form-item>
-             <el-date-picker type="date" size="small" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
-           </el-form-item>
-         </el-col>
-         <el-col class="line" :span="2">至</el-col>
-         <el-col :span="11">
-           <el-form-item>
-             <el-date-picker type="date" size="small" placeholder="选择日期" v-model="ruleForm.date2" style="width: 100%;"></el-date-picker>
-           </el-form-item>
+         <el-col :span="24">
+          <div class="block">
+           <el-date-picker
+             v-model="ruleForm.time"
+             type="daterange"
+             value-format="yyyy-MM-dd"
+             @change="timeChange"
+             range-separator="-"
+             start-placeholder="开始日期"
+             end-placeholder="结束日期">
+           </el-date-picker>
+         </div>
          </el-col>
        </el-form-item>
        <el-form-item>
@@ -31,7 +35,7 @@
    </el-row>
    <el-row class="table-list" :gutter="20">
      <el-col :span="24">
-       <panel></panel>
+       <panel :time="ruleForm" ref="myChild"></panel>
      </el-col>
    </el-row>
  </div>
@@ -49,8 +53,9 @@ export default{
       msg: '123',
       ruleForm: {
         companyName: '',
-        date1: '',
-        date2: ''
+        time: '',
+        start:'',
+        end:''
       }
     }
   },
@@ -59,7 +64,17 @@ export default{
   },
   methods: {
     onSubmit () {
-      console.log(this.ruleForm.companyName, this.ruleForm.date1, this.ruleForm.date2)
+      this.$refs.myChild.getPublicMsg(this.ruleForm.companyName,this.ruleForm.start,this.ruleForm.end);
+    },
+    timeChange(val){
+      if(val == null){
+        this.ruleForm.time=['','']
+      }else{
+        this.ruleForm.time=val
+      }
+      this.ruleForm.start =this.ruleForm.time[0]
+      this.ruleForm.end =this.ruleForm.time[1]
+      console.log(this.ruleForm.time)
     }
   },
   mounted () {

@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
-        <el-form-item label="角色" class="ml-10 no-mb">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
+        <!--<el-form-item label="角色" class="ml-10 no-mb">
           <el-select size="small" v-model="ruleForm.companyName" placeholder="选择角色">
             <el-option label="全部" value="all"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
@@ -220,7 +220,7 @@ export default{
       let header = {
         accessToken:  sessionStorage.getItem('accessToken')
       }
-      let urlData = [1,2]
+      let urlData = [1 , 2]
       this.$store.dispatch('GET_USER_FOR_ROLES', {param, header, urlData}).then(res => {
       }).catch(error=>{
         console.error(error);
@@ -237,7 +237,6 @@ export default{
     delUserForRoles (){
       let _this = this
       this.dialogDelete = false
-
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
@@ -394,8 +393,6 @@ export default{
     },
     /*查询*/
     searchName(val){
-      console.log(val)
-
       let param = {
         type: '1',
         pageNumber:this.pageNum,
