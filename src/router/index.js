@@ -17,6 +17,7 @@ import historyData from '@/pages/dataManagement/historyData'
 import role from '@/pages/jurisdiction/role'
 import user from '@/pages/jurisdiction/user'
 import company from '@/pages/jurisdiction/company'
+import department from '@/pages/jurisdiction/department'
 Vue.use(Router)
 
 export default new Router({
@@ -77,6 +78,11 @@ export default new Router({
           path: 'company',
           name: 'company',
           component: company
+        },
+        {
+          path: 'department',
+          name: 'department',
+          component: department
         },
         {
           path: 'moneyData',

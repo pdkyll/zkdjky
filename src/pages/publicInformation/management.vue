@@ -1,22 +1,17 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
+      <el-form :inline="true" :model="ruleForm">
         <el-form-item class="no-mb ml-10" label="日期">
           <el-col :span="11">
             <el-form-item>
-              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+              <el-date-picker size="small" type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="ruleForm.startDate" style="width: 100%;" @change="searchList"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="1">至</el-col>
           <el-col :span="11">
             <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.date2"
-                style="width: 100%;"></el-date-picker>
+              <el-date-picker size="small" type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="ruleForm.endDate" style="width: 100%;" @change="searchList"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -25,7 +20,8 @@
             size="small"
             placeholder="输入名称"
             style="width: 100%"
-            v-model="ruleForm.input">
+            v-model="ruleForm.infoName"
+            @change="searchList">
           </el-input>
         </el-form-item>
         <el-form-item class="pull-right no-mb">
@@ -43,46 +39,56 @@
         style="width: 100%">
         <el-table-column
           :resizable=false
-          prop="date"
+          prop="CREATION_TIME"
           label="日期">
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="name"
-          label="姓名">
+          prop="INFO_NAME"
+          label="名称">
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="province"
-          label="省份">
+          prop="DATA_TYPE"
+          label="类型">
+          <template slot-scope="scope">
+            <span v-if="scope.row.DATA_TYPE == 1">文本</span>
+            <span v-if="scope.row.DATA_TYPE == 2">音频</span>
+            <span v-if="scope.row.DATA_TYPE == 3">视频</span>
+            <span v-if="scope.row.DATA_TYPE == 4">图片</span>
+          </template>
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="city"
-          label="市区">
+          prop="CREATOR"
+          label="录入人">
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="address"
-          label="地址">
+          prop="DESCRIBE_INFO"
+          label="备注">
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="zip"
-          label="邮编"
+          label="公示权重"
           width="100">
+          <template slot-scope="scope">
+            <i v-for="item in scope.row.WEIGHTINESS" class="el-icon-star-on mr2" style="color: #f7ba2a"></i>
+          </template>
         </el-table-column>
         <el-table-column
           :resizable=false
           label="操作"
-          width="100">
+          align="center"
+          width="140">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <!--<el-button @click="handleClick(scope.row)" type="text" size="small">发布</el-button>-->
+            <el-button @click="deleteHandleClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="fy-box">
+      <!--<div class="fy-box">
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -91,48 +97,87 @@
           layout="total, prev, pager, next"
           :total="1000">
         </el-pagination>
-      </div>
+      </div>-->
     </div>
     <!--弹框-->
     <el-dialog
-      title="提示"
+      title="添加公示信息"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="ruleFormModule.name"></el-input>
+      <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="名称" prop="info_name">
+          <el-input v-model="ruleFormModule.info_name"></el-input>
         </el-form-item>
-        <el-form-item label="类型" prop="region">
-          <el-select v-model="ruleFormModule.region" style="width: 100%" placeholder="请选择类型">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="类型" prop="data_type">
+          <el-select v-model="ruleFormModule.data_type" style="width: 100%" placeholder="请选择类型">
+            <el-option label="文本" value="1"></el-option>
+            <el-option label="音频" value="2"></el-option>
+            <el-option label="视频" value="3"></el-option>
+            <el-option label="图片" value="4"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="desc">
-          <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="ruleFormModule.describe_info"></el-input>
         </el-form-item>
         <el-form-item label="权重">
-          <el-rate v-model="ruleFormModule.qz" style="line-height: 2.6;" @change="qz_change"></el-rate>
+          <el-rate v-model="ruleFormModule.weightiness" style="line-height: 2.6;"></el-rate>
+        </el-form-item>
+        <el-form-item label="文件">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            :data="ruleFormModule"
+            action="/apis/publicInformation/uploadFiles"
+            :file-list="fileList"
+            accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.txt,.GIF,.docx,.PDF"
+            :on-success="uploadSuccess"
+            :on-error="uploadError"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">允许.jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.txt,.GIF,.docx,.PDF类型的文件</div>
+          </el-upload>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-       <el-upload
-             class="upload-demo"
-             action="https://jsonplaceholder.typicode.com/posts/"
-             :on-preview="handlePreview"
-             :on-remove="handleRemove"
-             :before-remove="beforeRemove"
-             accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.txt,.GIF,.docx,.PDF"
-             multiple
-             :limit="3"
-             :on-change = "updata"
-             :on-exceed="handleExceed"
-             :file-list="fileList">
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-    </el-upload>
-      </span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="publicInformationUpload">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--修改-->
+    <el-dialog
+      title="修改公示信息"
+      :visible.sync="updateDialogVisible"
+      width="30%">
+      <el-form :model="updateForm" :rules="rules" ref="updateForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="名称" prop="info_name">
+          <el-input v-model="updateForm.info_name"></el-input>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-input v-model="updateForm.data_type" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="updateForm.describe_info"></el-input>
+        </el-form-item>
+        <el-form-item label="权重">
+          <el-rate v-model="updateForm.weightiness" style="line-height: 2.6;" @change="qz_change"></el-rate>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="updateDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitUpdateForm('updateForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--删除-->
+    <el-dialog
+      title="删除公示信息"
+      :visible.sync="deleteDialogVisible"
+      width="30%">
+      <p>是否删除该公示信息？</p>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="deletePublicInformation()">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -146,67 +191,49 @@ export default{
   data () {
     return {
       dialogVisible: false,
+      updateDialogVisible: false,
+      deleteDialogVisible: false,
+      deleteId: '',
+      updateForm: {
+        id: '',
+        info_name: '',
+        data_type: '',
+        describe_info: '',
+        weightiness: ''
+      },
       fileList: [
-        {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
+//        {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
       ],
       msg: '123',
       ruleForm: {
-        companyName: '',
-        date1: '',
-        date2: '',
-        input: ''
+        startDate: '',
+        endDate: '',
+        infoName: ''
       },
       ruleFormModule: {
-        name: '',
-        region: '',
-        desc: '',
-        qz: 1
+        info_name: '',
+        data_type: '',
+        describe_info: '',
+        weightiness: 0,
+        accessToken: sessionStorage.getItem('accessToken')
       },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ],
-        region: [
+        info_name: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        data_type: [
           { required: true, message: '请选择类型', trigger: 'change' }
         ]
       },
-      tableData: [
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
     onSubmit () {
       this.dialogVisible = true
-      console.log(this.ruleForm.companyName, this.ruleForm.date1, this.ruleForm.date2)
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -215,8 +242,22 @@ export default{
         })
         .catch(_ => {})
     },
+    /**
+     * 打开修改的模态窗口
+     */
     handleClick (row) {
-      console.log(row)
+      this.updateForm = {
+        id: row.ID,
+        info_name: row.INFO_NAME,
+        data_type: row.DATA_TYPE,
+        describe_info: row.DESCRIBE_INFO,
+        weightiness: row.WEIGHTINESS
+      },
+      this.updateDialogVisible = true;
+    },
+    deleteHandleClick (row) {
+      this.deleteId = row.ID
+      this.deleteDialogVisible = true;
     },
     qz_change (val) {
       console.log(val)
@@ -227,24 +268,135 @@ export default{
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+    isEmpty (str) {
+      console.log(str)
+      if(str === undefined || str === null || str === '') {
+        return false
+      }else{
+        return true
+      }
     },
-    handlePreview (file) {
-      console.log(file)
+    searchList () {
+      let _this = this
+      let startDate = _this.ruleForm.startDated
+      let endDate = _this.ruleForm.endDate
+      if(!_this.isEmpty(startDate) && !_this.isEmpty(endDate)){
+          return false
+      }else{
+        _this.publicInformationList()
+      }
     },
-    handleExceed (files, fileList) {
-      console.log(files, fileList)
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    /**
+     * 获取列表
+     */
+    publicInformationList () {
+      let _this = this
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      let param = Object.assign({}, _this.ruleForm)
+      param.infoName = param.infoName.trim()
+      _this.$store.dispatch('PUBLIC_INFORMATION_LIST', {param, header}).then(res => {
+        if(res.status === 200 && res.data.length >= 0){
+          _this.tableData = res.data
+        }
+      }).catch(error => {
+          console.log(error)
+      })
     },
-    beforeRemove (file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+    /**
+     * 修改公示信息
+     * @param formName
+     */
+    submitUpdateForm (formName) {
+      let _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let header = {
+            accountId: sessionStorage.getItem('accountId'),
+            accessToken: sessionStorage.getItem('accessToken')
+          }
+          let param = Object.assign({}, _this.updateForm)
+          let urlData = param.id
+          param.accessToken = sessionStorage.getItem('accessToken')
+          _this.$store.dispatch('PUBLIC_INFORMATION_UPDATE', {param, header, urlData}).then(res => {
+            if(res.status === 200 && res.data){
+              _this.updateDialogVisible = false
+              _this.publicInformationList()
+            }
+            _this.$notify({
+              title: '提示信息',
+              message: res.data ? '修改公示信息成功' : '修改公示信息失败',
+              type: res.data ? 'success' : 'error',
+              duration: '1000'
+            })
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+            return false
+        }
+      })
     },
-    updata (file, fileList) {
-      console.log(file)
+    /**
+     * 删除公示信息
+     */
+    deletePublicInformation () {
+      let _this = this
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      let urlData = _this.deleteId
+      let param = {}
+      param.accessToken = sessionStorage.getItem('accessToken')
+      _this.$store.dispatch('PUBLIC_INFORMATION_DELETE', {param, header, urlData}).then(res => {
+        if(res.status === 200 && res.data){
+          _this.publicInformationList()
+        }
+        _this.deleteDialogVisible = false
+        _this.$notify({
+          title: '提示信息',
+          message: res.data ? '删除公示信息成功' : '删除公示信息失败',
+          type: res.data ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    /**
+     * 添加公示信息
+     */
+    publicInformationUpload () {
+      this.$refs.upload.submit()
+    },
+    uploadSuccess () {
+      this.dialogVisible = false
+      this.$notify({
+        title: '提示信息',
+        message: '添加公示信息成功',
+        type: 'success',
+        duration: '1000'
+      })
+      this.publicInformationList()
+    },
+    uploadError () {
+      this.dialogVisible = false
+      this.$notify({
+        title: '提示信息',
+        message: '添加公示信息失败',
+        type: 'error',
+        duration: '1000'
+      })
     }
   },
+  created () {
+
+  },
   mounted () {
+    this.publicInformationList()
   }
 }
 </script>
@@ -264,6 +416,12 @@ export default{
   .shadow-box{
     padding: 10px 5px;
     box-shadow: 0 0 29px rgba(#b1c4d0, .48);
+  }
+  .mr2{
+    margin-right: 2px;
+    &:last-child {
+      margin-right: 0;
+    }
   }
   .center-form{
     text-align: center;

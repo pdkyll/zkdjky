@@ -100,7 +100,6 @@ export function users (param, header) {
  * @returns {*|Promise}
  */
 export function getUserForUsers (param, header, urlData) {
-  console.log(param, header, urlData)
   return api.get(`/apis/v1/roles/${urlData[0]}/datarole/${urlData[1]}`, param, header)
 }
 
@@ -130,17 +129,55 @@ export function insertUserForUsers ( param, header) {
  * @param header
  * @returns {*}
  */
-export function updateUserForUsers ( param, header) {
-  return api.put('/apis/v1/accounts', param, header)
+export function updateUserForUsers ( param, header, urlData) {
+  return api.put(`/apis/v1/accounts/${urlData}`, param, header)
 }
 
+/**
+ * 公示信息-列表展示
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function publicMsg (param, header) {
+  console.log(param, header)
+  return api.get('/apis/publicInformation/publicInformation', param, header)
+}
 
+/**
+ * 公示信息-下载文件
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function linkDownload (param, header) {
+  console.log(param, header)
+  return api.get('/apis/publicInformation/linkDownload', param, header)
+}
 
 /*
 公司设置providerManage
 */
 export function providerManage (param, header) {
   return api.get('/apis/v2/daas/meta/providerManage', param, header)
+}
+/**
+ * 公司设置-获取部门的下拉菜单
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function getDepartment (param, header) {
+  return api.get('/apis/v2/daas/meta/providerManageByCode', param, header)
+}
+/**
+ * 公司设置-修改公司信息
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function providerManageUpdate (param, header) {
+  return api.put('/apis/v2/daas/meta/providerManage/update', param, header)
 }
 /*
 公司设置-删除数据del
@@ -153,6 +190,78 @@ export function providerManageDel (param, header) {
 */
 export function providerManageInsert (param, header) {
   return api.post('/apis/v2/daas/meta/providerManage/insert', param, header)
+}
+/**
+ * 部门设置-查询部门列表
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function providerManageCmpAndDep (param, header) {
+  return api.get('/apis/v2/daas/meta/providerManageCmpAndDep', param, header)
+}
+/**
+ * 部门设置-根据公司的code获取部门列表
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function providerManageByCode (param, header) {
+  return api.get('/apis/v2/daas/meta/providerManageByCode', param, header)
+}
+/**
+ * 部门设置-批量插入部门
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function insertDepartment (param, header) {
+  return api.post('/apis/v2/daas/meta/providerManage/insertDepartment', param, header)
+}
+/**
+ * 部门设置-获取公司列表
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function providerManageFindNameId (param, header) {
+  return api.get('/apis/v2/daas/meta/providerManageFindNameId', param, header)
+}
+/**
+ * 公示管理-列表
+ * @returns {*|Promise}
+ */
+export function publicInformationList(param, header) {
+  return api.get('/apis/publicInformation/list', param, header)
+}
+/**
+ * 公示管理-修改公示信息
+ * @param param
+ * @param header
+ * @param urlData
+ * @returns {*|Promise}
+ */
+export function publicInformationUpdate(param, header, urlData) {
+  return api.get(`/apis/publicInformation/up/${urlData}`, param, header)
+}
+/**
+ * 公示管理-删除公示信息
+ * @param param
+ * @param header
+ * @param urlData
+ * @returns {*|Promise}
+ */
+export function publicInformationDelete(param, header, urlData) {
+  return api.get(`/apis/publicInformation/del/${urlData}`, param, header)
+}
+/**
+ * 公示管理-添加公示信息
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function publicInformationUpload(param, header) {
+  return api.get(`/apis/publicInformation/uploadFiles`, param, header)
 }
 /**
  * 历史数据-树形结构
@@ -195,14 +304,14 @@ export function getFinanceList () {
  * 凭证列表-公司的凭证信息
  * @returns {*|Promise}
  */
-export function getFinanceTable (param) {
-  return api.post('/apis/getFinanceTableList', param)
+export function getFinanceTable (param, header) {
+  return api.post('/apis/getFinanceTableList', param, header)
 }
 /**
  * 凭证列表-单条凭证信息的详细内容
  * @param param
  * @returns {*|Promise}
  */
-export function getFinanceDetails (param) {
-  return api.post('/apis/getFinanceDetails', param)
+export function getFinanceDetails (param, header) {
+  return api.get('/apis/getFinanceDetails', param, header)
 }

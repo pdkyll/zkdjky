@@ -1,27 +1,10 @@
-
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
-        <el-form-item label="公司名称" class="ml-10 no-mb">
-          <el-select size="small" v-model="ruleForm.companyName" placeholder="请选择活动区域">
-            <el-option label="江苏天晴" value="jiangsu"></el-option>
-            <el-option label="南京天晴" value="nanjing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item class="pull-right">
-          <el-button class="join-btn" size="small" @click="add_BM()">
-            <i class="el-icon-plus"></i>
-            新建部门
-          </el-button>
-        </el-form-item>
-        <el-form-item class="pull-right">
-          <el-button class="join-btn" size="small" @click="add_GS()">
-            <i class="el-icon-plus"></i>
-            新建公司
-          </el-button>
-        </el-form-item>
-      </el-form>
+        <el-button class="join-btn" size="small" @click="add_GS()">
+          <i class="el-icon-plus"></i>
+          新建公司
+        </el-button>
     </div>
     <div class="mt-20">
       <el-table
@@ -31,22 +14,17 @@
         <el-table-column
           :resizable=false
           prop="name"
-          label="单位名称">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="type"
-          label="单位类型">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="description"
-          label="单位描述">
+          label="公司名称">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="create_time"
           label="创建时间">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="description"
+          label="备注">
         </el-table-column>
         <el-table-column
           :resizable=false
@@ -59,7 +37,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="fy-box">
+      <!--<div class="fy-box">
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -68,7 +46,7 @@
           layout="total, prev, pager, next"
           :total="1000">
         </el-pagination>
-      </div>
+      </div>-->
     </div>
     <!--弹框新建公司-->
     <el-dialog
@@ -76,41 +54,17 @@
       :visible.sync="dialog_gs"
       width="30%"
       :before-close="gsClose">
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司名称" prop="name">
           <el-input v-model="ruleFormModule.name"></el-input>
         </el-form-item>
-        <el-form-item label="公司备注" prop="desc">
+        <el-form-item label="公司备注">
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_gs = false">取 消</el-button>
         <el-button type="primary" @click="insert_GS">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!--弹框新建部门-->
-    <el-dialog
-      title="新建部门"
-      :visible.sync="dialog_bm"
-      width="30%"
-      :before-close="bmClose">
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司名称">
-          <el-select size="small" style="width: 100%" v-model="ruleFormModule.companyName" placeholder="请选择活动区域" @change="gs_change">
-            <el-option  v-for="item in companyList" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="部门名称">
-          <el-input v-model="bm_name"></el-input>
-        </el-form-item>
-        <el-form-item label="部门备注">
-          <el-input type="textarea" v-model="bm_desc"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialog_bm = false">取 消</el-button>
-        <el-button type="primary" @click="insert_BM">确 定</el-button>
       </span>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -131,17 +85,17 @@
       :visible.sync="dialog_xg"
       width="30%"
       :before-close="xgClose">
-      <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="单位名称" prop="name">
-          <el-input v-model="xg_gsmc"></el-input>
+      <el-form ref="ruleFormUpdate" :rules="rules" :model="ruleFormUpdate" label-width="100px">
+        <el-form-item label="公司名称" prop="name">
+          <el-input v-model="ruleFormUpdate.name"></el-input>
         </el-form-item>
-        <el-form-item label="单位描述" prop="name">
-          <el-input v-model="xg_gsms"></el-input>
+        <el-form-item label="公司描述">
+          <el-input v-model="ruleFormUpdate.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_xg = false">取 消</el-button>
-        <el-button type="primary" @click="insert_xg">确 定</el-button>
+        <el-button type="primary" @click="insert_xg('ruleFormUpdate')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -156,31 +110,22 @@ export default{
   data () {
     return {
       msg: '123',
-      ruleForm: {
-        companyName: '',
-        date1: '',
-        date2: '',
-        input: ''
-      },
       companyList:[],
       ruleFormModule: {
         name: '',
         desc: '',
-        companyName: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-        ],
-        companyName: [
-          { required: true, message: '请选择公司', trigger: 'change' }
+          { required: true, message: '请输入公司名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ]
       },
+      ruleFormUpdate:{
+        name: '',
+        description: ''
+      },
       tableData: [],
-      bm_name:'',
-      bm_desc:'',
-      bm_id:'',
-      bm_code:'',
       xg_gsmc:'',
       xg_gsms:'',
       /*添加部门相关的函数*/
@@ -205,46 +150,38 @@ export default{
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
-
-    /*添加部门相关的函数*/
-    handleClose_tag (tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-    },
-    showInput () {
-      this.inputVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus()
-      })
-    },
-    handleInputConfirm () {
-      let inputValue = this.inputValue
-      if (inputValue) {
-        this.dynamicTags.push(inputValue)
-      }
-      this.inputVisible = false
-      this.inputValue = ''
-    },
     /*初始化表格*/
     search_list(){
+      let _this = this
       let param = {
-        type:'1'
+        type:'0',
+        pagenum: "1",
+        pagesize:"1000"
       }
       let header = {
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
       }
-      this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
-        this.tableData = []
-        console.log(res)
-        for(let i = 0; i<res.data.result.datas.length;i++){
-          this.tableData.push({
-            name:res.data.result.datas[i].name,
-            description:res.data.result.datas[i].description,
-            create_time:res.data.result.datas[i].create_time,
-            id:res.data.result.datas[i].id,
-            type:res.data.result.datas[i].type=='0'?'公司':'部门'
+      _this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
+        _this.tableData = []
+        if(res.data.code !== 200){
+          return
+        }
+        let resultData = res.data.data || []
+        for(let i = 0; i<resultData.length;i++){
+          _this.tableData.push({
+            name: resultData[i].companyName,
+            description: resultData[i].description,
+            create_time: resultData[i].createTime,
+            id: resultData[i].id,
           })
         }
+        _this.$notify({
+          title: '提示信息',
+          message: res.data.code === 200 ? '公司列表加载成功' : '公司列表加载失败',
+          type: res.data.code === 200 ? 'success' : 'error',
+          duration: '1000'
+        })
       }).catch((error) => {
         console.error(error)
       })
@@ -266,18 +203,8 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('PROVIDER_MANAGE_DEL', { param, header }).then((res, req) => {
-        console.log(res)
         this.search_list()
         this.dialogDelete = false
-        /*this.tableData = []
-        for(let i = 0; i<res.data.result.datas.length;i++){
-          this.tableData.push({
-            name:res.data.result.datas[i].name,
-            description:res.data.result.datas[i].description,
-            create_time:res.data.result.datas[i].create_time,
-            id:res.data.result.datas[i].id,
-          })
-        }*/
       }).catch((error) => {
         console.error(error)
       })
@@ -327,96 +254,56 @@ export default{
     gsClose () {
       this.dialog_gs = false
     },
-    /*新增部门*/
-    insert_BM(){
-      let _this = this
-      this.dialog_bm = false
-      let param = {
-        "address":"",
-        "contact":"sjm",
-        "create_by":"sjm",
-        "description":this.bm_desc,
-        "level":2,
-        "id":this.bm_id,
-        "name":this.bm_name,
-        "code":this.bm_code,
-        "pcode":1,
-        "pid":1,
-        "paramType":1,
-        "postcode":"",
-        "telephone":"13012455623",
-        "type":1
-      }
-      let header = {
-        accountId: sessionStorage.getItem('accountId'),
-        accessToken: sessionStorage.getItem('accessToken')
-      }
-      this.$store.dispatch('PROVIDER_MANAGE_INSERT', { param, header }).then((res, req) => {
-        if(res.code == 200){
-          _this.search_list()
-        }
-        console.log(res)
-        _this.$notify({
-          title: '提示信息',
-          message: res.message,
-          type: res.code === 200 ? 'success' : 'error',
-          duration: '1000'
-        })
-        console.log(res)
-      }).catch((error) => {
-        console.error(error)
-      })
-      console.log(this.bm_name,this.bm_desc)
-    },
-    add_BM () {
-      this.dialog_bm = true
-      /*获取下拉菜单*/
-      let param = {
-        type:'0'
-      }
-      let header = {
-        accountId: sessionStorage.getItem('accountId'),
-        accessToken: sessionStorage.getItem('accessToken')
-      }
-      this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
-        this.companyList = []
-        for(let i=0;i<res.data.result.datas.length;i++){
-          if(res.data.result.datas[i].type ==0){
-            this.companyList.push({
-              name:res.data.result.datas[i].name,
-              id:res.data.result.datas[i].id,
-              code:res.data.result.datas[i].code
-            })
-          }
-        }
-      }).catch((error) => {
-        console.error(error)
-      })
-    },
-    bmClose () {
-      this.dialog_bm = false
-    },
-    gs_change(){
-      let companyName = this.ruleFormModule.companyName
-      let selectCompanyArr = this.companyList.filter((item,index) => {
-        return item.id === companyName
-      })
-      this.bm_id = selectCompanyArr[0].id
-      this.bm_code=selectCompanyArr[0].code
-      console.log(selectCompanyArr[0].code,selectCompanyArr[0].id)
-    },
     /*修改公司*/
     xg(val){
-      console.log(val)
-      this.xg_gsmc = val.name
-      this.xg_gsms = val.description
+      this.ruleFormUpdate.id = val.id
+      this.ruleFormUpdate.name = val.name
+      this.ruleFormUpdate.description = val.description
       this.dialog_xg = true
     },
     xgClose(){
       this.dialog_xg = false
     },
-    insert_xg(){
-      this.dialog_xg = false
+    /**
+     * 修改公司信息
+     */
+    insert_xg(formName){
+      let _this = this
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let param = {
+            name: "",
+            telephone: "13012455623",
+            contact: "张三",
+            description: "",
+            update_by: "岸本齐史",
+            address: "菁蓉镇"
+          }
+          param = Object.assign({}, param, _this.ruleFormUpdate)
+          let header = {
+            accountId: sessionStorage.getItem('accountId'),
+            accessToken: sessionStorage.getItem('accessToken')
+          }
+          _this.$store.dispatch('PROVIDER_MANAGE_UPDATE', { param, header }).then((res, req) => {
+            _this.$notify({
+              title: '提示信息',
+              message: res.message,
+              type: res.code === 200 ? 'success' : 'error',
+              duration: '1000'
+            })
+            if(res.code !== 200){
+              return
+            }
+            _this.dialog_xg = false
+            _this.search_list()
+          }).catch((error) => {
+            console.error(error)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
   },
   created(){

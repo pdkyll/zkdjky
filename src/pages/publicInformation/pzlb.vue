@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item class="no-mb" label="平台公司">
             <el-select size="small" v-model="ruleForm.cpcc" style="width: 150px" placeholder="请选择平台公司" @change="getTableList">
-              <el-option v-for="item in ptCompany" :label="item.cpccName" :value="item.cpcc"></el-option>
+              <el-option v-for="item in ptCompany" :label="item.companyName" :value="item.code"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="no-mb" label="业务公司">
@@ -55,55 +55,88 @@
         style="width: 100%">
         <el-table-column
           :resizable=false
-          prop="date"
-          label="日期">
+          prop="bldat"
+          label="凭证日期">
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="name"
-          label="姓名">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="province"
-          label="省份">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="city"
-          label="市区">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="address"
-          label="地址">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="zip"
-          label="邮编"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          label="操作"
-          width="100">
+          label="凭证编号">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" @click="getListDetails(scope.row.belnr)">{{scope.row.belnr}}</el-button>
           </template>
         </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="blart"
+          label="凭证类型">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="cpccName"
+          label="子公司">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="butxt"
+          label="公司">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="budat"
+          label="过账日期"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="usnam"
+          label="用户名">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="hwaer"
+          label="本位币">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="waers"
+          label="货币">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="kursf"
+          label="汇率">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="kurst"
+          label="汇率类型">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="bstat"
+          label="凭证状态">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="awtyp"
+          label="参考交易">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
+          prop="xreversal"
+          label="冲销标识">
+        </el-table-column>
       </el-table>
-      <div class="fy-box">
-        <el-pagination
-          background
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-size="100"
-          layout="total, prev, pager, next"
-          :total="1000">
-        </el-pagination>
-      </div>
+      <!--<div class="fy-box">-->
+        <!--<el-pagination-->
+          <!--background-->
+          <!--@size-change="handleSizeChange"-->
+          <!--@current-change="handleCurrentChange"-->
+          <!--:page-size="100"-->
+          <!--layout="total, prev, pager, next"-->
+          <!--:total="1000">-->
+        <!--</el-pagination>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -139,37 +172,7 @@ export default{
           { required: true, message: '请选择类型', trigger: 'change' }
         ]
       },
-      tableData: [
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
@@ -182,39 +185,62 @@ export default{
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     },
+    /**
+     * 获取平台公司信息
+     */
     getPtCompany () {
-      let vm = this
-      vm.$store.dispatch('GET_FINANCE_LIST').then((res, req) => {
-        vm.ptCompany = res.data
-      }).catch(res => {
-        console.error(res);
+      let _this = this
+      let param = {
+        type: '0',
+        pagenum: "1",
+        pagesize:"10000"
+      }
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
+        if(res.data.code === 200){
+          _this.ptCompany = res.data.data
+        }
+      }).catch(error => {
+        console.error(error)
       })
     },
     getTableList () {
       let vm = this
       let param = Object.assign({},vm.ruleForm)
-      vm.$store.dispatch('GET_FINANCE_TABLE', {param}).then((res, req) => {
-          console.log(res);
-//        vm.ptCompany = res.data
-      }).catch(res => {
-          console.error(res);
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
+          vm.tableData = res || []
+      }).catch(error => {
+          console.error(error);
       })
     },
-    getListDetails () {
+    getListDetails (belnr) {
       let vm = this
-      let param = Object.assign({},vm.ruleForm)
-      vm.$store.dispatch('GET_FINANCE_DETAILS', {param}).then((res, req) => {
-        console.log(res);
-  //        vm.ptCompany = res.data
-      }).catch(res => {
-        console.error(res);
-      })
+      let param = {
+          belnr: belnr
+      }
+//      let header = {
+//        accountId: sessionStorage.getItem('accountId'),
+//        accessToken: sessionStorage.getItem('accessToken')
+//      }
+      vm.$router.push({path: '/pzlbmx', query: param})
+//      vm.$store.dispatch('GET_FINANCE_DETAILS', {param, header}).then((res, req) => {
+//        console.log(res);
+//  //        vm.ptCompany = res.data
+//      }).catch(error => {
+//        console.error(error);
+//      })
     }
   },
   mounted () {
       this.getPtCompany()
       this.getTableList()
-      this.getListDetails()
   }
 }
 </script>

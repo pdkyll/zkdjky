@@ -8,12 +8,15 @@
         <img src="../../assets/logo.png" width="142" height="25" alt="LOGO" />
       </a>
       <el-menu class="el-menu-jky"
+         background-color="#222e26"
+         text-color="#fff"
+         active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
         <router-link to="publicInformation">
           <el-menu-item index="1"><i class="el-icon-menu"></i>公示信息</el-menu-item>
         </router-link>
-        <router-link to="attention">
+        <!--<router-link to="attention">
           <el-menu-item index="2"><i class="el-icon-menu"></i>关注信息</el-menu-item>
         </router-link>
         <router-link to="dataLink">
@@ -27,34 +30,55 @@
         </router-link>
         <router-link to="">
           <el-menu-item index="6"><i class="el-icon-menu"></i>数据治理管理</el-menu-item>
-        </router-link>
-        <router-link to="user">
-          <el-menu-item index="7"><i class="el-icon-menu"></i>用户管理</el-menu-item>
-        </router-link>
-        <router-link to="role">
-          <el-menu-item index="8"><i class="el-icon-menu"></i>角色管理</el-menu-item>
-        </router-link>
+        </router-link>-->
+
+        <!--<router-link to="user">-->
+          <!--<el-menu-item index="7"><i class="el-icon-menu"></i>用户管理</el-menu-item>-->
+        <!--</router-link>-->
+        <!--<router-link to="role">-->
+          <!--<el-menu-item index="8"><i class="el-icon-menu"></i>角色管理</el-menu-item>-->
+        <!--</router-link>-->
         <router-link to="management">
           <el-menu-item index="9"><i class="el-icon-menu"></i>公示管理</el-menu-item>
         </router-link>
-        <router-link to="moneyData">
-          <el-menu-item index="10"><i class="el-icon-menu"></i>财务数据</el-menu-item>
-        </router-link>
+        <!--<router-link to="moneyData">-->
+          <!--<el-menu-item index="10"><i class="el-icon-menu"></i>财务数据</el-menu-item>-->
+        <!--</router-link>-->
         <router-link to="historyData">
           <el-menu-item index="11"><i class="el-icon-menu"></i>历史数据</el-menu-item>
         </router-link>
-        <router-link to="company">
-          <el-menu-item index="12"><i class="el-icon-menu"></i>公司设置</el-menu-item>
-        </router-link>
-        <router-link to="moneyData1">
-          <el-menu-item index="13"><i class="el-icon-menu"></i>财务数据1</el-menu-item>
-        </router-link>
+        <!--<router-link to="company">-->
+          <!--<el-menu-item index="12"><i class="el-icon-menu"></i>公司设置</el-menu-item>-->
+        <!--</router-link>-->
+        <!--<router-link to="department">-->
+          <!--<el-menu-item index="13"><i class="el-icon-menu"></i>部门设置</el-menu-item>-->
+        <!--</router-link>-->
+        <!--<router-link to="moneyData1">-->
+          <!--<el-menu-item index="14"><i class="el-icon-menu"></i>财务数据1</el-menu-item>-->
+        <!--</router-link>-->
         <router-link to="pzlb">
-          <el-menu-item index="14"><i class="el-icon-menu"></i>凭证列表</el-menu-item>
+          <el-menu-item index="15"><i class="el-icon-menu"></i>凭证列表</el-menu-item>
         </router-link>
-        <router-link to="pzlbmx">
-          <el-menu-item index="15"><i class="el-icon-menu"></i>凭证明细</el-menu-item>
-        </router-link>
+        <el-submenu index="12">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>权限管理</span>
+          </template>
+          <el-menu-item-group>
+            <router-link to="company">
+              <el-menu-item index="12"><i class="el-icon-menu"></i>公司管理</el-menu-item>
+            </router-link>
+            <router-link to="department">
+              <el-menu-item index="13"><i class="el-icon-menu"></i>部门管理</el-menu-item>
+            </router-link>
+            <router-link to="role">
+              <el-menu-item index="8"><i class="el-icon-menu"></i>角色管理</el-menu-item>
+            </router-link>
+            <router-link to="user">
+              <el-menu-item index="7"><i class="el-icon-menu"></i>用户管理</el-menu-item>
+            </router-link>
+          </el-menu-item-group>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <el-container>
@@ -104,10 +128,10 @@ export default{
         '公示管理',
         '财务数据',
         '历史数据',
-        '公司设置',
+        '公司管理',
+        '部门管理',
         '财务数据1',
-        '凭证列表',
-        '凭证明细'
+        '凭证列表'
       ],
       menuTitle: '公示信息'
     }
@@ -140,12 +164,16 @@ export default{
   }
   .el-menu-jky {
     background-color: transparent;
-    .el-menu-item{
+    .el-menu-item,
+    .el-submenu__title{
       color: #fff;
       border-left: 5px solid transparent;
     }
     .el-menu-item:focus,
     .el-menu-item:hover,
+    .is-opened .el-submenu__title,
+    .el-submenu__title:hover,
+    .el-submenu__title:focus,
     .el-menu-item.is-active{
       border-left-color: #bfd046;
       background-color: rgba(#bfd046, .1);

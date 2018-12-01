@@ -17,11 +17,33 @@ import {
   delUserForUsers,
   insertUserForUsers,
   updateUserForUsers,
-
-  /*历史数据*/
+   /*公示信息*/
+  publicMsg,
+  linkDownload,
+  /*部门设置*/
+  getDepartment,
+  /**
+   * 公司设置
+   */
   providerManage,
   providerManageDel,
   providerManageInsert,
+  providerManageUpdate,
+  /**
+   * 部门设置
+   */
+  providerManageCmpAndDep,
+  insertDepartment,
+  providerManageFindNameId,
+  providerManageByCode,
+  /**
+   * 公示管理
+   */
+  publicInformationList,
+  publicInformationUpdate,
+  publicInformationDelete,
+  publicInformationUpload,
+  /*历史数据*/
   historyTree,
   getHistoryCompany,
   getHistoryInfoByTableName,
@@ -202,25 +224,224 @@ export default {
    * @returns {Promise.<TResult>}
    * @constructor
    */
-  UPDATE_USER_FOR_USERS: ({commit, state}, { param, header}) => {
-    return updateUserForUsers( param, header).then((res, req) => {
+  UPDATE_USER_FOR_USERS: ({commit, state}, {param, header, urlData}) => {
+    return updateUserForUsers(param, header, urlData).then((res, req) => {
       return res
     })
   },
-
-
+  /* 公示信息-列表展示
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PUBLIC_MSG: ({commit, state}, {param, header}) => {
+    return publicMsg(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公示信息-链接下载文件
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  LINK_DOWNLOAD: ({commit, state}, {param, header}) => {
+    return linkDownload(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公司管理-公司列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
   PROVIDER_MANAGE: ({commit, state}, {param, header}) => {
     return providerManage(param, header).then((res, req) => {
       return res
     })
   },
+  /**
+   * 公司管理-删除公司
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
   PROVIDER_MANAGE_DEL: ({commit, state}, {param, header}) => {
     return providerManageDel(param, header).then((res, req) => {
       return res
     })
   },
+  /**
+   * 公司管理-添加公司
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
   PROVIDER_MANAGE_INSERT: ({commit, state}, {param, header}) => {
     return providerManageInsert(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公司管理-修改公司信息
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
+  PROVIDER_MANAGE_UPDATE: ({commit, state}, {param, header}) => {
+    return providerManageUpdate(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 部门管理-查询部门列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PROVIDER_MANAGE_CMP_AND_DEP: ({commit, state}, {param, header}) => {
+    return providerManageCmpAndDep(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 部门管理-根据code查询部门列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PROVIDER_MANAGE_BY_CODE: ({commit, state}, {param, header}) => {
+    return providerManageByCode(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公司设置-获取公司
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PROVIDER_MANAGE: ({commit, state}, {param, header}) => {
+    return providerManage(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 获取部门
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  GET_DEPARTMENT: ({commit, state}, {param, header}) => {
+    return getDepartment(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 部门管理-批量添加部门
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  INSERT_DEPARTMENT: ({commit, state}, {param, header}) => {
+    return insertDepartment(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 部门管理-下拉框里的公司名字
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PROVIDER_MANAGE_FIND_NAME_ID: ({commit, state}, {param, header}) => {
+    return providerManageFindNameId(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公示管理-列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PUBLIC_INFORMATION_LIST: ({commit, state}, {param, header}) => {
+    return publicInformationList(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公示管理-修改公司信息
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @param urlData
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PUBLIC_INFORMATION_UPDATE: ({commit, state}, {param, header, urlData}) => {
+    return publicInformationUpdate(param, header, urlData).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 公示管理-删除公示信息
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @param urlData
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PUBLIC_INFORMATION_DELETE: ({commit, state}, {param, header, urlData}) => {
+    return publicInformationDelete(param, header, urlData).then((res, req) => {
+      return res
+    })
+  },
+  PUBLIC_INFORMATION_UPLOAD: ({commit, state}, {param, header}) => {
+    return publicInformationUpload(param, header).then((res, req) => {
       return res
     })
   },
@@ -291,8 +512,8 @@ export default {
    * @returns {Promise.<TResult>}
    * @constructor
    */
-  GET_FINANCE_TABLE: ({commit, state}, {param}) => {
-    return getFinanceTable(param).then((res, req) => {
+  GET_FINANCE_TABLE: ({commit, state}, {param, header}) => {
+    return getFinanceTable(param, header).then((res, req) => {
       return res
     })
   },
@@ -304,8 +525,8 @@ export default {
    * @returns {Promise.<TResult>}
    * @constructor
    */
-  GET_FINANCE_DETAILS: ({commit, state}, {param}) => {
-    return getFinanceDetails(param).then((res, req) => {
+  GET_FINANCE_DETAILS: ({commit, state}, {param, header}) => {
+    return getFinanceDetails(param, header).then((res, req) => {
       return res
     })
   },

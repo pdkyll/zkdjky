@@ -13,30 +13,30 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期" class="no-mb">
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line text-center" :span="2">至</el-col>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.date2"
-                style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-        <el-form-item class="pull-right no-mb">
-          <el-button class="join-btn" size="small" @click="onSubmit">
-            <i class="el-icon-plus"></i>
-            新建统计表
-          </el-button>
-        </el-form-item>
+        <!--<el-form-item label="日期" class="no-mb">-->
+          <!--<el-col :span="11">-->
+            <!--<el-form-item>-->
+              <!--<el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+          <!--<el-col class="line text-center" :span="2">至</el-col>-->
+          <!--<el-col :span="11">-->
+            <!--<el-form-item>-->
+              <!--<el-date-picker-->
+                <!--size="small"-->
+                <!--type="date"-->
+                <!--placeholder="选择日期"-->
+                <!--v-model="ruleForm.date2"-->
+                <!--style="width: 100%;"></el-date-picker>-->
+            <!--</el-form-item>-->
+          <!--</el-col>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item class="pull-right no-mb">-->
+          <!--<el-button class="join-btn" size="small" @click="onSubmit">-->
+            <!--<i class="el-icon-plus"></i>-->
+            <!--新建统计表-->
+          <!--</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     </div>
     <div class="f-box">

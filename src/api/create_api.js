@@ -105,7 +105,6 @@ export function createAPI () {
           headers = Object.assign({}, headers, header)
         }
         axios.delete(target, {params, headers}).then(res => {
-          console.log(params, headers)
           resolve(res.data)
         }).catch((err) => {
           reject(err)
