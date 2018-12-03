@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item class="no-mb" label="平台公司">
             <el-select size="small" v-model="ruleForm.cpcc" style="width: 150px" placeholder="请选择平台公司" @change="getTableList">
-              <el-option v-for="item in ptCompany" :label="item.companyName" :value="item.code"></el-option>
+              <el-option v-for="item in ptCompany" :key="item.code" :label="item.companyName" :value="item.code"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="no-mb" label="业务公司">

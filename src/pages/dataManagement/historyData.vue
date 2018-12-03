@@ -7,7 +7,7 @@
           <el-select size="small" v-model="ruleForm.companyName" placeholder="请选择公司">
             <el-option
               v-for="item in companyOptions"
-              :key="item.value"
+              :key="'opt' + item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
@@ -60,6 +60,7 @@
             <el-table-column
               v-for="cols in historyTableColumnHeader"
               :resizable=false
+              :key="'col' + cols.column_name"
               :prop="cols.column_name"
               :label="cols.column_comment">
             </el-table-column>
@@ -610,6 +611,20 @@ export default{
           vm.$refs.chart2.echarts.resize()
         })
       }
+    },
+    //数据导出方法
+    export2Excel(lister) {
+      require.ensure([], () => {
+        const { export_json_to_excel } = require('../../vendor/Export2Excel');
+        const tHeader = ['国家','学院', '合作机构', '负责人姓名', '电话','邮箱','启动日期','邮寄地址']; //对应表格输出的title
+        const filterVal = ['city','name', 'address', 'people', 'phone','mailbox', 'runTime','yjdz']; // 对应表格输出的数据
+        const list = lister;
+        const data = this.formatJson(filterVal, list);
+        export_json_to_excel(tHeader, data, '数据分析列表excel'); //对应下载文件的名字
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
     },
     /**
      * 左侧树状菜单点击事件的方法

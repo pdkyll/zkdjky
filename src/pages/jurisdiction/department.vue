@@ -5,7 +5,7 @@
         <el-form-item label="公司名称" class="ml-10 no-mb">
           <el-select size="small" v-model="ruleForm.companyName" placeholder="请选择公司名称" @change="search_param_list">
             <el-option label="全部" value="all"></el-option>
-            <el-option v-for="item in optionData" :label="item.companyName" :value="item.code"></el-option>
+            <el-option v-for="item in optionData" :key="'opt' + item.code" :label="item.companyName" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item class="pull-right">
@@ -72,7 +72,7 @@
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司名称">
           <el-select size="small" style="width: 100%" prop="companyName" v-model="ruleFormModule.companyName" placeholder="请选择公司" @change="gs_change">
-            <el-option v-for="item in optionData" :label="item.companyName" :value="item.id"></el-option>
+            <el-option v-for="items in optionData" :key="'opt' + items.id" :label="items.companyName" :value="items.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门名称">

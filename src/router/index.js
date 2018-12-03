@@ -1,23 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Layout from '@/components/layout/Layout'
-import LayoutNoLeft from '@/components/layout/layoutNoLeft'
-import Login from '@/pages/login/login'
-import Home from '@/pages/home/home'
-import publicInformation from '@/pages/publicInformation/publicInformation'
-import attention from '@/pages/publicInformation/attention'
-import management from '@/pages/publicInformation/management'
-import pzlb from '@/pages/publicInformation/pzlb'
-import pzlbmx from '@/pages/publicInformation/pzlbmx'
-import dataLink from '@/pages/dataManagement/dataLink'
-import joinUp from '@/pages/dataManagement/joinUp'
-import moneyData from '@/pages/dataManagement/moneyData'
-import moneyData1 from '@/pages/dataManagement/moneyData1'
-import historyData from '@/pages/dataManagement/historyData'
-import role from '@/pages/jurisdiction/role'
-import user from '@/pages/jurisdiction/user'
-import company from '@/pages/jurisdiction/company'
-import department from '@/pages/jurisdiction/department'
+const Layout = () => import ('@/components/layout/Layout')
+const LayoutNoLeft = () => import ('@/components/layout/layoutNoLeft')
+const Login = () => import ('@/pages/login/login')
+const Home = () => import ('@/pages/home/home')
+const publicInformation = () => import ('@/pages/publicInformation/publicInformation')
+const attention = () => import ('@/pages/publicInformation/attention')
+const management = () => import ('@/pages/publicInformation/management')
+const pzlb = () => import ('@/pages/publicInformation/pzlb')
+const pzlbmx = () => import ('@/pages/publicInformation/pzlbmx')
+const dataLink = () => import ('@/pages/dataManagement/dataLink')
+const joinUp = () => import ('@/pages/dataManagement/joinUp')
+const moneyData = () => import ('@/pages/dataManagement/moneyData')
+const moneyData1 = () => import ('@/pages/dataManagement/moneyData1')
+const historyData = () => import ('@/pages/dataManagement/historyData')
+const role = () => import ('@/pages/jurisdiction/role')
+const user = () => import ('@/pages/jurisdiction/user')
+const company = () => import ('@/pages/jurisdiction/company')
+const department = () => import ('@/pages/jurisdiction/department')
 Vue.use(Router)
 
 export default new Router({
