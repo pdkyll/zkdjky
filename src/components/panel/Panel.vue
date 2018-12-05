@@ -78,7 +78,6 @@ export default{
     }
   },
   components: {
-    pdf
   },
   methods: {
     handleClose () {

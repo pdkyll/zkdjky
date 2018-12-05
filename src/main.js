@@ -8,7 +8,7 @@ import { createStore } from './store'
 import ElementUI from 'element-ui'
 import VCharts from 'v-charts'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import '../src/assets/iconfont/iconfont.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
