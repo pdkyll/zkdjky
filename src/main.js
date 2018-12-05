@@ -8,10 +8,6 @@ import { createStore } from './store'
 import ElementUI from 'element-ui'
 import VCharts from 'v-charts'
 import 'element-ui/lib/theme-chalk/index.css'
-import VideoPlayer from 'vue-video-player'
-require('video.js/dist/video-js.css')
-require('vue-video-player/src/custom-theme.css')
-Vue.use(VideoPlayer)
 
 
 Vue.config.productionTip = false

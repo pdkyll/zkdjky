@@ -29,27 +29,7 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog
-      title="预览"
-      :visible.sync="dialogVisible"
-      width="70%"
-      :before-close="handleClose">
-      <pdf
-        v-if='imgShow === 1'
-        :src="docSrc">
-      </pdf>
-      <video-player  class="video-player vjs-custom-skin"
-                     ref="videoPlayer"
-                     :playsinline="true"
-                     :options="playerOptions"
-                     v-if="imgShow === 2 ||imgShow === 3"
-                     >
-      </video-player>
-      <img  style="width: 100%" :src="imgSrc" v-if="imgShow === 4" alt="">
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="closeLook">关 闭</el-button>
-      </span>
-    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -58,7 +38,7 @@
  * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
  * import loginButton from './components/loginButton.vue';
  */
-import pdf from 'vue-pdf'
+
 export default{
   props:['time'],
   name: "child",
