@@ -120,7 +120,6 @@ export default{
       console.log(data)
       this.frame.src= 'http://daas-website.tpaas.youedata.com'
       setTimeout(function () {
-
         window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
         vm.loading = false
         vm.frameShow = true

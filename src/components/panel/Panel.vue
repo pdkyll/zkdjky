@@ -16,7 +16,7 @@
                 <div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>
                 <div style="text-align: center;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
                 <div style="text-align: right;">
-                  <i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>
+                  <!--<i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>-->
                   <i class="el-icon-download" @click="downItem(item.ID)"></i>
                   <i v-if="item.DATA_TYPE===1" class="el-icon-document"></i>
                   <i v-if="item.DATA_TYPE===2" class="el-icon-service"></i>
@@ -111,19 +111,21 @@ export default{
       this.playerOptions.sources[0].src = []
     },
     /*预览文件*/
-    showItem (val,code) {
+    /*showItem (val,code) {
       let vm = this
       this.imgShow = code
+      console.log(this.imgShow)
       this.dialogVisible = true
       let param = {
         id:val,
-        accessToken:sessionStorage.getItem('accessToken')
       }
 
       let header = {
+        accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LINK_DOWNLOAD', { param, header }).then((res, req) => {
         if(res.status == 200){
+          console.log(res)
           if(code == 1){
             //vm.docSrc = 'http://api.tpaas.youedata.com/swift/v1/AUTH_9rkxf4dl9w02o0z4/0827/%E9%A2%86%E8%A2%96%E5%B3%B0%E4%BC%9A-%E6%95%B0%E5%AD%97%E5%8C%96%E6%97%B6%E4%BB%A3IT%E5%BB%BA%E8%AE%BE%E4%B9%8B%E6%88%91%E8%A7%81-%E6%9D%8E%E4%BC%9F-%E8%B4%9D%E4%B8%9A%E6%96%B0%E5%85%84%E5%BC%9F-%E4%B8%8B%E8%BD%BD%E7%89%88.pdf?temp_url_sig=07dfaee7ce8ed1c5d7930448bd94e236bd06d594&temp_url_expires=1543631419'
             vm.docSrc = res.data
@@ -141,17 +143,18 @@ export default{
       }).catch((error) => {
         console.error(error)
       })
-    },
+    },*/
     /*点击下载文件*/
     downItem(val){
       let param = {
-       id:val,
-       accessToken:sessionStorage.getItem('accessToken')
+        id:val,
       }
       let header = {
+        accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LINK_DOWNLOAD', { param, header }).then((res, req) => {
         if(res.status == 200){
+          console.log(res)
           this.download(res.data);
         }
       }).catch((error) => {
