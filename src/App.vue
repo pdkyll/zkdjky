@@ -24,9 +24,6 @@ body,
 #app>.el-container>.el-aside{
   height: 100%;
 }
-body{
-  min-width: 1400px;
-}
 ul,
 li{
   list-style: none;

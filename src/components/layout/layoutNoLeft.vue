@@ -45,8 +45,11 @@ export default{
   components: {},
   methods: {
   },
+  created (){
+
+  },
   mounted () {
-    this.title = this.$route.query.flag
+    this.title = window.sessionStorage.getItem('publicName')
   }
 }
 </script>

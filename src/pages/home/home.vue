@@ -21,43 +21,54 @@
     <el-main>
       <ul class="menu">
         <li>
-          <router-link :to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}" target="_blank" class="menu-item">
-            <img src="@/assets/archive.png" alt="">
-          </router-link>
+          <!--:to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}"-->
+          <div  @click="frameLink('LayoutNoLeft')" class="menu-item">
+            <img src="@/assets/monitor.png" alt="">
+          </div>
           <p>公示信息</p>
         </li>
         <li>
-          <router-link :to="{path:'LayoutNoLeft/attention', query:{flag:'关注信息'}}" target="_blank" class="menu-item">
+          <div @click="frameLink('LayoutNoLeft/attention')" class="menu-item">
             <img src="@/assets/rss.png" alt="">
-          </router-link>
+          </div>
           <p>关注信息</p>
         </li>
         <li>
-          <router-link to="publicInformation" target="_blank" class="menu-item">
+          <div @click="frameLink('publicInformation')" class="menu-item">
             <img src="@/assets/custom_reports.png" alt="">
-          </router-link>
+          </div>
           <p>数据管理</p>
         </li>
         <li>
-          <router-link to="" class="menu-item" target="_blank">
+          <div @click="frameLink('publicInformation')" class="menu-item">
             <img src="@/assets/bar_chart.png" alt="">
-          </router-link>
+          </div>
           <p>数据统计</p>
         </li>
         <li>
-          <router-link to="publicInformation" target="_blank" class="menu-item">
+          <div @click="frameLink('publicInformation')" class="menu-item">
             <img src="@/assets/file_cabinet.png" alt="">
-          </router-link>
+          </div>
           <p>公示管理</p>
         </li>
         <li>
-          <router-link to="" class="menu-item" target="_blank">
+          <div @click="frameLink('publicInformation')"  class="menu-item">
             <img src="@/assets/document_console.png" alt="">
-          </router-link>
+          </div>
           <p>权限管理</p>
         </li>
       </ul>
     </el-main>
+    <div class="frameBox" v-show="frameShow" id="frameBox">
+      <div class="frameTit">
+        <div class="iBox clearFix">
+          <i class="iconfont icon-cross pull-right titBtn ml-10" @click="closeFrame"></i>
+          <i class="iconfont icon--quanbubiankuang pull-right titBtn ml-10" @click="bigFrame"></i>
+          <i class="iconfont icon-jianhao pull-right titBtn ml-10" @click="smallFrame"></i>
+        </div>
+      </div>
+      <iframe src="/LayoutNoLeft" class="frame" id="frame" frameborder="0"></iframe>
+    </div>
   </el-container>
 </template>
 <script>
@@ -69,16 +80,61 @@
 export default{
   data () {
     return {
-      msg: '首页'
+      msg: '首页',
+      rouPath:'',
+      frameShow:false,
+      frameDom:''
     }
   },
   components: {},
   methods: {
     removeKey () {
       sessionStorage.removeItem('key')
+    },
+    frameLink(urlPath){
+      this.frameShow = true
+      let name = ''
+      if(urlPath == 'LayoutNoLeft'){
+        name = '公示信息'
+      }else if(urlPath == 'LayoutNoLeft/attention'){
+        name = '关注信息'
+      }
+      window.sessionStorage.setItem('publicName', name)
+      /*this.$store.dispatch('PUBLIC_HEADER_TYPE', { name })*/
+      var frame = document.getElementById('frame')
+      frame.src= urlPath
+    },
+    closeFrame(){
+      this.frameShow = false
+      this.frameDom.style.width = '1200px'
+      this.frameDom.style.height = '500px'
+    },
+    bigFrame(){
+      if(this.frameDom.style.width=='100%'){
+        this.frameDom.style.width = '1200px'
+        this.frameDom.style.height = '500px'
+      }else{
+        this.frameDom.style.width = '100%'
+        this.frameDom.style.height = '100%'
+      }
+
+    },
+    smallFrame(){
+      if(this.frameDom.style.width=='100%'){
+        this.frameDom.style.width = '1200px'
+        this.frameDom.style.height = '500px'
+      }else{
+        this.frameDom.style.width = '1200px'
+        this.frameDom.style.height = '500px'
+        this.frameShow = false
+      }
     }
   },
+  created (){
+
+  },
   mounted () {
+    this.frameDom = document.getElementById('frameBox')
     this.removeKey()
   }
 }
@@ -132,7 +188,7 @@ export default{
     flex: 0 0 16.6%;
     margin-bottom: 20px;
     text-align: center;
-    a{
+    .menu-item{
       display: inline-block;
       padding: 20px;
       margin-bottom: 15px;
@@ -152,23 +208,49 @@ export default{
       }
     }
   };
-  li:hover a{
+  li:hover .menu-item{
     background: rgba(46,46,46,0.5);
     box-shadow: 0 0 36px rgba(#bfd046, .9) ;
   }
 }
-  .frameBox{
+.frameBox{
+  width: 1200px;
+  height: 500px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom: 0;
+  margin:auto;
+  .frameTit{
     width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right:0;
-    bottom: 0;
-    margin:auto;
-    .frame{
-      width: 100%;
-      height: 100%;
+    height: 5%;
+    background: white;
+    padding: .1% 0;
+    position: relative;
+    .iBox{
+      height: 20px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right:0;
+      bottom: 0;
+      margin:auto;
+      padding-right: 5px;
+      i{
+        color: black;
+        font-size: 20px;
+      }
+      i:hover{
+        background: #ccc;
+        color: white;
+      }
     }
   }
+  .frame{
+    width: 100%;
+    height: 94%;
+  }
+
+}
 </style>

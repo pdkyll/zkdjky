@@ -13,6 +13,16 @@ export default {
   SET_LIST: (state, {ids}) => {
     state.string = ids
   },
+
+  /**
+   * iframe打开更改公共头部信息
+   * @param state
+   * @param name
+   * @constructor
+   */
+  SET_PUBLIC_NAME :(state, {name}) => {
+    state.publicName = name
+  },
   /**
    * 示例代码，用于引用类型(数组/对象)值改变时
    * Vue.set(target, key, value)

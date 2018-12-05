@@ -54,6 +54,12 @@ import {
 } from '../api'
 
 export default {
+
+  PUBLIC_HEADER_TYPE:({commit, state}, {name}) =>{
+    console.log('1:'+name)
+    commit('SET_PUBLIC_NAME',{name})
+    return
+  },
   LOGIN: ({commit, state}, {param}) => {
     return login(param).then((res, req) => {
       return res

@@ -11,9 +11,7 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     state: {
-      string: '',
-      array: [],
-      object: {}
+      publicName:''
     },
     actions,
     mutations,
