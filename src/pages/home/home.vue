@@ -2,7 +2,7 @@
  * Created by zhangxin on 2018/11/18.
  */
 <template>
-  <el-container class="home">
+  <el-container class="home" v-loading="loading">
     <el-header>
       <el-dropdown class="nav-bar-right">
         <div class="head-img-box">
@@ -34,7 +34,7 @@
           <p>关注信息</p>
         </li>
         <li>
-          <div @click="frameLink('publicInformation')" class="menu-item">
+          <div @click="frameData" class="menu-item">
             <img src="@/assets/custom_reports.png" alt="">
           </div>
           <p>数据管理</p>
@@ -83,7 +83,9 @@ export default{
       msg: '首页',
       rouPath:'',
       frameShow:false,
-      frameDom:''
+      frameDom:'',
+      frame:'',
+      loading:false
     }
   },
   components: {},
@@ -92,22 +94,44 @@ export default{
       sessionStorage.removeItem('key')
     },
     frameLink(urlPath){
-      this.frameShow = true
+      let vm = this
+      this.loading = true
       let name = ''
       if(urlPath == 'LayoutNoLeft'){
         name = '公示信息'
       }else if(urlPath == 'LayoutNoLeft/attention'){
         name = '关注信息'
       }
+      this.frame.src= urlPath
       window.sessionStorage.setItem('publicName', name)
       /*this.$store.dispatch('PUBLIC_HEADER_TYPE', { name })*/
-      var frame = document.getElementById('frame')
-      frame.src= urlPath
+      this.frameShow = true
+      setTimeout(function () {
+        vm.loading = false
+      },1000)
+    },
+    frameData(){
+      let vm = this
+      this.loading = true
+      let data = {
+        accountToken:  sessionStorage.getItem('accessToken'),
+        accountId: sessionStorage.getItem('accountId')
+      }
+      console.log(data)
+      this.frame.src= 'http://daas-website.tpaas.youedata.com'
+      setTimeout(function () {
+
+        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
+        vm.loading = false
+        vm.frameShow = true
+      },1000)
+
     },
     closeFrame(){
-      this.frameShow = false
       this.frameDom.style.width = '1200px'
       this.frameDom.style.height = '500px'
+      this.frameShow = false
+      this.frame.src = ''
     },
     bigFrame(){
       if(this.frameDom.style.width=='100%'){
@@ -127,6 +151,7 @@ export default{
         this.frameDom.style.width = '1200px'
         this.frameDom.style.height = '500px'
         this.frameShow = false
+        this.frame.src = ''
       }
     }
   },
@@ -135,6 +160,7 @@ export default{
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')
+    this.frame = document.getElementById('frame')
     this.removeKey()
   }
 }
@@ -249,7 +275,7 @@ export default{
   }
   .frame{
     width: 100%;
-    height: 94%;
+    height: 94.5%;
   }
 
 }

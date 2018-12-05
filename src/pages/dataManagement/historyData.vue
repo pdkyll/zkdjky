@@ -13,30 +13,30 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="日期" class="no-mb">-->
-          <!--<el-col :span="11">-->
-            <!--<el-form-item>-->
-              <!--<el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
-          <!--<el-col class="line text-center" :span="2">至</el-col>-->
-          <!--<el-col :span="11">-->
-            <!--<el-form-item>-->
-              <!--<el-date-picker-->
-                <!--size="small"-->
-                <!--type="date"-->
-                <!--placeholder="选择日期"-->
-                <!--v-model="ruleForm.date2"-->
-                <!--style="width: 100%;"></el-date-picker>-->
-            <!--</el-form-item>-->
-          <!--</el-col>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item class="pull-right no-mb">-->
-          <!--<el-button class="join-btn" size="small" @click="onSubmit">-->
-            <!--<i class="el-icon-plus"></i>-->
-            <!--新建统计表-->
-          <!--</el-button>-->
-        <!--</el-form-item>-->
+        <el-form-item label="日期" class="no-mb">
+          <el-col :span="11">
+            <el-form-item>
+              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line text-center" :span="2">至</el-col>
+          <el-col :span="11">
+            <el-form-item>
+              <el-date-picker
+                size="small"
+                type="date"
+                placeholder="选择日期"
+                v-model="ruleForm.date2"
+                style="width: 100%;"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item class="pull-right no-mb">
+          <el-button class="join-btn" size="small" @click="onSubmit">
+            <i class="el-icon-plus"></i>
+            新建统计表
+          </el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div class="f-box">
@@ -98,34 +98,6 @@
             <el-input v-model="ruleFormModule.name"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="选择日期" prop="rq">
-          <el-col :span="9">
-            <el-form-item>
-              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleFormModule.date1" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2" style="text-align: center">至</el-col>
-          <el-col :span="9">
-            <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleFormModule.date2"
-                style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item>
-              <el-radio-group v-model="ruleFormModule.timeRadio">
-              <el-radio :label="1">天</el-radio>
-              <el-radio :label="2">月</el-radio>
-              <el-radio :label="3">季</el-radio>
-              <el-radio :label="4">年</el-radio>
-            </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-form-item>
         <el-form-item label="统计目的" prop="md">
           <el-col :span="20">
             <el-input type="textarea" v-model="ruleFormModule.md"></el-input>
@@ -150,6 +122,34 @@
         </el-steps>
       </div>
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="选择日期" prop="rq">
+          <el-col :span="9">
+            <el-form-item>
+              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleFormModule.date1" style="width: 100%;"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col class="line" :span="2" style="text-align: center">至</el-col>
+          <el-col :span="9">
+            <el-form-item>
+              <el-date-picker
+                size="small"
+                type="date"
+                placeholder="选择日期"
+                v-model="ruleFormModule.date2"
+                style="width: 100%;"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item>
+              <el-radio-group v-model="ruleFormModule.timeRadio">
+                <el-radio :label="1">天</el-radio>
+                <el-radio :label="2">月</el-radio>
+                <el-radio :label="3">季</el-radio>
+                <el-radio :label="4">年</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
         <el-form-item label="选择公司" prop="gs">
           <el-transfer
             v-model="ruleFormModule.value"
@@ -186,7 +186,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择地区" prop="dq">
+        <!--<el-form-item label="选择地区" prop="dq">
           <el-transfer
             filterable
             :filter-method="ruleFormModule.filterMethod"
@@ -194,7 +194,7 @@
             v-model="ruleFormModule.value2"
             :data="ruleFormModule.data2">
           </el-transfer>
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="last2">上一步</el-button>
@@ -286,7 +286,7 @@ export default{
       }
       return data
     }
-    const generateData2 = _ => {
+    /*const generateData2 = _ => {
       const data = []
       const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都']
       const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu']
@@ -298,7 +298,7 @@ export default{
         })
       })
       return data
-    }
+    }*/
     return {
       dy: '取消订阅',
       msg: '123',
@@ -327,11 +327,11 @@ export default{
         md: '',
         data: generateData(),
         value: [],
-        data2: generateData2(),
+        /*data2: generateData2(),
         value2: [],
         filterMethod (query, item) {
           return item.pinyin.indexOf(query) > -1
-        },
+        },*/
         typeRadio: 1,
         tree_bm: [
           {
@@ -697,7 +697,6 @@ export default{
 </script>
 <style scoped lang="scss">
   .join-btn{
-    width: 150px;
     color: white;
     border-color: #d5d655;
     background-image: linear-gradient(to right, #b7cc41,#d5d655);

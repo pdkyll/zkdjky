@@ -48,6 +48,7 @@
         <ve-histogram
           :data="item.chartData"
           :settings="item.chartData.chartSettings"
+          :extend="chartExtend"
           :toolbox="toolbox" height="350px">
         </ve-histogram>
         <div class="hide-box" v-show="item.is_show">
@@ -89,6 +90,18 @@ export default{
       feature: {
         magicType: {type: ['bar', 'line']},
         saveAsImage: {}
+      }
+    }
+    this.chartExtend = {
+      series (v) {
+        v.forEach(i => {
+          i.barWidth = 20
+        })
+        return v
+      },
+      tooltip (v) {
+        v.trigger = 'axis'
+        return v
       }
     }
     return {
