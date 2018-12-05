@@ -322,6 +322,7 @@ export default{
   }
   .qx{
     float: right;
+    padding: 5px;
     margin-right: 1%;
     display: inline-block;
     height: 30px;
@@ -338,6 +339,7 @@ export default{
   }
   .ll{
     float: right;
+    padding: 5px;
     margin-right: 1%;
     display: inline-block;
     height: 30px;
