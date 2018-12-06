@@ -45,16 +45,12 @@
         </p>
       </div>
       <div class="right-chart">
-        <ve-histogram
-          :data="item.chartData"
-          :settings="item.chartData.chartSettings"
-          :extend="chartExtend"
-          :toolbox="toolbox" height="350px">
-        </ve-histogram>
-        <div class="hide-box" v-show="item.is_show">
-          <div class="e-box" v-for="(i , index) in item.dataList" :key="index">
-            <ve-chart :data="i" :ref="i.chart_ref" :settings="i.chartSettings"></ve-chart>
-          </div>
+        <mingle-chart></mingle-chart>
+        <div class="hide-box clearFix" v-show="item.isShow">
+          <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData"></pie-chart>
+          <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData2"></pie-chart>
+          <bar-chart v-if="item.bar" class="mb-10" :data="item.barData"></bar-chart>
+          <line-Chart v-if="item.line" class="mb-10" :data="item.lineData"></line-Chart>
           <div class="e-table">
             <el-table
               :data="item.tableData"
@@ -82,32 +78,21 @@
   </div>
 </template>
 <script>
-import 'echarts/lib/component/toolbox'
+import barChart from './barChart.vue'
+import pieChart from './pieChart.vue'
+import lineChart from './lineChart.vue'
+import mingleChart from './mingleChart.vue'
 export default{
   name: 'PanelDy',
   data () {
-    this.toolbox = {
-      feature: {
-        magicType: {type: ['bar', 'line']},
-        saveAsImage: {}
-      }
-    }
-    this.chartExtend = {
-      series (v) {
-        v.forEach(i => {
-          i.barWidth = 20
-        })
-        return v
-      },
-      tooltip (v) {
-        v.trigger = 'axis'
-        return v
-      }
-    }
     return {
       tjList: [
         {
-          is_show: false,
+          chartRef:'chart_' + new Date().getTime(),
+          isShow: false,
+          pie:false,
+          line:true,
+          bar: true,
           index: 0,
           name: '营业总收入',
           sj: '2018-01-01至今',
@@ -117,61 +102,51 @@ export default{
           bm: '销售一部',
           wd: '临床',
           md: '通过以上维度排查相关产品的营业总收入',
-          chartData: {
-            columns: ['日期', '访问用户', '下单用户', '下单率'],
-            rows: [
-              { '日期': '2018-01', '访问用户': 1393, '下单用户': 1093, '下单率': 321 },
-              { '日期': '2018-02', '访问用户': 3530, '下单用户': 3230, '下单率': 261 },
-              { '日期': '2018-03', '访问用户': 2923, '下单用户': 2623, '下单率': 761 },
-              { '日期': '2018-04', '访问用户': 1723, '下单用户': 1423, '下单率': 491 },
-              { '日期': '2018-05', '访问用户': 3792, '下单用户': 3492, '下单率': 3231 },
-              { '日期': '2018-06', '访问用户': 4593, '下单用户': 4293, '下单率': 781 }
+          barData:{
+            name:['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            xName:[
+              '北京','\n天津','河北','\n山西','内蒙古','\n辽宁','吉林','\n黑龙江',
+              '上海','\n江苏','浙江','\n安徽','福建','\n江西','山东','\n河南',
+              '湖北','\n湖南','广东','\n广西','海南','\n重庆','四川','\n贵州',
+              '云南','\n西藏','陕西','\n甘肃','青海','\n宁夏','新疆'
             ],
-            chartSettings: {
-              metrics: ['访问用户', '下单用户', '下单率']
+            count:{
+              //max : 60000,
+              '1': [1020, 45, 45, 34, 25, 43, 37, 31, 32, 26, 33, 25, 35, 23, 25, 39, 31, 32, 48, 37, 33, 35, 32, 34, 25, 28, 35, 44, 36, 26, 26, 20],
+              '2': [928, 39, 42, 27, 29, 39, 36, 34, 38, 25, 30, 31, 34, 29, 35, 32, 28, 29, 37, 27, 47, 25, 25, 30, 31, 33, 42, 27, 39, 8, 0, 0],
+              '3': [1024, 29, 26, 37, 48, 41, 34, 26, 45, 21, 39, 35, 37, 41, 29, 32, 34, 25, 39, 24, 35, 34, 36, 29, 25, 35, 32, 31, 45, 30, 29, 21],
+              '4': [878, 26, 34, 24, 31, 36, 20, 24, 28, 30, 25, 22, 32, 28, 32, 28, 27, 34, 34, 30, 39, 36, 16, 26, 36, 34, 26, 34, 26, 26, 34, 0],
+              '5': [902, 28, 27, 38, 26, 22, 32, 28, 39, 36, 31, 35, 20, 29, 27, 36, 25, 23, 24, 26, 35, 21, 27, 41, 30, 33, 26, 27, 30, 31, 30, 19],
+              '6': [914, 31, 29, 31, 30, 34, 40, 32, 38, 16, 31, 27, 25, 28, 27, 28, 28, 33, 36, 23, 34, 36, 33, 31, 31, 30, 26, 35, 30, 34, 27, 0],
+              '7': [1070, 31, 35, 36, 34, 29, 36, 28, 49, 28, 33, 36, 32, 36, 31, 47, 30, 41, 41, 43, 33, 24, 38, 40, 33, 32, 35, 21, 43, 38, 33, 24],
+              '8': [1342, 47, 35, 26, 32, 40, 40, 31, 63, 37, 44, 37, 40, 41, 41, 48, 50, 36, 65, 44, 51, 40, 41, 51, 36, 39, 63, 55, 59, 32, 38, 40],
+              '9': [1157, 32, 34, 33, 29, 39, 44, 32, 33, 33, 57, 36, 31, 41, 32, 36, 36, 42, 49, 45, 55, 37, 34, 35, 36, 43, 55, 34, 42, 34, 38, 0],
+              '10': [1185, 45, 46, 33, 29, 50, 31, 40, 57, 33, 49, 34, 50, 31, 34, 33, 31, 32, 36, 33, 51, 49, 41, 30, 32, 48, 45, 39, 41, 30, 28, 24],
+              '11': [1116, 45, 39, 42, 38, 34, 41, 38, 39, 39, 36, 28, 32, 37, 30, 38, 56, 36, 46, 34, 37, 23, 31, 40, 35, 35, 44, 42, 51, 24, 26, 0],
+              '12': [1026, 44, 38, 32, 35, 36, 47, 35, 43, 30, 38, 32, 33, 38, 36, 27, 36, 30, 31, 32, 38, 29, 25, 27, 24, 36, 37, 26, 47, 23, 27, 14]
             }
           },
-          dataList: [
-            {
-              chart_ref: 'chart1',
-              columns: ['日期', '访问用户'],
-              rows: [
-                { '日期': '1/1', '访问用户': 1393 },
-                { '日期': '1/2', '访问用户': 3530 },
-                { '日期': '1/3', '访问用户': 2923 },
-                { '日期': '1/4', '访问用户': 1723 },
-                { '日期': '1/5', '访问用户': 3792 },
-                { '日期': '1/6', '访问用户': 4593 }
-              ],
-              chartSettings: { type: 'line' }
-            },
-            {
-              chart_ref: 'chart2',
-              columns: ['日期', '访问用户'],
-              rows: [
-                { '日期': '1/1', '访问用户': 1393 },
-                { '日期': '1/2', '访问用户': 3530 },
-                { '日期': '1/3', '访问用户': 2923 },
-                { '日期': '1/4', '访问用户': 1723 },
-                { '日期': '1/5', '访问用户': 3792 },
-                { '日期': '1/6', '访问用户': 4593 }
-              ],
-              chartSettings: { type: 'pie' }
-            },
-            {
-              chart_ref: 'chart3',
-              columns: ['日期', '访问用户'],
-              rows: [
-                { '日期': '1/1', '访问用户': 1393 },
-                { '日期': '1/2', '访问用户': 3530 },
-                { '日期': '1/3', '访问用户': 2923 },
-                { '日期': '1/4', '访问用户': 1723 },
-                { '日期': '1/5', '访问用户': 3792 },
-                { '日期': '1/6', '访问用户': 4593 }
-              ],
-              chartSettings: { type: 'histogram' }
-            }
-          ],
+          lineData:{
+            time:['1', '2', '3', '4', '5', '6', '7'],
+            count:[
+              {
+                name:'旅游运输',
+                value:[120, 132, 101, 134, 90, 230, 10],
+              },
+              {
+                name:'班线运输',
+                value:[220, 182, 191, 234, 290, 330, 310],
+              },
+              {
+                name:'危险品',
+                value:[150, 232, 201, 154, 190, 330, 410],
+              },
+              {
+                name:'普货',
+                value:[320, 332, 301, 334, 390, 330, 320],
+              }
+            ]
+          },
           tableData: [
             {
               date: '2016-05-02',
@@ -190,10 +165,13 @@ export default{
               name: '王小虎',
               address: '上海市普陀区金沙江路 1516 弄'
             }
-          ]
+          ],
         },
         {
-          is_show: false,
+          chartRef:'chart_' + new Date().getTime(),
+          isShow: false,
+          pie:true,
+          line:false,
           index: 1,
           name: '营业总收入',
           sj: '2018-01-01至今',
@@ -203,48 +181,6 @@ export default{
           bm: '销售一部',
           wd: '临床',
           md: '通过以上维度排查相关产品的营业总收入',
-          chartData: {
-            columns: ['日期', '访问用户', '下单用户', '下单率'],
-            rows: [
-              { '日期': '2018-01', '访问用户': 1393, '下单用户': 1093, '下单率': 321 },
-              { '日期': '2018-02', '访问用户': 3530, '下单用户': 3230, '下单率': 261 },
-              { '日期': '2018-03', '访问用户': 2923, '下单用户': 2623, '下单率': 761 },
-              { '日期': '2018-04', '访问用户': 1723, '下单用户': 1423, '下单率': 491 },
-              { '日期': '2018-05', '访问用户': 3792, '下单用户': 3492, '下单率': 3231 },
-              { '日期': '2018-06', '访问用户': 4593, '下单用户': 4293, '下单率': 781 }
-            ],
-            chartSettings: {
-              metrics: ['访问用户', '下单用户', '下单率']
-            }
-          },
-          dataList: [
-            {
-              chart_ref: 'chart1',
-              columns: ['日期', '访问用户'],
-              rows: [
-                { '日期': '1/1', '访问用户': 1393 },
-                { '日期': '1/2', '访问用户': 3530 },
-                { '日期': '1/3', '访问用户': 2923 },
-                { '日期': '1/4', '访问用户': 1723 },
-                { '日期': '1/5', '访问用户': 3792 },
-                { '日期': '1/6', '访问用户': 4593 }
-              ],
-              chartSettings: { type: 'pie' }
-            },
-            {
-              chart_ref: 'chart2',
-              columns: ['日期', '访问用户'],
-              rows: [
-                { '日期': '1/1', '访问用户': 1393 },
-                { '日期': '1/2', '访问用户': 3530 },
-                { '日期': '1/3', '访问用户': 2923 },
-                { '日期': '1/4', '访问用户': 1723 },
-                { '日期': '1/5', '访问用户': 3792 },
-                { '日期': '1/6', '访问用户': 4593 }
-              ],
-              chartSettings: { type: 'histogram' }
-            }
-          ],
           tableData: [
             {
               date: '2016-05-02',
@@ -263,32 +199,61 @@ export default{
               name: '王小虎',
               address: '上海市普陀区金沙江路 1516 弄'
             }
-          ]
+          ],
+          data:{
+            name:['a','b','c'],
+            count:[12,22,32]
+          },
+          pieData:{
+            name:['直接访问','邮件营销', '联盟广告','视频广告','搜索引擎'],
+            count:[
+              {value:335, name:'直接访问'},
+              {value:310, name:'邮件营销'},
+              {value:234, name:'联盟广告'},
+              {value:135, name:'视频广告'},
+              {value:1548, name:'搜索引擎'}
+            ]
+          },
+          pieData2:{
+            name:['直接访问','邮件营销', '联盟广告','视频广告','搜索引擎'],
+            count:[
+              {value:335, name:'直接访问'},
+              {value:310, name:'邮件营销'},
+              {value:234, name:'联盟广告'},
+              {value:135, name:'视频广告'},
+              {value:1548, name:'搜索引擎'}
+            ]
+          }
         }
-      ]
+      ],
     }
   },
-  components: {},
+  components: {
+    barChart,
+    pieChart,
+    lineChart,
+    mingleChart
+  },
   methods: {
     open_hide (flag) {
-      if (this.tjList[flag].is_show !== !this.tjList[flag].is_show) {
-        this.tjList[flag].is_show = !this.tjList[flag].is_show
+      if (this.tjList[flag].isShow !== !this.tjList[flag].isShow) {
+        this.tjList[flag].isShow = !this.tjList[flag].isShow
       }
-      if (this.tjList[flag].is_show) {
-        this.$nextTick(_ => {
-          for (let i = 0; i < this.tjList[flag].dataList.length; i++) {
-            this.$refs[`chart${i + 1}`][flag].echarts.resize()
-            console.log(this.$refs[`chart${i + 1}`][flag])
-          }
-        })
-      }
-    }
+      //console.log(this.$refs[this.tjList[flag].chartRef][flag].resizeChart)
+      //chart.resize()
+      //this.$refs[this.tjList[flag].chartRef][flag].resizeChart()
+    },
+  },
+  created () {
   },
   mounted () {
   }
 }
 </script>
 <style scoped lang="scss">
+  .pieChart{
+    float: left;
+  }
   .box-wrapper{
     position: relative;
     margin: 0 auto 20px;
@@ -335,10 +300,10 @@ export default{
   }
   .qx{
     float: right;
-    padding: 5px;
     margin-right: 1%;
     display: inline-block;
     height: 30px;
+    padding: 5px;
     line-height: 5px;
     color: #000;
     border-color: #d5d655;
@@ -369,11 +334,7 @@ export default{
   }
   .hide-box{
     width: 100%;
-  }
-  .e-box{
-    float: left;
-    width: 50%;
-    height: 350px;
+    height: auto;
   }
   .e-table{
     float: left;

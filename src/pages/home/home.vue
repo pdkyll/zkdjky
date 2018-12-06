@@ -117,10 +117,9 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      console.log(data)
-      this.frame.src= 'http://daas-website.tpaas.youedata.com'
+      this.frame.src= 'http://10.220.1.6:31246'
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
+        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
         vm.loading = false
         vm.frameShow = true
       },1000)
@@ -239,6 +238,7 @@ export default{
   }
 }
 .frameBox{
+  background: #f5f5f5;
   width: 1200px;
   height: 500px;
   position: absolute;

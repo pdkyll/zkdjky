@@ -6,13 +6,13 @@ import App from './App'
 import router from './router'
 import { createStore } from './store'
 import ElementUI from 'element-ui'
-import VCharts from 'v-charts'
+import echarts from 'echarts'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../src/assets/iconfont/iconfont.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-Vue.use(VCharts)
+Vue.use(echarts)
 const store = createStore()
 /* eslint-disable no-new */
 /*router.beforeEach((to, from, next) => {
