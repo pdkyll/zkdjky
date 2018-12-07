@@ -7,6 +7,7 @@ const Home = () => import('@/pages/home/home')
 const publicInformation = () => import('@/pages/publicInformation/publicInformation')
 const attention = () => import('@/pages/publicInformation/attention')
 const management = () => import('@/pages/publicInformation/management')
+const newNorm = () => import('@/pages/publicInformation/newNorm')
 const pzlb = () => import('@/pages/publicInformation/pzlb')
 const pzlbmx = () => import('@/pages/publicInformation/pzlbmx')
 const dataLink = () => import('@/pages/dataManagement/dataLink')
@@ -53,6 +54,11 @@ export default new Router({
           path: 'management',
           name: 'management',
           component: management
+        },
+        {
+          path: 'newNorm',
+          name: 'newNorm',
+          component: newNorm
         },
         {
           path: 'dataLink',

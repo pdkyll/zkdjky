@@ -31,12 +31,6 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item class="pull-right no-mb">
-          <el-button class="join-btn" size="small" @click="onSubmit">
-            <i class="el-icon-plus"></i>
-            新建统计表
-          </el-button>
-        </el-form-item>
       </el-form>
     </div>
     <div class="f-box">
@@ -286,19 +280,6 @@ export default{
       }
       return data
     }
-    /*const generateData2 = _ => {
-      const data = []
-      const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都']
-      const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu']
-      cities.forEach((city, index) => {
-        data.push({
-          label: city,
-          key: index,
-          pinyin: pinyin[index]
-        })
-      })
-      return data
-    }*/
     return {
       dy: '取消订阅',
       msg: '123',
@@ -327,11 +308,6 @@ export default{
         md: '',
         data: generateData(),
         value: [],
-        /*data2: generateData2(),
-        value2: [],
-        filterMethod (query, item) {
-          return item.pinyin.indexOf(query) > -1
-        },*/
         typeRadio: 1,
         tree_bm: [
           {

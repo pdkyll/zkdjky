@@ -31,11 +31,11 @@
         <p class="footer-btn">
           <span class="mr-10 icon-green">
             <i class="iconfont icon-chakanyanjingshishifenxi"></i>
-            <span>10</span>
+            <span>{{item.view}}</span>
           </span>
           <span class="mr-10 icon-red">
-            <i class="iconfont icon-shoucang3"></i>
-            <span>10</span>
+            <i class="iconfont icon-shoucang3" transiton="fade" @click="good(item.index)"></i>
+            <span>{{item.like}}</span>
           </span>
           <span class="mr-10 color-999">
             有帮助吗？
@@ -46,33 +46,35 @@
       </div>
       <div class="right-chart">
         <mingle-chart></mingle-chart>
-        <div class="hide-box clearFix" v-show="item.isShow">
-          <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData"></pie-chart>
-          <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData2"></pie-chart>
-          <bar-chart v-if="item.bar" class="mb-10" :data="item.barData"></bar-chart>
-          <line-Chart v-if="item.line" class="mb-10" :data="item.lineData"></line-Chart>
-          <div class="e-table">
-            <el-table
-              :data="item.tableData"
-              border
-              style="width: 100%">
-              <el-table-column
-                prop="date"
-                label="日期"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="地址">
-              </el-table-column>
-            </el-table>
+        <transition name="fade">
+          <div class="hide-box clearFix" transiton="fade" v-show="item.isShow">
+            <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData"></pie-chart>
+            <pie-chart v-if="item.pie" class="mb-10" :data="item.pieData2"></pie-chart>
+            <bar-chart v-if="item.bar" class="mb-10" :data="item.barData"></bar-chart>
+            <line-Chart v-if="item.line" class="mb-10" :data="item.lineData"></line-Chart>
+            <div class="e-table">
+              <el-table
+                :data="item.tableData"
+                border
+                style="width: 100%">
+                <el-table-column
+                  prop="date"
+                  label="日期"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="name"
+                  label="姓名"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="address"
+                  label="地址">
+                </el-table-column>
+              </el-table>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -90,6 +92,7 @@ export default{
         {
           chartRef:'chart_' + new Date().getTime(),
           isShow: false,
+          dis:true,
           pie:false,
           line:true,
           bar: true,
@@ -102,6 +105,8 @@ export default{
           bm: '销售一部',
           wd: '临床',
           md: '通过以上维度排查相关产品的营业总收入',
+          view:10,
+          like:12,
           barData:{
             name:['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
             xName:[
@@ -170,6 +175,7 @@ export default{
         {
           chartRef:'chart_' + new Date().getTime(),
           isShow: false,
+          dis:true,
           pie:true,
           line:false,
           index: 1,
@@ -181,6 +187,8 @@ export default{
           bm: '销售一部',
           wd: '临床',
           md: '通过以上维度排查相关产品的营业总收入',
+          view:3,
+          like:7,
           tableData: [
             {
               date: '2016-05-02',
@@ -239,10 +247,13 @@ export default{
       if (this.tjList[flag].isShow !== !this.tjList[flag].isShow) {
         this.tjList[flag].isShow = !this.tjList[flag].isShow
       }
-      //console.log(this.$refs[this.tjList[flag].chartRef][flag].resizeChart)
-      //chart.resize()
-      //this.$refs[this.tjList[flag].chartRef][flag].resizeChart()
     },
+    good(flag){
+      if (this.tjList[flag].dis) {
+        this.tjList[flag].like++
+      }
+      this.tjList[flag].dis = false
+    }
   },
   created () {
   },
@@ -251,6 +262,12 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s
+  }
+  .fade-enter, .fade-leave-active {
+    opacity: 0
+  }
   .pieChart{
     float: left;
   }
