@@ -74,7 +74,6 @@ export default{
       }
       this.ruleForm.start =this.ruleForm.time[0]
       this.ruleForm.end =this.ruleForm.time[1]
-      console.log(this.ruleForm.time)
     }
   },
   mounted () {

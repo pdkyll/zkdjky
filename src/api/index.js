@@ -315,3 +315,84 @@ export function getFinanceTable (param, header) {
 export function getFinanceDetails (param, header) {
   return api.get('/apis/getFinanceDetails', param, header)
 }
+
+/**
+ * 新建指标
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function newNorm (param, header) {
+  return api.post('/apis/dataStatisticsService/statistical', param, header)
+}
+
+/**
+ * 新建指标-获取逻辑指标库
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function getNormSelect (param, header) {
+  return api.get('/apis/dataStatisticsService/logic', param, header)
+}
+/**
+ * 新建指标-获取表格
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function getNormTable (param, header) {
+  return api.get('/apis/dataStatisticsService/statisticalSubscriptionList', param, header)
+}
+
+/**
+ * 新建指标-发布指标
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function publishNorm(param, header, urlData) {
+  return api.get(`/apis/dataStatisticsService/releaseIndicators/${urlData}`, param, header)
+}
+
+/**
+ * 新建指标-取消发布
+ * @param param
+ * @param header
+ * @param urlData
+ * @returns {*|Promise}
+ */
+export function unPublishNorm(param, header, urlData) {
+  return api.get(`/apis/dataStatisticsService/unpublishIndex/${urlData}`, param, header)
+}
+
+/**
+ * 新建指标-订阅指标
+ * @param param
+ * @param header
+ * @param urlData
+ * @returns {*|Promise}
+ */
+export function subscriberNorm(param, header) {
+  return api.get('/apis/dataStatisticsService/subscriptionMetrics', param, header)
+}
+
+/**
+ * 新增指标-取消订阅
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function unSubscriberNorm(param, header) {
+  return api.get('/apis/dataStatisticsService/unsubscribeMetrics', param, header)
+}
+
+/**
+ * 删除指标
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function deleteIndicators(param, header) {
+  return api.get('/apis/dataStatisticsService/deleteIndicators', param, header)
+}

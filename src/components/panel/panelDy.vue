@@ -90,7 +90,6 @@ export default{
     return {
       tjList: [
         {
-          chartRef:'chart_' + new Date().getTime(),
           isShow: false,
           dis:true,
           pie:false,
@@ -173,7 +172,6 @@ export default{
           ],
         },
         {
-          chartRef:'chart_' + new Date().getTime(),
           isShow: false,
           dis:true,
           pie:true,

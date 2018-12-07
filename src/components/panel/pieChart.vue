@@ -55,12 +55,13 @@
             }
           ]
         };
-
         this.chartInstance.setOption(option);
       },
       resizeChart(){
+        let vm = this
+        document.getElementById(this.elId).style.width = '100%'
         setTimeout(function () {
-          this.chartInstance.resize()
+          vm.chartInstance.resize()
         },100)
       }
     },

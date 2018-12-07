@@ -83,6 +83,13 @@ export function createAPI () {
         })
       })
     },
+    /**
+     * put请求
+     * @param target
+     * @param params
+     * @param header
+     * @returns {Promise}
+     */
     put (target, params = {}, header = {}) {
       let headers = { projectId: '0ba94f86769c42a4aba6282834aee3b9'}
       let objKeyLen = Object.keys(header).length
@@ -97,6 +104,13 @@ export function createAPI () {
         })
       })
     },
+    /**
+     * delete请求
+     * @param target
+     * @param params
+     * @param header
+     * @returns {Promise}
+     */
     delete (target, params = {}, header = {}) {
       return new Promise((resolve, reject) => {
         let headers = { projectId: '0ba94f86769c42a4aba6282834aee3b9'}

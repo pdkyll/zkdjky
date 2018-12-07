@@ -51,6 +51,15 @@ import {
   getFinanceList,
   getFinanceTable,
   getFinanceDetails,
+  /*新建指标*/
+  newNorm,
+  getNormSelect,
+  getNormTable,
+  publishNorm,
+  unPublishNorm,
+  subscriberNorm,
+  unSubscriberNorm,
+  deleteIndicators
 } from '../api'
 
 export default {
@@ -159,8 +168,6 @@ export default {
       return res
     })
   },
-
-
   /**
    * 用户管理的列表展示
    * @param commit
@@ -235,7 +242,8 @@ export default {
       return res
     })
   },
-  /* 公示信息-列表展示
+  /**
+   * 公示信息-列表展示
    * @param commit
    * @param state
    * @param param
@@ -259,20 +267,6 @@ export default {
    */
   LINK_DOWNLOAD: ({commit, state}, {param, header}) => {
     return linkDownload(param, header).then((res, req) => {
-      return res
-    })
-  },
-  /**
-   * 公司管理-公司列表
-   * @param commit
-   * @param state
-   * @param param
-   * @param header
-   * @returns {Promise.<TResult>|*}
-   * @constructor
-   */
-  PROVIDER_MANAGE: ({commit, state}, {param, header}) => {
-    return providerManage(param, header).then((res, req) => {
       return res
     })
   },
@@ -537,4 +531,119 @@ export default {
     })
   },
 
+  /**
+   * 新建指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  NEW_NORM: ({commit, state}, {param, header}) => {
+    return newNorm(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-获取逻辑指标库下拉菜单
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  GET_NORM_SELECT: ({commit, state}, {param, header}) => {
+    return getNormSelect(param, header).then((res, req) => {
+      return res
+    })
+  },
+
+  /**
+   * 新建指标-获取表格展示
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  GET_NORM_TABLE: ({commit, state}, {param, header}) => {
+    return getNormTable(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-发布指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  PUBLISH_NORM: ({commit, state}, {param, header, urlData}) => {
+    return publishNorm(param, header, urlData).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-取消发布指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @param urlData
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  UN_PUBLISH_NORM: ({commit, state}, {param, header, urlData}) => {
+    return unPublishNorm(param, header, urlData).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-订阅指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @param urlData
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  SUBSCRIBER_NORM: ({commit, state}, {param, header}) => {
+  return subscriberNorm(param, header).then((res, req) => {
+    return res
+  })
+},
+  /**
+   * 新建指标-取消订阅指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  UN_SUBSCRIBER_NORM: ({commit, state}, {param, header}) => {
+    return unSubscriberNorm(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-删除指标
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  DELETE_INDICATORS: ({commit, state}, {param, header}) => {
+    return deleteIndicators(param, header).then((res, req) => {
+      return res
+    })
+  },
 }
