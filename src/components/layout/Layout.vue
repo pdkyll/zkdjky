@@ -13,9 +13,9 @@
          active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
-        <!--<router-link to="publicInformation">
+        <router-link to="publicInformation">
           <el-menu-item index="1"><i class="el-icon-menu"></i>公示信息</el-menu-item>
-        </router-link>-->
+        </router-link>
         <!--<router-link to="attention">
           <el-menu-item index="2"><i class="el-icon-menu"></i>关注信息</el-menu-item>
         </router-link>
