@@ -405,3 +405,13 @@ export function unSubscriberNorm(param, header) {
 export function deleteIndicators(param, header) {
   return api.get('/apis/dataStatisticsService/deleteIndicators', param, header)
 }
+
+/**
+ * 关注信息-获取列表展示
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function getAttentionList(param, header) {
+  return api.get('/apis/dataStatisticsService/findSubscriptionList', param, header)
+}

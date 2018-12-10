@@ -60,7 +60,9 @@ import {
   subscriberNorm,
   unSubscriberNorm,
   deleteIndicators,
-  previewNorm
+  previewNorm,
+  /*关注信息*/
+  getAttentionList
 } from '../api'
 
 export default {
@@ -660,4 +662,20 @@ export default {
       return res
     })
   },
+  /**
+   * 关注信息-获取列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  GET_ATTENTION_LIST: ({commit, state}, {param, header}) => {
+    return getAttentionList(param, header).then((res, req) => {
+      return res
+    })
+  }
+
+
 }
