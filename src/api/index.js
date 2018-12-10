@@ -370,11 +370,20 @@ export function unPublishNorm(param, header, urlData) {
  * 新建指标-订阅指标
  * @param param
  * @param header
- * @param urlData
  * @returns {*|Promise}
  */
 export function subscriberNorm(param, header) {
   return api.get('/apis/dataStatisticsService/subscriptionMetrics', param, header)
+}
+
+/**
+ * 新建指标-预览图表
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function previewNorm(param, header) {
+  return api.post('/apis/dataStatisticsService/preview', param, header)
 }
 
 /**

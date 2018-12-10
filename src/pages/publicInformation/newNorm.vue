@@ -36,15 +36,15 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="cpcc"
-          label="公司名称">
+          prop="statistical_name"
+          label="统计表名称">
         </el-table-column>
         <el-table-column
           prop="creation_time"
           label="创建日期">
         </el-table-column>
         <el-table-column
-          prop="creation_time"
+          prop="date_range"
           label="统计日期">
         </el-table-column>
         <el-table-column
@@ -52,16 +52,18 @@
           label="统计目的">
         </el-table-column>
         <el-table-column
-          prop="createor"
+          prop="creator"
           label="创建人员">
         </el-table-column>
         <el-table-column
           prop="likeCount"
           label="点赞统计">
-        </el-table-column>
-        <el-table-column
-          prop="subscibeCount"
-          label="订阅统计">
+          <template slot-scope="scope">
+            <span class="iconfont icon-chakanyanjingshishifenxi icon-green"></span>
+            <span class="mr-10">{{scope.row.likeCount}}</span>
+            <span class="iconfont icon-shoucang3 icon-red"></span>
+            <span class="mr-10">{{scope.row.subscibeCount}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           :resizable=false
@@ -101,15 +103,15 @@
           <el-step title="逻辑指标库"></el-step>
         </el-steps>
       </div>
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-        <el-form-item label="统计表名称" prop="name">
+      <el-form :model="formData1" :rules="rules" ref="formData1" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="统计表名称" prop="statisticalName">
           <el-col :span="20">
-            <el-input v-model="ruleFormModule.name"></el-input>
+            <el-input v-model="formData1.statisticalName"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="统计目的" prop="md">
+        <el-form-item label="统计目的" prop="remarks">
           <el-col :span="20">
-            <el-input type="textarea" v-model="ruleFormModule.md"></el-input>
+            <el-input type="textarea" v-model="formData1.remarks"></el-input>
           </el-col>
         </el-form-item>
       </el-form>
@@ -130,80 +132,68 @@
           <el-step title="逻辑指标库"></el-step>
         </el-steps>
       </div>
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-        <el-form-item label="选择日期" prop="rq">
+      <el-form :model="formData2" :rules="rules" ref="formData2" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="选择日期" required>
           <el-col :span="9">
-            <el-form-item>
-              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleFormModule.date1" style="width: 100%;"></el-date-picker>
+            <el-form-item prop="date1">
+              <el-date-picker
+                size="small"
+                :type="formData2T.dateType[formData2.dateType-1].type"
+                placeholder="选择开始日期"
+                :format="formData2T.dateType[formData2.dateType-1].format"
+                :value-format="formData2T.dateType[formData2.dateType-1].value_format"
+                v-model="formData2.date1"
+                style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">至</el-col>
           <el-col :span="9">
-            <el-form-item>
+            <el-form-item prop="date2">
               <el-date-picker
                 size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleFormModule.date2"
+                :type="formData2T.dateType[formData2.dateType-1].type"
+                placeholder="选择结束日期"
+                :format="formData2T.dateType[formData2.dateType-1].format"
+                :value-format="formData2T.dateType[formData2.dateType-1].value_format"
+                v-model="formData2.date2"
                 style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item>
-              <el-radio-group v-model="ruleFormModule.timeRadio">
-                <el-radio :label="1">天</el-radio>
-                <el-radio :label="2">月</el-radio>
-                <el-radio :label="3">季</el-radio>
-                <el-radio :label="4">年</el-radio>
+              <el-radio-group v-model="formData2.dateType" @change="changeDate">
+                <el-radio label="1">天</el-radio>
+                <el-radio label="2">月</el-radio>
+                <el-radio label="3">季</el-radio>
+                <el-radio label="4">年</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="选择公司" prop="gs">
+        <el-form-item label="选择公司" prop="companys">
           <el-transfer
-            v-model="ruleFormModule.value"
+            v-model="formData2.companys"
             :titles="['全部','全部']"
-            :data="ruleFormModule.data"></el-transfer>
+            :data="formData2T.companyTransfer"></el-transfer>
         </el-form-item>
-        <el-form-item label="部门" prop="bm">
+        <el-form-item label="部门">
           <el-tree
-            :data="ruleFormModule.tree_bm"
+            v-model="formData2.departments"
+            :data="formData2T.departmentTree"
             show-checkbox
-            node-key="id"
-            :props="ruleFormModule.defaultProps_bm">
+            node-key="id">
           </el-tree>
         </el-form-item>
-        <el-form-item label="产品" prop="cp">
-          <br>
-          <label for="">南京天晴</label>
-          <el-select v-model="ruleFormModule.cp" class="mb-20" size="small" multiple filterable placeholder="请选择">
+        <el-form-item label="产品" prop="products">
+          <el-select style="width: 80%;" v-model="formData2.products" class="mb-20" size="small" multiple filterable placeholder="请选择">
             <el-option
-              v-for="item in ruleFormModule.cp_options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <br>
-          <label for="">江苏天晴</label>
-          <el-select v-model="ruleFormModule.cp2" size="small" multiple filterable placeholder="请选择">
-            <el-option
-              v-for="item in ruleFormModule.cp_options2"
+              v-for="item in formData2T.productsArr"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="选择地区" prop="dq">
-          <el-transfer
-            filterable
-            :filter-method="ruleFormModule.filterMethod"
-            filter-placeholder="请输入城市拼音"
-            v-model="ruleFormModule.value2"
-            :data="ruleFormModule.data2">
-          </el-transfer>
-        </el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="last2">上一步</el-button>
@@ -223,11 +213,11 @@
           <el-step title="逻辑指标库"></el-step>
         </el-steps>
       </div>
-      <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-        <el-form-item label="逻辑指标库" prop="zb">
-          <el-select v-model="ruleFormModule.zb" placeholder="请选择">
+      <el-form :model="formData3" :rules="rules" ref="formData3" label-width="120px" class="demo-ruleForm">
+        <el-form-item label="逻辑指标库" prop="indicatorIndex">
+          <el-select v-model="formData3.indicatorIndex" placeholder="请选择逻辑指标库">
             <el-option-group
-              v-for="group in ruleFormModule.zb_options"
+              v-for="group in formData3T.typeArr"
               :key="group.value"
               :label="group.label">
               <el-option
@@ -239,35 +229,35 @@
             </el-option-group>
           </el-select>
         </el-form-item>
-        <el-form-item label="展现方式" prop="fl">
+        <el-form-item label="展现方式" prop="atlas">
           <el-col :span="24">
             <el-form-item>
-              <el-checkbox-group v-model="ruleFormModule.checkList">
+              <el-checkbox-group v-model="formData3.atlas">
                 <div>
-                  <el-checkbox label="柱状图" class="w100">柱状图</el-checkbox>
+                  <el-checkbox label="1" name="atlas" class="w100">柱状图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="barShow">预览图形</el-button>
-                  <div style="width: 500px" v-show="barFlag">
+                  <div style="width: 500px;" v-show="barFlag">
                     <bar-chart ref="bar" class="mb-10" :data="barData"></bar-chart>
                   </div>
                 </div>
                 <div>
-                  <el-checkbox label="饼状图" class="w100">饼状图</el-checkbox>
+                  <el-checkbox label="3" name="atlas" class="w100">饼状图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="pieShow">预览图形</el-button>
-                  <div v-show="pieFlag">
+                  <div style="width: 500px;" v-show="pieFlag">
                     <pie-chart ref="pie" class="mb-10" :data="pieData"></pie-chart>
                   </div>
                 </div>
                 <div>
-                  <el-checkbox label="折现图" class="w100">折现图</el-checkbox>
+                  <el-checkbox label="2" name="atlas" class="w100">折现图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="lineShow">预览图形</el-button>
-                  <div v-show="lineFlag">
+                  <div style="width: 500px;" v-show="lineFlag">
                     <line-chart ref="line" class="mb-10" :data="lineData"></line-chart>
                   </div>
                 </div>
                 <div>
-                  <el-checkbox label="组合图" class="w100">组合图</el-checkbox>
+                  <el-checkbox label="4" name="atlas" class="w100">组合图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="mingleShow">预览图形</el-button>
-                  <div v-show="mingleFlag">
+                  <div style="width: 500px;" v-show="mingleFlag">
                     <mingle-chart ref="mingle" class="mb-10" :data="mingleData"></mingle-chart>
                   </div>
                 </div>
@@ -295,16 +285,6 @@
   import mingleChart from '../../components/panel/mingleChart.vue'
   export default{
     data () {
-      const generateData = _ => {
-          const data = []
-          for (let i = 1; i <= 15; i++) {
-            data.push({
-              key: i,
-              label: `备选项 ${i}`
-            })
-          }
-          return data
-        }
       return {
         dialogVisible: false,
         dialogVisible2: false,
@@ -312,6 +292,48 @@
         updateDialogVisible: false,
         deleteDialogVisible: false,
         deleteId: '',
+        formData1: {
+          remarks: '',
+          statisticalName: ''
+        },
+        formData2: {
+          date1: '',
+          date2: '',
+          companys: [],
+          departments: [],
+          products: [],
+          dateType: '1'
+        },
+        formData2T: {
+          dateType: [{
+            type: 'date',
+            format: 'yyyy 年 MM 月 dd 日',
+            value_format: 'yyyy-MM-dd'
+          },{
+            type: 'month',
+            format: 'yyyy 年 MM 月',
+            value_format: 'yyyy-MM'
+          },{
+            type: 'quarter',
+            format: 'yyyy 年 M 季',
+            value_format: 'yyyy-M'
+          },{
+            type: 'year',
+            format: 'yyyy 年',
+            value_format: 'yyyy'
+          }],
+          companyTransfer: [],
+          departmentsTree: [],
+          productsArr: [],
+        },
+        formData3: {
+          indicatorIndex: '',
+          atlas: []
+        },
+        formData3T: {
+          typeArr: [],
+          typeOld: {}
+        },
         updateForm: {
           id: '',
           info_name: '',
@@ -319,10 +341,6 @@
           describe_info: '',
           weightiness: ''
         },
-        fileList: [
-//        {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
-        ],
-        msg: '123',
         ruleForm: {
           time: '',
           start:'',
@@ -340,7 +358,7 @@
           fl: '',
           bm: '',
           md: '',
-          data: generateData(),
+          data: this.generateData([]),
           value: [],
           typeRadio: 1,
           tree_bm: [
@@ -430,29 +448,29 @@
           ]
         },
         rules: {
-          name: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
+          statisticalName: [
+            { required: true, message: '请输入统计表名称', trigger: 'blur' }
           ],
-          rq: [
-            { required: true, message: '请选择日期', trigger: 'blur' }
+          remarks: [
+            { min: 10, max: 200, message: '统计目的长度应在10到200个字符内', trigger: 'blur' }
           ],
-          gs: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
+          date1: [
+            { required: true, message: '请选择开始日期', trigger: 'change' }
           ],
-          dq: [
-            { required: true, message: '请选择类型', trigger: 'check' }
+          date2: [
+            { required: true, message: '请选择结束日期', trigger: 'change' }
           ],
-          fl: [
-            { required: true, message: '请选择类型', trigger: 'blur' }
+          companys: [
+            { type: 'array', required: true, message: '请选择公司', trigger: 'change' }
           ],
-          bm: [
-            { required: true, message: '请选择类型', trigger: 'blur' }
+          products: [
+            { type: 'array', max: 6, message: '最多选择6款产品', trigger: 'change' }
           ],
-          cp: [
-            { required: true, message: '请选择类型', trigger: 'blur' }
+          indicatorIndex: [
+            { required: true, message: '请选择逻辑指标库', trigger: 'change' }
           ],
-          zb: [
-            { required: true, message: '请选择类型', trigger: 'blur' }
+          atlas: [
+            { type: 'array', required: true, message: '请至少选择一种展现方式', trigger: 'change' }
           ]
         },
         tableData: [],
@@ -525,18 +543,60 @@
       mingleChart
     },
     methods: {
+      generateData(companyArr){
+        const data = []
+        if( companyArr && companyArr.length>0){
+          for (let item in companyArr) {
+            data.push({
+              key: `${companyArr[item].code}`,
+              label: `${companyArr[item].companyName}`
+            })
+          }
+        }
+        return data
+      },
       next () {
-        this.dialogVisible = false
-        this.dialogVisible2 = true
+        let _this = this
+        this.$refs['formData1'].validate((valid) => {
+          if (valid) {
+            _this.$nextTick(() => {
+              _this.getCompanysArr()
+              _this.dialogVisible = false
+              _this.dialogVisible2 = true
+            })
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       next2 () {
-        this.dialogVisible2 = false
-        this.dialogVisible3 = true
-        this.getNormSelect()
+        let _this = this
+        _this.$refs['formData2'].validate((valid) => {
+          if (valid) {
+            _this.$nextTick(() => {
+              _this.getNormSelect()
+              _this.dialogVisible2 = false
+              _this.dialogVisible3 = true
+            })
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       next3 () {
-        this.dialogVisible3 = false
-        this.createNorm ()
+        let _this = this
+        _this.$refs['formData3'].validate((valid) => {
+          if (valid) {
+            _this.createNorm ()
+          } else {
+            console.log('error submit!')
+          }
+        })
+      },
+      changeDate(){
+        let _this = this
+        _this.formData2.date1 = ''
+        _this.formData2.date2 = ''
       },
       last2 () {
         this.dialogVisible2 = false
@@ -570,92 +630,219 @@
       /*预览图标的隐藏展示*/
       barShow () {
         let vm = this
-        if (this.barFlag !== !this.barFlag) {
+        vm.$refs['formData3'].validate((valid) => {
+          if (valid) {
             vm.barFlag = !vm.barFlag
-        }
-        if (this.barFlag) {
-          vm.pieFlag = false
-          vm.lineFlag = false
-          vm.mingleFlag = false
-          this.$nextTick(_ => {
-            this.$refs.bar.resizeChart();
-          })
-        }
+            if (vm.barFlag) {
+              vm.pieFlag = false
+              vm.lineFlag = false
+              vm.mingleFlag = false
+              vm.previewChart()
+              vm.$nextTick(_ => {
+                vm.$refs.bar.resizeChart();
+              })
+            }
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       pieShow () {
         let vm = this
-        if (this.pieFlag !== !this.pieFlag) {
-          this.pieFlag = !this.pieFlag
-        }
-        if (this.pieFlag) {
-          vm.barFlag = false
-          vm.lineFlag = false
-          vm.mingleFlag = false
-          this.$nextTick(_ => {
-            this.$refs.pie.resizeChart()
-          })
-        }
+        vm.$refs['formData3'].validate((valid) => {
+          if (valid) {
+            vm.pieFlag = !vm.pieFlag
+            if (vm.pieFlag) {
+              vm.barFlag = false
+              vm.lineFlag = false
+              vm.mingleFlag = false
+              vm.previewChart()
+              vm.$nextTick(_ => {
+                vm.$refs.pie.resizeChart()
+              })
+            }
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       lineShow () {
         let vm = this
-        if (this.lineFlag !== !this.lineFlag) {
-          this.lineFlag = !this.lineFlag
-        }
-        if (this.lineFlag) {
-          vm.pieFlag = false
-          vm.barFlag = false
-          vm.mingleFlag = false
-          this.$nextTick(_ => {
-            this.$refs.line.resizeChart()
-          })
-        }
+        vm.$refs['formData3'].validate((valid) => {
+          if (valid) {
+            vm.lineFlag = !vm.lineFlag
+            if (vm.lineFlag) {
+              vm.pieFlag = false
+              vm.barFlag = false
+              vm.mingleFlag = false
+              vm.previewChart()
+              vm.$nextTick(_ => {
+                vm.$refs.line.resizeChart()
+              })
+            }
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       mingleShow(){
         let vm = this
-        if (this.mingleFlag !== !this.mingleFlag) {
-          this.mingleFlag = !this.mingleFlag
-        }
-        if (this.mingleFlag) {
-          vm.pieFlag = false
-          vm.lineFlag = false
-          vm.barFlag = false
-          this.$nextTick(_ => {
-            this.$refs.mingle.resizeChart()
-          })
-        }
+        vm.$refs['formData3'].validate((valid) => {
+          if (valid) {
+            vm.mingleFlag = !vm.mingleFlag
+            if (vm.mingleFlag) {
+              vm.pieFlag = false
+              vm.lineFlag = false
+              vm.barFlag = false
+              vm.previewChart()
+              vm.$nextTick(_ => {
+                vm.$refs.mingle.resizeChart()
+              })
+            }
+          } else {
+            console.log('error submit!')
+          }
+        })
       },
       /*新建指标*/
       createNorm (){
         let _this = this
-        var searchCondition = JSON.stringify({
-          "dateRange": "",
-          "companys": "",
-          "departments": "",
-          "products": ""
-        });
+        /**
+         * 处理第二页的数据
+         */
+        let searchCondition = {
+          dateRange: '',
+          companys: '',
+          departments: '',
+          products: ''
+        }
+        searchCondition.dateRange = _this.formData2.date1 + '&' + _this.formData2.date2
+        searchCondition.companys = _this.formData2.companys.join(',') || ''
+        searchCondition.departments = _this.formData2.departments.join(',') || ''
+        searchCondition.products = _this.formData2.products.join(',') || ''
+        searchCondition = JSON.stringify(searchCondition)
+        /**
+         * 请求头的数据拼接
+         * @type {{accessToken}}
+         */
         let header = {
           accessToken: sessionStorage.getItem('accessToken')
         }
+        /**
+         * 请求传递的参数整理
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, companys: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         */
         let param = {
           //private Integer id  				//主键
-          "cpcc":"002", 					//公司编码
-          "statisticalName": "testName", 		//名称
-          "remarks": "测试插入数据", 			//备注
-          "searchCondition": searchCondition, //检索条件
-          "indicatorIndex": "指标索引2", 		//指标索引
-          "indicatorName": "指标名称2", 		//指标名称
-          "type": 1, 							//数据类型;1:财务
-          "atlas": "1,2", 					//展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
+          //"cpcc":"002", 					//公司编码
+          searchCondition: '',    //检索条件
+          indicatorIndex: '', 		//指标索引
+          indicatorName: '', 		//指标名称
+          type: 1, 							//数据类型;1:财务
+          atlas: '', 					  //展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
           //"ifPublish":"默认未发布",			//是否发布;0:未发布;1:发布
-          "creator":"343433535"				//创建人    accountId
+          //"creator":"343433535"				//创建人    accountId
           //"creationTime":"自动维护"			//创建时间
         }
+        param.searchCondition = searchCondition
+        param.atlas = _this.formData3.atlas.join(',') || ''
+        param.indicatorIndex = _this.formData3.indicatorIndex || ''
+        param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
+        param = Object.assign({}, param, _this.formData1)
         _this.$store.dispatch('NEW_NORM', {param, header}).then(res => {
-          if(res.status === 200 && res.data.length >= 0){
-            console.log(res)
+          _this.$notify({
+            title: '提示信息',
+            message: res == 0 ? '新建指标成功' : '新建指标失败',
+            type: res == 0 ? 'success' : 'error',
+            duration: '1000'
+          })
+          if(res == 0){
+            _this.dialogVisible3 = false
+            _this.getNormTable()
           }
         }).catch(error => {
           console.log(error)
+        })
+      },
+      /**
+       * 预览图表的方法
+       */
+      previewChart (){
+        let _this = this
+        /**
+         * 处理第二页的数据
+         */
+        let searchCondition = {
+          dateRange: '',
+          companys: '',
+          departments: '',
+          products: ''
+        }
+        searchCondition.dateRange = _this.formData2.date1 + '&' + _this.formData2.date2
+        searchCondition.companys = _this.formData2.companys.join(',') || ''
+        searchCondition.departments = _this.formData2.departments.join(',') || ''
+        searchCondition.products = _this.formData2.products.join(',') || ''
+        searchCondition = JSON.stringify(searchCondition)
+        /**
+         * 请求头的数据拼接
+         * @type {{accessToken}}
+         */
+        let header = {
+          accessToken: sessionStorage.getItem('accessToken')
+        }
+        /**
+         * 请求传递的参数整理
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, companys: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         */
+        let param = {
+          //private Integer id  				//主键
+          //"cpcc":"002", 					//公司编码
+          searchCondition: '',    //检索条件
+          indicatorIndex: '', 		//指标索引
+          indicatorName: '', 		//指标名称
+          type: 1, 							//数据类型;1:财务
+          atlas: '', 					  //展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
+          //"ifPublish":"默认未发布",			//是否发布;0:未发布;1:发布
+          //"creator":"343433535"				//创建人    accountId
+          //"creationTime":"自动维护"			//创建时间
+        }
+        param.searchCondition = searchCondition
+        param.atlas = _this.formData3.atlas.join(',') || ''
+        param.indicatorIndex = _this.formData3.indicatorIndex || ''
+        param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
+        param = Object.assign({}, param, _this.formData1)
+        _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
+          if(res != 1){
+            console.log(res)
+          }else{
+            _this.$notify({
+              title: '提示信息',
+              message:'预览图表失败',
+              type: 'error',
+              duration: '1000'
+            })
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      },
+      /**
+       * 获取公司的列表
+       */
+      getCompanysArr(){
+        let _this = this
+        let param = {
+          type: 0
+        }
+        let header = {
+          accessToken: sessionStorage.getItem('accessToken'),
+          accessId: sessionStorage.getItem('accessId')
+        }
+        _this.$store.dispatch('PROVIDER_MANAGE', {param, header}).then(res=>{
+          let companyArr = _this.generateData(res.data.data)
+          _this.formData2T.companyTransfer = companyArr
+        }).catch(error=>{
+            console.log(error)
         })
       },
       /*获取逻辑指标库下拉菜单*/
@@ -667,8 +854,13 @@
         }
         _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
           if(res.status === 200){
+            _this.formData3T.typeOld = res.data
+            _this.formData3T.typeArr.push({
+              label: param.type,
+              options: []
+            })
             for(var key in res.data){
-              _this.ruleFormModule.zb_options[0].options.push({
+              _this.formData3T.typeArr[0].options.push({
                 value: key,
                 label: res.data[key]
               })
@@ -679,33 +871,32 @@
         })
       },
       /*表格回显*/
-      getNormTable(startTime,endTime,name){
-        console.log(startTime,endTime,name)
+      getNormTable(){
         let _this = this
         let header = {
         }
         let param = {
           accountId: sessionStorage.getItem('accountId'),
-          startTime:startTime,
-          endTime:endTime,
-          indexName:name
+          startTime: _this.ruleForm.start,
+          endTime: _this.ruleForm.end,
+          indexName: _this.ruleForm.infoName
         }
         _this.$store.dispatch('GET_NORM_TABLE', {param, header}).then(res => {
           if(res.status === 200){
             _this.tableData = []
-            console.log(res.data)
             for(let i=0;i<res.data.length;i++){
               _this.tableData.push({
-                cpcc: res.data[i].cpcc,
+                statistical_name: res.data[i].statistical_name,
                 creation_time: res.data[i].creation_time,
+                date_range: res.data[i].dateRange,
                 remarks: res.data[i].remarks,
-                createor: res.data[i].createor,
+                creator: res.data[i].creatorName,
                 likeCount: res.data[i].likeCount,
                 subscibeCount: res.data[i].subscibeCount,
-                fb:res.data[i].creatorResult == 1 ? false:true,
-                qxfb:res.data[i].creatorResult == 1 ? true:false,
-                dy:res.data[i].resultType == 1 ? false:true,
-                qxdy:res.data[i].resultType == 1 ? true:false,
+                fb:res.data[i].creatorResult == 1 ? true : false,
+                qxfb:res.data[i].creatorResult == 1 ? false : true,
+                dy:res.data[i].resultType == 1 ? false : true,
+                qxdy:res.data[i].resultType == 1 ? true : false,
                 sc:true,
                 id:res.data[i].id,
                 type:res.data[i].type
@@ -744,7 +935,6 @@
         }
         let urlData = row.id
         this.$store.dispatch('PUBLISH_NORM', {param, header, urlData}).then(res => {
-          console.log(res)
           if(res.status == 200){
             vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
           }
@@ -768,7 +958,6 @@
         }
         let urlData = row.id
         this.$store.dispatch('UN_PUBLISH_NORM', {param, header, urlData}).then(res => {
-          console.log(res)
           if(res.status == 200){
             vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
           }
@@ -792,7 +981,6 @@
           type:row.type
         }
         this.$store.dispatch('SUBSCRIBER_NORM', {param, header}).then(res => {
-          console.log(res)
           if(res.status == 200){
             vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
           }
@@ -816,7 +1004,6 @@
           type:row.type
         }
         this.$store.dispatch('UN_SUBSCRIBER_NORM', {param, header}).then(res => {
-          console.log(res)
           if(res.status == 200){
             vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
           }
@@ -830,7 +1017,7 @@
           console.error(error);
         })
       },
-      /*取消订阅指标*/
+      /*删除订阅指标*/
       deleteNorm(row){
         let vm = this
         alert(1)
@@ -840,7 +1027,6 @@
           id:row.id
         }
         this.$store.dispatch('DELETE_INDICATORS', {param, header}).then(res => {
-          console.log(res)
           if(res.status == 200){
             vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
           }
@@ -856,8 +1042,7 @@
       },
     },
     created () {
-      let vm = this
-      vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+      this.getNormTable()
     },
     mounted () {
 
@@ -881,10 +1066,10 @@
     padding: 10px 5px;
     box-shadow: 0 0 29px rgba(#b1c4d0, .48);
   }
-  .mr2{
-    margin-right: 2px;
-    &:last-child {
-      margin-right: 0;
+  td{
+    span{
+      display: inline-block;
+      vertical-align: middle;
     }
   }
   .center-form{

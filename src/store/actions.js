@@ -59,7 +59,8 @@ import {
   unPublishNorm,
   subscriberNorm,
   unSubscriberNorm,
-  deleteIndicators
+  deleteIndicators,
+  previewNorm
 } from '../api'
 
 export default {
@@ -609,15 +610,28 @@ export default {
    * @param state
    * @param param
    * @param header
-   * @param urlData
    * @returns {Promise.<TResult>}
    * @constructor
    */
   SUBSCRIBER_NORM: ({commit, state}, {param, header}) => {
-  return subscriberNorm(param, header).then((res, req) => {
-    return res
-  })
-},
+    return subscriberNorm(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 新建指标-预览图表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
+  PREVIEW_NORM: ({commit, state}, {param, header}) => {
+    return previewNorm(param, header).then((res, req) => {
+      return res
+    })
+  },
   /**
    * 新建指标-取消订阅指标
    * @param commit
