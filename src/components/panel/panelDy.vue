@@ -3,6 +3,11 @@
 */
 <template>
   <div>
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <el-button class="pull-right qx" size="small" v-if="tjList.length > 0" @click="openDialog">取消全部订阅</el-button>
+      </el-col>
+    </el-row>
     <div class="box-wrapper" v-for="item in tjList" :key="item.index">
       <div class="left-msg">
         <p class="msg-list">
@@ -65,6 +70,17 @@
         </transition>
       </div>
     </div>
+    <el-dialog
+      title="提示信息"
+      :visible.sync="dialogDelete"
+      width="30%"
+      :before-close="deleteClose">
+      <p>是否取消关注所有？</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogDelete = false">取 消</el-button>
+        <el-button type="primary" @click="deleteAll">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -76,6 +92,7 @@ export default{
   name: 'PanelDy',
   data () {
     return {
+      dialogDelete:false,
       tjList: [],
     }
   },
@@ -92,11 +109,14 @@ export default{
       }
     },
     good(flag,e){
+      let vm = this
       if(this.tjList[flag].like){
         e.target.style.color = '#999'
+        vm.notLike(vm.tjList[flag].data_id,vm.tjList[flag].type)
         this.tjList[flag].like = false
       }else{
         this.tjList[flag].like = true
+        vm.like(vm.tjList[flag].data_id,vm.tjList[flag].type)
         e.target.style.color = '#CC0F1B'
       }
     },
@@ -116,7 +136,7 @@ export default{
           for(let i=0;i<res.data.length;i++){
             let time = res.data[i].dateRange.split('&')
             time = time[0]+'至'+time[1]
-            let atlasArr = res.data.atlas.split(',')
+            let atlasArr = res.data[i].atlas.split(',')
             _this.tjList.push({
               isShow: false,
               dis: atlasArr.indexOf('1')>=0?true:false,
@@ -124,6 +144,8 @@ export default{
               line: atlasArr.indexOf('3')>=0?true:false,
               pie: atlasArr.indexOf('4')>=0?true:false,
               index: i,
+              data_id:res.data[i].id,
+              type:res.data[i].type,
               name:res.data[i].statisticalName,
               sj: time,
               gs: res.data[i].companyName,
@@ -131,7 +153,7 @@ export default{
               bm: res.data[i].departmentName,
               md: res.data[i].remarks,
               view:res.data[i].subscribeCount,
-              like:false,
+              like:res.data[i].funp,
               barData:{
                 name:['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
                 xName:[
@@ -186,6 +208,80 @@ export default{
         console.log(error)
       })
     },
+    /*点赞*/
+    like(dataId,type){
+      let _this = this
+      let header = {
+      }
+      let param = {
+        account_id: sessionStorage.getItem('accountId'),
+        data_id:dataId,
+        type:type
+      }
+      _this.$store.dispatch('ATTENTION_LIKE', {param, header}).then(res => {
+        console.log(res)
+        _this.$notify({
+          title: '提示信息',
+          message: '点赞成功',
+          type: res.status === 200 ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    /*取消点赞*/
+    notLike(dataId,type){
+      let _this = this
+      let header = {
+      }
+      let param = {
+        account_id: sessionStorage.getItem('accountId'),
+        data_id:dataId,
+        type:type
+      }
+      _this.$store.dispatch('ATTENTION_NOT_LIKE', {param, header}).then(res => {
+        console.log(res)
+        _this.$notify({
+          title: '提示信息',
+          message: '取消点赞成功',
+          type: res.status === 200 ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    /*取消全部订阅*/
+    cancelAll(){
+      let _this = this
+      let header = {
+      }
+      let param = {
+        account_id: sessionStorage.getItem('accountId'),
+      }
+      _this.$store.dispatch('CANCEL_ALL_ATTENTION', {param, header}).then(res => {
+        _this.$notify({
+          title: '提示信息',
+          message: '取消全部订阅成功',
+          type: res.status === 200 ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    openDialog(){
+      this.dialogDelete = true
+    },
+    deleteClose(){
+      this.dialogDelete = false
+    },
+    deleteAll(){
+      this.dialogDelete = false
+      this.cancelAll()
+      this.tjList = []
+    }
   },
   created () {
     this.getAttention()

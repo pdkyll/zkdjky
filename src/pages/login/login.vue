@@ -9,10 +9,10 @@
       <el-form-item label="" prop="userName">
         <el-input v-model="ruleForm.userName" class="underline-input" placeholder="用户名"></el-input>
       </el-form-item>
-      <el-form-item label="" prop="password">
+      <el-form-item label="" prop="password" >
         <el-input type="password" v-model="ruleForm.password" autocomplete="off" class="underline-input" placeholder="密码"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="mt-50">
         <el-button type="login" @click="submitForm('ruleForm')">立即登录</el-button>
       </el-form-item>
     </el-form>
@@ -82,6 +82,9 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+  .mt-50{
+    margin-top: 50px;
+  }
   .login,
   .login-info{
     color: #fff;
@@ -96,7 +99,7 @@ export default{
     .login-info{
       position: absolute;
       right: 0;
-      padding: 200px 60px 0;
+      padding: 200px 120px 0;
       width: 39.53%;
       background-image: url("../../assets/login_bg_info.jpg");
     }
@@ -145,6 +148,7 @@ export default{
   .el-button--login{
     width: 100%;
     color: #fff;
+    border-radius: 10px;
     font-size: 18px;
     border-color: #d5d655;
     background-image: linear-gradient(to right, #b7cc41,#d5d655);

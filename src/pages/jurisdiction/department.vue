@@ -52,16 +52,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">-->
-        <!--<el-pagination-->
-          <!--background-->
-          <!--@size-change="handleSizeChange"-->
-          <!--@current-change="handleCurrentChange"-->
-          <!--:page-size="100"-->
-          <!--layout="total, prev, pager, next"-->
-          <!--:total="1000">-->
-        <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="fy-box">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-size="100"
+          layout="total, prev, pager, next"
+          :total="1000">
+        </el-pagination>
+      </div>
     </div>
     <!--弹框新建部门-->
     <el-dialog

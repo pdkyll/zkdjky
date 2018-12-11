@@ -81,11 +81,12 @@
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
         <el-form-item label="公司选择">
-          <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse accordion v-model="activeNames" @change="handleChange">
             <el-collapse-item v-for="item in moduleData" :key="item.id" :title="item.tit" :name="item.id">
               <el-tree
                 :data="item.children"
                 show-checkbox
+                accordion
                 :props="item.defaultProps">
               </el-tree>
             </el-collapse-item>

@@ -13,10 +13,13 @@
          active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
+        <router-link v-for="(item, index) in title_list" :to="item.pathUrl">
+          <el-menu-item :index="index+''"><i class="el-icon-menu"></i>{{item.name}}</el-menu-item>
+        </router-link>
         <!--<router-link to="publicInformation">
           <el-menu-item index="1"><i class="el-icon-menu"></i>公示信息</el-menu-item>
-        </router-link>-->
-        <!--<router-link to="attention">
+        </router-link>
+        <router-link to="attention">
           <el-menu-item index="2"><i class="el-icon-menu"></i>关注信息</el-menu-item>
         </router-link>
         <router-link to="dataLink">
@@ -30,34 +33,31 @@
         </router-link>
         <router-link to="">
           <el-menu-item index="6"><i class="el-icon-menu"></i>数据治理管理</el-menu-item>
-        </router-link>-->
-        <!--<router-link to="user">-->
-          <!--<el-menu-item index="7"><i class="el-icon-menu"></i>用户管理</el-menu-item>-->
-        <!--</router-link>-->
-        <!--<router-link to="role">-->
-          <!--<el-menu-item index="8"><i class="el-icon-menu"></i>角色管理</el-menu-item>-->
-        <!--</router-link>-->
-        <router-link to="management">
-          <el-menu-item index="1"><i class="el-icon-menu"></i>公示管理</el-menu-item>
         </router-link>
-        <!--<router-link to="moneyData">-->
-          <!--<el-menu-item index="10"><i class="el-icon-menu"></i>财务数据</el-menu-item>-->
-        <!--</router-link>-->
+        <router-link to="user">
+          <el-menu-item index="7"><i class="el-icon-menu"></i>用户管理</el-menu-item>
+        </router-link>
+        <router-link to="role">
+          <el-menu-item index="8"><i class="el-icon-menu"></i>角色管理</el-menu-item>
+        </router-link>
+        <router-link to="moneyData">
+          <el-menu-item index="10"><i class="el-icon-menu"></i>财务数据</el-menu-item>
+        </router-link>
         <router-link to="historyData">
           <el-menu-item index="2"><i class="el-icon-menu"></i>历史数据</el-menu-item>
         </router-link>
         <router-link to="newNorm">
           <el-menu-item index="3"><i class="el-icon-menu"></i>新建指标</el-menu-item>
         </router-link>
-        <!--<router-link to="company">-->
-          <!--<el-menu-item index="13"><i class="el-icon-menu"></i>公司设置</el-menu-item>-->
-        <!--</router-link>-->
-        <!--<router-link to="department">-->
-          <!--<el-menu-item index="14"><i class="el-icon-menu"></i>部门设置</el-menu-item>-->
-        <!--</router-link>-->
-        <!--<router-link to="moneyData1">-->
-          <!--<el-menu-item index="15"><i class="el-icon-menu"></i>财务数据1</el-menu-item>-->
-        <!--</router-link>-->
+        <router-link to="company">
+          <el-menu-item index="13"><i class="el-icon-menu"></i>公司设置</el-menu-item>
+        </router-link>
+        <router-link to="department">
+          <el-menu-item index="14"><i class="el-icon-menu"></i>部门设置</el-menu-item>
+        </router-link>
+        <router-link to="moneyData1">
+          <el-menu-item index="15"><i class="el-icon-menu"></i>财务数据1</el-menu-item>
+        </router-link>
         <router-link to="pzlb">
           <el-menu-item index="4"><i class="el-icon-menu"></i>凭证列表</el-menu-item>
         </router-link>
@@ -80,7 +80,7 @@
               <el-menu-item index="8"><i class="el-icon-menu"></i>用户管理</el-menu-item>
             </router-link>
           </el-menu-item-group>
-        </el-submenu>
+        </el-submenu>-->
       </el-menu>
     </el-aside>
     <el-container>
@@ -117,8 +117,8 @@
 export default{
   data () {
     return {
-      activeIndex: '1',
-      title_list: [
+      activeIndex: '0',
+      /*title_list: [
         '公示管理',
         '历史数据',
         '新建指标',
@@ -135,22 +135,77 @@ export default{
         '数据治理管理',
         '财务数据',
         '财务数据1',
-      ],
-      menuTitle: '公示管理'
+      ],*/
+      title_list:[],
+      menuTitle: ''
     }
   },
   components: {},
   methods: {
     handleSelect (key, keyPath) {
       var vm = this
-      sessionStorage.setItem('key', key)
-      vm.menuTitle = vm.title_list[key - 1]
+      vm.menuTitle = vm.title_list[key].name
     }
   },
   mounted () {
     let vm = this
-    this.activeIndex = sessionStorage.getItem('key')
-    vm.menuTitle = vm.title_list[this.activeIndex - 1]
+    vm.menuTitle = sessionStorage.getItem('publicName')
+    if(vm.menuTitle == '历史数据'){
+      vm.title_list = [
+        {
+          name:'历史数据',
+          pathUrl:'historyData'
+        },
+        {
+          name:'凭证列表',
+          pathUrl:'pzlb'
+        },
+        {
+          name:'新建指标',
+          pathUrl:'newNorm'
+        },
+        {
+          name:'财务数据',
+          pathUrl:'publicInformation'
+        },
+        {
+          name:'销售数据',
+          pathUrl:'publicInformation'
+        },
+        {
+          name:'产品数据',
+          pathUrl:'publicInformation'
+        }
+      ]
+    }
+    else if(vm.menuTitle == '公示管理'){
+      vm.title_list = [
+        {
+          name:'公示管理',
+          pathUrl:'management'
+        }
+      ]
+    }
+    else if(vm.menuTitle == '公司管理'){
+      vm.title_list = [
+        {
+          name:'公司管理',
+          pathUrl:'company'
+        },
+        {
+          name:'部门管理',
+          pathUrl:'department'
+        },
+        {
+          name:'角色管理',
+          pathUrl:'role'
+        },
+        {
+          name:'用户管理',
+          pathUrl:'user'
+        }
+      ]
+    }
   }
 }
 </script>

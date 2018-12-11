@@ -40,19 +40,19 @@
           <p>数据管理</p>
         </li>
         <li>
-          <div @click="frameLink('publicInformation')" class="menu-item">
+          <div @click="frameLink('historyData')" class="menu-item">
             <img src="@/assets/bar_chart.png" alt="">
           </div>
           <p>数据统计</p>
         </li>
         <li>
-          <div @click="frameLink('publicInformation')" class="menu-item">
+          <div @click="frameLink('management')" class="menu-item">
             <img src="@/assets/file_cabinet.png" alt="">
           </div>
           <p>公示管理</p>
         </li>
         <li>
-          <div @click="frameLink('publicInformation')"  class="menu-item">
+          <div @click="frameLink('company')"  class="menu-item">
             <img src="@/assets/document_console.png" alt="">
           </div>
           <p>权限管理</p>
@@ -101,6 +101,12 @@ export default{
         name = '公示信息'
       }else if(urlPath == 'LayoutNoLeft/attention'){
         name = '关注信息'
+      }else if(urlPath == 'historyData'){
+        name = '历史数据'
+      }else if(urlPath == 'management'){
+        name = '公示管理'
+      }else if(urlPath == 'company'){
+        name = '公司管理'
       }
       this.frame.src= urlPath
       window.sessionStorage.setItem('publicName', name)

@@ -3,11 +3,11 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <!--<el-tab-pane label="定制表" name="first">定制表</el-tab-pane>-->
         <el-tab-pane label="订阅表" name="second">
-          <el-row :gutter="20">
+          <!--<el-row :gutter="20">
             <el-col :span="24">
               <el-button class="pull-right qx" size="small">取消全部订阅</el-button>
             </el-col>
-          </el-row>
+          </el-row>-->
           <el-row :gutter="20">
             <el-col :span="24">
               <panel-dy></panel-dy>

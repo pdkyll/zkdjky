@@ -415,3 +415,33 @@ export function deleteIndicators(param, header) {
 export function getAttentionList(param, header) {
   return api.get('/apis/dataStatisticsService/findSubscriptionList', param, header)
 }
+
+/**
+ * 关注信息-点赞
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function attentionLike(param, header) {
+  return api.get('/apis/dataStatisticsService/thumbUpIndex', param, header)
+}
+
+/**
+ * 关注信息-取消点赞
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function attentionNotLike(param, header) {
+  return api.get('/apis/dataStatisticsService/cancelThumbUp', param, header)
+}
+
+/**
+ * 关注信息-取消全部订阅
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function cancelAllAttention(param, header) {
+  return api.get('/apis/dataStatisticsService/cancelAllSubscriptionMetrics', param, header)
+}

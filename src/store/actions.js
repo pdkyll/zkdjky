@@ -62,7 +62,10 @@ import {
   deleteIndicators,
   previewNorm,
   /*关注信息*/
-  getAttentionList
+  getAttentionList,
+  attentionLike,
+  attentionNotLike,
+  cancelAllAttention
 } from '../api'
 
 export default {
@@ -675,7 +678,48 @@ export default {
     return getAttentionList(param, header).then((res, req) => {
       return res
     })
+  },
+  /**
+   * 关注信息-点赞
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  ATTENTION_LIKE: ({commit, state}, {param, header}) => {
+    return attentionLike(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 关注信息-取消点赞
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  ATTENTION_NOT_LIKE: ({commit, state}, {param, header}) => {
+    return attentionNotLike(param, header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 关注信息-取消全部订阅
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  CANCEL_ALL_ATTENTION: ({commit, state}, {param, header}) => {
+    return cancelAllAttention(param, header).then((res, req) => {
+      return res
+    })
   }
-
 
 }

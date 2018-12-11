@@ -37,7 +37,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">
+      <div class="fy-box">
         <el-pagination
           background
           @size-change="handleSizeChange"
@@ -46,7 +46,7 @@
           layout="total, prev, pager, next"
           :total="1000">
         </el-pagination>
-      </div>-->
+      </div>
     </div>
     <!--弹框新建公司-->
     <el-dialog

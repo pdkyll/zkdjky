@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 html, body, div, select, span, p, a, b, img, table, thead, tr, th, tbody, td, input, textarea, header, nav, menu, main, ul, li, dl, dd, dt, section, form, button, footer, aside, i, em, video, iframe, audio, sub, sup, :before, :after {
   margin: 0;
   padding: 0;
@@ -94,5 +94,69 @@ body .el-table th.gutter{
 }
 .w200{
   width: 200px;
+}
+.el-date-table td.end-date span, .el-date-table td.start-date span{
+  background-color: #b7cc41;
+}
+.el-date-table td.current:not(.disabled) span{
+  background-color: #b7cc41;
+}
+.el-date-table td.today span{
+  color: #b7cc41;
+}
+.el-date-table td.available:hover{
+  color: #b7cc41;
+}
+.el-select-dropdown__item.selected{
+  color: #b7cc41;
+}
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #b7cc41;
+}
+.el-select .el-input__inner:focus{
+  border-color: #b7cc41;
+}
+.el-input.is-active .el-input__inner, .el-input__inner:focus{
+  border-color: #b7cc41;
+}
+.el-range-editor.is-active, .el-range-editor.is-active:hover{
+  border-color: #b7cc41;
+}
+.green-btn{
+  color: white;
+  border-color: #d5d655;
+  background-image: linear-gradient(to right, #b7cc41,#d5d655);
+  &:hover,
+  &:focus{
+    color: white;
+    border-color: #d5d655;
+    background-image: linear-gradient(to right, #b7cc41,#d5d655);
+  }
+}
+.el-button--primary,.el-button--default{
+  color: white;
+  border-color: #d5d655;
+  background-image: linear-gradient(to right, #b7cc41,#d5d655);
+  &:hover,
+  &:focus{
+    color: white;
+    border-color: #d5d655;
+    background-image: linear-gradient(to right, #A2B53A,#A7A842);
+  }
+}
+.el-button--text{
+  color: #B8B94A;
+}
+.el-button--text:focus, .el-button--text:hover{
+  color: #d5d655;
+}
+.el-pagination.is-background .el-pager li:not(.disabled).active{
+  background-color: #b7cc41;
+}
+.el-pagination.is-background .el-pager li:not(.disabled):hover{
+  color: #b7cc41;
+}
+.el-textarea__inner:focus{
+  border-color: #d5d655;
 }
 </style>
