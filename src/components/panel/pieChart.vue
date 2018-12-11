@@ -21,41 +21,174 @@
     },
     components: {},
     methods: {
-      createdChart(){
+      parseData() {
+        let data = this.data
+        let allProducts = new Map()//<产品,<年份,<部门,销售额>>>
+        let allCompanyDepartment = new Set()
+        let allYear = new Set()
+        for (let item in data) {
+          let arr = item.split('^')
+          let product = arr[0]
+          let year = arr[1]
+          let company = arr[2]
+          let department = arr[3]
+          let tmp_c_d = company + "-" + department
+          let value = parseInt(data[item])
+          if (!allProducts.has(product)) {
+            allProducts.set(product, new Map())
+          }
+          if (!allProducts.get(product).has(year)) {
+            allProducts.get(product).set(year, new Map())
+          }
+          if (!allProducts.get(product).get(year).has(tmp_c_d)) {
+            allProducts.get(product).get(year).set(tmp_c_d, value)
+          }
+          allCompanyDepartment.add(tmp_c_d)
+          allYear.add(year)
+        }
+        let allProductsNew = new Map()//<产品,<年份,[销售额]>>
+
+        allProducts.forEach(function (p_value, product, map) {
+          allYear.forEach(function (year, sameElement, set) {
+            if (!p_value.has(year)) {
+              p_value.set(year, new Map())
+            }
+          })
+          p_value.forEach(function (y_value, year, map) {
+            let list = new Array()
+            let sum = 0
+            let max = 0
+            allCompanyDepartment.forEach(function (cd, sameElement, set) {
+              if (y_value.has(cd)) {
+                list.push(y_value.get(cd))
+                sum += y_value.get(cd)
+                if (max < y_value.get(cd)) {
+                  max = y_value.get(cd)
+                }
+              } else {
+                list.push(0)
+              }
+            })
+            if (!allProductsNew.has(product)) {
+              allProductsNew.set(product, new Map())
+            }
+            if (!allProductsNew.get(product).has(year)) {
+              allProductsNew.get(product).set(year, list)
+            }
+            allProductsNew.get(product)[year + 'max'] = Math.floor(max / 100) * 100
+            allProductsNew.get(product)[year + 'sum'] = sum
+          })
+        })
+        let result = {}
+        result.years = Array.from(allYear).sort()
+        result.products = Array.from(allProducts.keys())
+        result.companyDepartments = Array.from(allCompanyDepartment)
+        result.productValues = allProductsNew
+        return result
+      },
+      builderChartOptions(chartData) {
         let option = {
-          tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-          },
-          series : [
-            {
-              name: '访问来源',
-              type: 'pie',
-              radius : '55%',
-              center: ['50%', '60%'],
-              data:[
-                {value:335, name:'直接访问'},
-                {value:310, name:'邮件营销'},
-                {value:234, name:'联盟广告'},
-                {value:135, name:'视频广告'},
-                {value:1548, name:'搜索引擎'}
-              ],
-              itemStyle: {
-                emphasis: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+          baseOption: {
+            timeline: {
+              // y: 0,
+              axisType: 'category',
+              // realtime: false,
+              // loop: false,
+              autoPlay: false,
+              // currentIndex: 2,
+              playInterval: 1000,
+              // controlStyle: {
+              //     position: 'left'
+              // },
+              data: chartData.years,
+              label: {
+                formatter: function (s) {
+                  return (new Date(s)).getFullYear()
                 }
               }
+            },
+            title: {
+            },
+            tooltip: {
+            },
+            legend: {
+              x: 'right',
+              data: chartData.products
+            },
+            calculable: true,
+            grid: {
+              top: 80,
+              bottom: 100,
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow',
+                  label: {
+                    show: true,
+                    formatter: function (params) {
+                      return params.value.replace('\n', '')
+                    }
+                  }
+                }
+              }
+            },
+            xAxis: [
+              {
+                'type': 'category',
+                'axisLabel': { 'interval': 0 },
+                'data': chartData.companyDepartments,
+                splitLine: { show: false }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: '销售量（亿元）'
+              }
+            ],
+            series: function () {
+              let array = new Array()
+              for (let p in chartData.products) {
+                array.push({ name: chartData.products[p], type: 'bar' })
+              }
+              array.push({
+                name: '产品销售量占比',
+                type: 'pie',
+                center: ['75%', '35%'],
+                radius: '28%',
+                z: 100
+              });
+              return array
+            }()
+          },
+          options: function () {
+            let array = new Array()
+            for (let i_year in chartData.years) {
+              let year = chartData.years[i_year]
+              array.push({
+                title: { text: year + '年指标统计结果' },
+                series: function () {
+                  let tempArray = new Array()
+                  let subArray = new Array()
+                  for (let i_p in chartData.products) {
+                    let p = chartData.products[i_p];
+                    tempArray.push({ data: chartData.productValues.get(p).get(year) })
+                    subArray.push({ name: p, value: chartData.productValues.get(p)[year+'sum'] })
+                  }
+                  tempArray.push({ data: subArray })
+                  return tempArray;
+                }()
+              });
             }
-          ]
+            return array;
+          }()
+
         };
-        this.chartInstance.setOption(option);
+        return option;
+      },
+      createdChart(){
+        let option = this.builderChartOptions(this.parseData())
+        this.chartInstance.setOption(option)
       },
       resizeChart(){
         let vm = this
@@ -78,7 +211,7 @@
 <style scoped>
   .chart{
     float: left;
-    width: 450px;
+    /*width: 450px;*/
     height: 350px;
   }
 </style>

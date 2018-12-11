@@ -236,32 +236,29 @@
                 <div>
                   <el-checkbox label="1" name="atlas" class="w100">柱状图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="barShow">预览图形</el-button>
-                  <div style="width: 500px;" v-show="barFlag">
-                    <bar-chart ref="bar" class="mb-10" :data="barData"></bar-chart>
-                  </div>
                 </div>
                 <div>
                   <el-checkbox label="3" name="atlas" class="w100">饼状图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="pieShow">预览图形</el-button>
-                  <div style="width: 500px;" v-show="pieFlag">
-                    <pie-chart ref="pie" class="mb-10" :data="pieData"></pie-chart>
-                  </div>
                 </div>
                 <div>
                   <el-checkbox label="2" name="atlas" class="w100">折现图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="lineShow">预览图形</el-button>
-                  <div style="width: 500px;" v-show="lineFlag">
-                    <line-chart ref="line" class="mb-10" :data="lineData"></line-chart>
+                  <div>
                   </div>
                 </div>
                 <div>
                   <el-checkbox label="4" name="atlas" class="w100">组合图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="mingleShow">预览图形</el-button>
-                  <div style="width: 500px;" v-show="mingleFlag">
-                    <mingle-chart ref="mingle" class="mb-10" :data="mingleData"></mingle-chart>
+                  <div>
+
                   </div>
                 </div>
               </el-checkbox-group>
+              <bar-chart ref="bar" class="mb-10" :data="chartData" v-if="barFlag"></bar-chart>
+              <pie-chart ref="pie" class="mb-10" :data="chartData" v-if="pieFlag"></pie-chart>
+              <line-chart ref="line" class="mb-10" :data="chartData" v-if="lineFlag"></line-chart>
+              <mingle-chart ref="mingle" class="mb-10" :data="chartData" v-if="mingleFlag"></mingle-chart>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -475,63 +472,14 @@
         },
         tableData: [],
         barFlag: false,
-        barData:{
-          name:['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-          xName:[
-            '北京','\n天津','河北','\n山西','内蒙古','\n辽宁','吉林','\n黑龙江',
-            '上海','\n江苏','浙江','\n安徽','福建','\n江西','山东','\n河南',
-            '湖北','\n湖南','广东','\n广西','海南','\n重庆','四川','\n贵州',
-            '云南','\n西藏','陕西','\n甘肃','青海','\n宁夏','新疆'
-          ],
-          count:{
-            //max : 60000,
-            '1': [1020, 45, 45, 34, 25, 43, 37, 31, 32, 26, 33, 25, 35, 23, 25, 39, 31, 32, 48, 37, 33, 35, 32, 34, 25, 28, 35, 44, 36, 26, 26, 20],
-            '2': [928, 39, 42, 27, 29, 39, 36, 34, 38, 25, 30, 31, 34, 29, 35, 32, 28, 29, 37, 27, 47, 25, 25, 30, 31, 33, 42, 27, 39, 8, 0, 0],
-            '3': [1024, 29, 26, 37, 48, 41, 34, 26, 45, 21, 39, 35, 37, 41, 29, 32, 34, 25, 39, 24, 35, 34, 36, 29, 25, 35, 32, 31, 45, 30, 29, 21],
-            '4': [878, 26, 34, 24, 31, 36, 20, 24, 28, 30, 25, 22, 32, 28, 32, 28, 27, 34, 34, 30, 39, 36, 16, 26, 36, 34, 26, 34, 26, 26, 34, 0],
-            '5': [902, 28, 27, 38, 26, 22, 32, 28, 39, 36, 31, 35, 20, 29, 27, 36, 25, 23, 24, 26, 35, 21, 27, 41, 30, 33, 26, 27, 30, 31, 30, 19],
-            '6': [914, 31, 29, 31, 30, 34, 40, 32, 38, 16, 31, 27, 25, 28, 27, 28, 28, 33, 36, 23, 34, 36, 33, 31, 31, 30, 26, 35, 30, 34, 27, 0],
-            '7': [1070, 31, 35, 36, 34, 29, 36, 28, 49, 28, 33, 36, 32, 36, 31, 47, 30, 41, 41, 43, 33, 24, 38, 40, 33, 32, 35, 21, 43, 38, 33, 24],
-            '8': [1342, 47, 35, 26, 32, 40, 40, 31, 63, 37, 44, 37, 40, 41, 41, 48, 50, 36, 65, 44, 51, 40, 41, 51, 36, 39, 63, 55, 59, 32, 38, 40],
-            '9': [1157, 32, 34, 33, 29, 39, 44, 32, 33, 33, 57, 36, 31, 41, 32, 36, 36, 42, 49, 45, 55, 37, 34, 35, 36, 43, 55, 34, 42, 34, 38, 0],
-            '10': [1185, 45, 46, 33, 29, 50, 31, 40, 57, 33, 49, 34, 50, 31, 34, 33, 31, 32, 36, 33, 51, 49, 41, 30, 32, 48, 45, 39, 41, 30, 28, 24],
-            '11': [1116, 45, 39, 42, 38, 34, 41, 38, 39, 39, 36, 28, 32, 37, 30, 38, 56, 36, 46, 34, 37, 23, 31, 40, 35, 35, 44, 42, 51, 24, 26, 0],
-            '12': [1026, 44, 38, 32, 35, 36, 47, 35, 43, 30, 38, 32, 33, 38, 36, 27, 36, 30, 31, 32, 38, 29, 25, 27, 24, 36, 37, 26, 47, 23, 27, 14]
-          }
+        chartData: {
+          "全部产品^2016^阿斯顿^全部部门": 10000,
+          "全部产品1^2016^正大天晴^全部部门": 1300,
+          "全部产品1^2017^正大天晴^全部部门": 1000,
+          "全部产品1^2017^阿斯顿1^全部部门": 50000
         },
         pieFlag: false,
-        pieData:{
-          name:['直接访问','邮件营销', '联盟广告','视频广告','搜索引擎'],
-          count:[
-            {value:335, name:'直接访问'},
-            {value:310, name:'邮件营销'},
-            {value:234, name:'联盟广告'},
-            {value:135, name:'视频广告'},
-            {value:1548, name:'搜索引擎'}
-          ]
-        },
         lineFlag: false,
-        lineData:{
-          time:['1', '2', '3', '4', '5', '6', '7'],
-          count:[
-            {
-              name:'旅游运输',
-              value:[120, 132, 101, 134, 90, 230, 10],
-            },
-            {
-              name:'班线运输',
-              value:[220, 182, 191, 234, 290, 330, 310],
-            },
-            {
-              name:'危险品',
-              value:[150, 232, 201, 154, 190, 330, 410],
-            },
-            {
-              name:'普货',
-              value:[320, 332, 301, 334, 390, 330, 320],
-            }
-          ]
-        },
         mingleFlag: false,
         mingleData:{}
       }
@@ -814,6 +762,7 @@
         _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
           if(res != 1){
             console.log(res)
+            _this.chartData = res
           }else{
             _this.$notify({
               title: '提示信息',
@@ -831,44 +780,50 @@
        */
       getCompanysArr(){
         let _this = this
-        let param = {
-          type: 0
+        if(_this.$store.state.companyArr.length == 0){
+          let param = {
+            type: 0
+          }
+          let header = {
+            accessToken: sessionStorage.getItem('accessToken'),
+            accessId: sessionStorage.getItem('accessId')
+          }
+          _this.$store.dispatch('PROVIDER_MANAGE', {param, header}).then(res=>{
+            let companyArr = _this.generateData(res.data.data)
+            _this.$store.dispatch('SET_COMPANY_STATE',{companyArr})
+            _this.formData2T.companyTransfer = companyArr
+          }).catch(error=>{
+              console.log(error)
+          })
         }
-        let header = {
-          accessToken: sessionStorage.getItem('accessToken'),
-          accessId: sessionStorage.getItem('accessId')
-        }
-        _this.$store.dispatch('PROVIDER_MANAGE', {param, header}).then(res=>{
-          let companyArr = _this.generateData(res.data.data)
-          _this.formData2T.companyTransfer = companyArr
-        }).catch(error=>{
-            console.log(error)
-        })
+        _this.formData2T.companyTransfer = _this.$store.state.companyArr
       },
       /*获取逻辑指标库下拉菜单*/
       getNormSelect(){
         let _this = this
-        let header = {}
-        let param = {
-          type:'财务'
-        }
-        _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
-          if(res.status === 200){
-            _this.formData3T.typeOld = res.data
-            _this.formData3T.typeArr.push({
-              label: param.type,
-              options: []
-            })
-            for(var key in res.data){
-              _this.formData3T.typeArr[0].options.push({
-                value: key,
-                label: res.data[key]
-              })
-            }
+        if(_this.formData3T.typeArr.length == 0){
+          let header = {}
+          let param = {
+            type:'财务'
           }
-        }).catch(error => {
-          console.log(error)
-        })
+          _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
+            if(res.status === 200){
+              _this.formData3T.typeOld = res.data
+              _this.formData3T.typeArr.push({
+                label: param.type,
+                options: []
+              })
+              for(var key in res.data){
+                _this.formData3T.typeArr[0].options.push({
+                  value: key,
+                  label: res.data[key]
+                })
+              }
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }
       },
       /*表格回显*/
       getNormTable(){

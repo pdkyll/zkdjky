@@ -13,7 +13,9 @@ export default {
   SET_LIST: (state, {ids}) => {
     state.string = ids
   },
-
+  COMMIT_COMPANY: (state, {companyArr}) =>{
+    state.companyArr = companyArr
+  },
   /**
    * iframe打开更改公共头部信息
    * @param state

@@ -69,7 +69,24 @@ import {
 } from '../api'
 
 export default {
-
+  /**
+   * 设置公司的列表的数据
+   * @param commit
+   * @param state
+   * @param companyArr
+   * @constructor
+   */
+  SET_COMPANY_STATE:({commit, state}, {companyArr}) => {
+    commit('COMMIT_COMPANY', {companyArr})
+    return
+  },
+  /**
+   * iframe内公共头部
+   * @param commit
+   * @param state
+   * @param name
+   * @constructor
+   */
   PUBLIC_HEADER_TYPE:({commit, state}, {name}) =>{
     console.log('1:'+name)
     commit('SET_PUBLIC_NAME',{name})

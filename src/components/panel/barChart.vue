@@ -1,184 +1,203 @@
 <template>
-    <div>
-      <div class="chart" :id="elId"></div>
-    </div>
+  <div class="chart" :id="elId"></div>
 </template>
 <script>
-    import echarts from 'echarts'
-    import uuidv1 from 'uuid/v1'
-    export default {
-      name:'bar-chart',
-      props: {                //接受父组件传递来的数据
-        data: {
-          type: Object,
-        },
-      },
-      data () {
-        return {
-          elId: '',
-          chartInstance:''
+  import echarts from 'echarts'
+  import uuidv1 from 'uuid/v1'
+  export default {
+    name:'bar-chart',
+    props: {                //接受父组件传递来的数据
+      data: {},
+    },
+    data () {
+      return {
+        elId: '',
+        chartInstance:''
+      }
+    },
+    components: {},
+    methods: {
+      parseData() {
+        let data = this.data
+        let allProducts = new Map()//<产品,<年份,<部门,销售额>>>
+        let allCompanyDepartment = new Set()
+        let allYear = new Set()
+        for (let item in data) {
+          let arr = item.split('^')
+          let product = arr[0]
+          let year = arr[1]
+          let company = arr[2]
+          let department = arr[3]
+          let tmp_c_d = company + "-" + department
+          let value = parseInt(data[item])
+          if (!allProducts.has(product)) {
+            allProducts.set(product, new Map())
+          }
+          if (!allProducts.get(product).has(year)) {
+            allProducts.get(product).set(year, new Map())
+          }
+          if (!allProducts.get(product).get(year).has(tmp_c_d)) {
+            allProducts.get(product).get(year).set(tmp_c_d, value)
+          }
+          allCompanyDepartment.add(tmp_c_d)
+          allYear.add(year)
         }
+        let allProductsNew = new Map()//<产品,<年份,[销售额]>>
+
+        allProducts.forEach(function (p_value, product, map) {
+          allYear.forEach(function (year, sameElement, set) {
+            if (!p_value.has(year)) {
+              p_value.set(year, new Map())
+            }
+          })
+          p_value.forEach(function (y_value, year, map) {
+            let list = new Array()
+            let sum = 0
+            let max = 0
+            allCompanyDepartment.forEach(function (cd, sameElement, set) {
+              if (y_value.has(cd)) {
+                list.push(y_value.get(cd))
+                sum += y_value.get(cd)
+                if (max < y_value.get(cd)) {
+                  max = y_value.get(cd)
+                }
+              } else {
+                list.push(0)
+              }
+            })
+            if (!allProductsNew.has(product)) {
+              allProductsNew.set(product, new Map())
+            }
+            if (!allProductsNew.get(product).has(year)) {
+              allProductsNew.get(product).set(year, list)
+            }
+            allProductsNew.get(product)[year + 'max'] = Math.floor(max / 100) * 100
+            allProductsNew.get(product)[year + 'sum'] = sum
+          })
+        })
+        let result = {}
+        result.years = Array.from(allYear).sort()
+        result.products = Array.from(allProducts.keys())
+        result.companyDepartments = Array.from(allCompanyDepartment)
+        result.productValues = allProductsNew
+        return result
       },
-      components: {},
-      methods: {
-        createdChart(){
-          let dataMap = {};
-          function dataFormatter(obj) {
-            var pList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
-            var temp;
-            for (var month = 1; month <= 12; month++) {
-              temp = obj[month.toString()];
-              obj[month + 'sum'] = temp[0];
-              for (var i = 1, len = temp.length; i < len; i++) {
-                obj[month.toString()][i] = {
-                  name: pList[i],
-                  value: temp[i]
+      builderChartOptions(chartData) {
+        let option = {
+          baseOption: {
+            timeline: {
+              // y: 0,
+              axisType: 'category',
+              // realtime: false,
+              // loop: false,
+              autoPlay: false,
+              // currentIndex: 2,
+              playInterval: 1000,
+              // controlStyle: {
+              //     position: 'left'
+              // },
+              data: chartData.years,
+              label: {
+                formatter: function (s) {
+                  return (new Date(s)).getFullYear()
                 }
               }
-              obj[month.toString()].shift()
-
-            }
-            return obj;
-          }
-          dataMap.dataMonth = dataFormatter(this.data.count);
-          let option = {
-            baseOption: {
-              timeline: {
-                // y: 0,
-                axisType: 'category',
-                // realtime: false,
-                // loop: false,
-                autoPlay: false,
-                // currentIndex: 2,
-                playInterval: 1500,
-                // controlStyle: {
-                //     position: 'left'
-                // },
-                data: this.data.name,
-                label: {
-                  formatter: function(s) {
-                    return s + "月"
+            },
+            title: {
+            },
+            tooltip: {
+            },
+            legend: {
+              x: 'right',
+              data: chartData.products
+            },
+            calculable: true,
+            grid: {
+              top: 80,
+              bottom: 100,
+              tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow',
+                  label: {
+                    show: true,
+                    formatter: function (params) {
+                      return params.value.replace('\n', '')
+                    }
                   }
                 }
-              },
-              tooltip: {},
-
-              calculable: true,
-              grid: {
-                top: 80,
-                bottom: 100
-              },
-              xAxis: [
-                {
-                  type:'category',
-                  axisLabel:{'interval':0},
-                  data:this.data.xName,
-                  splitLine: {show: false}
-                }
-              ],
-              yAxis: [{
+              }
+            },
+            xAxis: [
+              {
+                'type': 'category',
+                'axisLabel': { 'interval': 0 },
+                'data': chartData.companyDepartments,
+                splitLine: { show: false }
+              }
+            ],
+            yAxis: [
+              {
                 type: 'value',
-                name: '人数',
-                // max: 53500
-                max: 100
-              }],
-              series: [{
-                name: 'days',
-                type: 'bar'
-              },
+                name: '销售额（万元）'
+              }
+            ],
+            series: function () {
+              let array = new Array()
+              for (let p in chartData.products) {
+                array.push({ name: chartData.products[p], type: 'bar' })
+              }
+              return array
+            }()
+          },
+          options: function () {
+            let array = new Array()
+            for (let i_year in chartData.years) {
+              let year = chartData.years[i_year]
+              array.push({
+                title: { text: year+'年的指标统计结果' },
+                series: function () {
+                  let tempArray = new Array()
+                  for (let i_p in chartData.products) {
+                    let p = chartData.products[i_p]
+                    tempArray.push({ data: chartData.productValues.get(p).get(year) })
+                  }
+                  return tempArray
+                }()
+              })
+            }
+            return array
+          }()
 
-
-              ]
-            },
-            options: [{
-              series: [{
-                data: dataMap.dataMonth['1'],
-              },
-
-              ]
-            },
-              {
-                series: [{
-                  data: dataMap.dataMonth['2'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['3'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['4'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['5'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['6'],
-                } ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['7'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['8'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['9'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['10'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['11'],
-                }, ]
-              },
-              {
-                series: [{
-                  data: dataMap.dataMonth['12'],
-                }, ]
-              },
-
-            ]
-          };
-          this.chartInstance.setOption(option);
-        },
-        resizeChart(){
-          let vm = this
-          document.getElementById(this.elId).style.width = '100%'
-         setTimeout(function () {
-           vm.chartInstance.resize()
-         },100)
         }
+        return option
       },
-      created(){
-        this.elId = uuidv1()
+      createdChart(){
+        let option = this.builderChartOptions(this.parseData())
+        this.chartInstance.setOption(option)
       },
-      mounted () {
-        this.chartInstance = echarts.init(document.getElementById(this.elId));
-        this.createdChart()
+      resizeChart(){
+        let vm = this
+        document.getElementById(this.elId).style.width = '100%'
+        setTimeout(function () {
+          vm.chartInstance.resize()
+        },100)
       }
+    },
+    created(){
+      this.elId = uuidv1()
+    },
+    mounted () {
+      this.chartInstance = echarts.init(document.getElementById(this.elId))
+      this.createdChart()
     }
+  }
 </script>
 
 <style scoped>
   .chart{
     float: left;
-    width: 900px;
+    /*width: 900px;*/
     height: 350px;
   }
 </style>
