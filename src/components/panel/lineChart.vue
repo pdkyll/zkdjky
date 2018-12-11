@@ -159,7 +159,7 @@
             for (let i_year in chartData.years) {
               let year = chartData.years[i_year]
               array.push({
-                title: { text: year+'年的指标统计结果' },
+                title: { text: year+'指标统计结果' },
                 series: function () {
                   let tempArray = new Array()
                   for (let i_p in chartData.products) {
@@ -192,8 +192,12 @@
       this.elId = uuidv1()
     },
     mounted () {
-      this.chartInstance = echarts.init(document.getElementById(this.elId));
-      this.createdChart()
+      let vm = this
+      vm.chartInstance = echarts.init(document.getElementById(this.elId));
+      vm.createdChart()
+      window.onresize = function(){
+        vm.resizeChart()
+      }
     }
   }
 </script>
@@ -201,7 +205,6 @@
 <style scoped>
   .chart{
     float: left;
-    /*width: 900px;*/
     height: 350px;
   }
 </style>

@@ -244,15 +244,10 @@
                 <div>
                   <el-checkbox label="2" name="atlas" class="w100">折现图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="lineShow">预览图形</el-button>
-                  <div>
-                  </div>
                 </div>
                 <div>
                   <el-checkbox label="4" name="atlas" class="w100">组合图</el-checkbox>
                   <el-button size="small" class="ml-20" @click="mingleShow">预览图形</el-button>
-                  <div>
-
-                  </div>
                 </div>
               </el-checkbox-group>
               <bar-chart ref="bar" class="mb-10" :data="chartData" v-if="barFlag"></bar-chart>
@@ -472,12 +467,7 @@
         },
         tableData: [],
         barFlag: false,
-        chartData: {
-          "全部产品^2016^阿斯顿^全部部门": 10000,
-          "全部产品1^2016^正大天晴^全部部门": 1300,
-          "全部产品1^2017^正大天晴^全部部门": 1000,
-          "全部产品1^2017^阿斯顿1^全部部门": 50000
-        },
+        chartData: {},
         pieFlag: false,
         lineFlag: false,
         mingleFlag: false,
@@ -829,6 +819,7 @@
       getNormTable(){
         let _this = this
         let header = {
+          accessToken:  sessionStorage.getItem('accessToken')
         }
         let param = {
           accountId: sessionStorage.getItem('accountId'),

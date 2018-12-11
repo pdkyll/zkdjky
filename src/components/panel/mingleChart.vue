@@ -143,7 +143,7 @@
             yAxis: [
               {
                 type: 'value',
-                name: '销售量（亿元）'
+                name: '销售量（万元）'
               }
             ],
             series: function () {
@@ -166,7 +166,7 @@
             for (let i_year in chartData.years) {
               let year = chartData.years[i_year]
               array.push({
-                title: { text: year + '年指标统计结果' },
+                title: { text: year + '指标统计结果' },
                 series: function () {
                   let tempArray = new Array()
                   let subArray = new Array()
@@ -202,8 +202,14 @@
       this.elId = uuidv1()
     },
     mounted () {
-      this.chartInstance = echarts.init(document.getElementById(this.elId));
-      this.createdChart()
+      let vm = this
+      vm.chartInstance = echarts.init(document.getElementById(this.elId));
+      vm.createdChart()
+      window.addEventListener("message", function (res) {
+        if(res.data.resize){
+          vm.resizeChart()
+        }
+      }, false)
     }
   }
 </script>
@@ -211,7 +217,6 @@
 <style scoped>
   .chart{
     float: left;
-    /*width: 900px;*/
     height: 350px;
   }
 </style>

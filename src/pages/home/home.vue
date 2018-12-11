@@ -125,7 +125,7 @@ export default{
       }
       this.frame.src= 'http://10.220.1.6:31246'
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
+        window.frames[0].postMessage(data, '*');
         vm.loading = false
         vm.frameShow = true
       },1000)
@@ -145,7 +145,10 @@ export default{
         this.frameDom.style.width = '100%'
         this.frameDom.style.height = '100%'
       }
-
+      let data = {
+        resize:true
+      }
+      window.frames[0].postMessage(data, 'http://localhost:8080');
     },
     smallFrame(){
       if(this.frameDom.style.width=='100%'){

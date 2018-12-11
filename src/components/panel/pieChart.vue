@@ -116,46 +116,13 @@
               data: chartData.products
             },
             calculable: true,
-            grid: {
-              top: 80,
-              bottom: 100,
-              tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                  type: 'shadow',
-                  label: {
-                    show: true,
-                    formatter: function (params) {
-                      return params.value.replace('\n', '')
-                    }
-                  }
-                }
-              }
-            },
-            xAxis: [
-              {
-                'type': 'category',
-                'axisLabel': { 'interval': 0 },
-                'data': chartData.companyDepartments,
-                splitLine: { show: false }
-              }
-            ],
-            yAxis: [
-              {
-                type: 'value',
-                name: '销售量（亿元）'
-              }
-            ],
             series: function () {
               let array = new Array()
-              for (let p in chartData.products) {
-                array.push({ name: chartData.products[p], type: 'bar' })
-              }
               array.push({
                 name: '产品销售量占比',
                 type: 'pie',
-                center: ['75%', '35%'],
-                radius: '28%',
+                //center: ['75%', '35%'],
+                radius: '50%',
                 z: 100
               });
               return array
@@ -166,13 +133,13 @@
             for (let i_year in chartData.years) {
               let year = chartData.years[i_year]
               array.push({
-                title: { text: year + '年指标统计结果' },
+                title: { text: year + '指标统计结果' },
                 series: function () {
                   let tempArray = new Array()
                   let subArray = new Array()
                   for (let i_p in chartData.products) {
                     let p = chartData.products[i_p];
-                    tempArray.push({ data: chartData.productValues.get(p).get(year) })
+                    //tempArray.push({ data: chartData.productValues.get(p).get(year) })
                     subArray.push({ name: p, value: chartData.productValues.get(p)[year+'sum'] })
                   }
                   tempArray.push({ data: subArray })
@@ -202,8 +169,12 @@
       this.elId = uuidv1()
     },
     mounted () {
-      this.chartInstance = echarts.init(document.getElementById(this.elId));
-      this.createdChart()
+      let vm = this
+      vm.chartInstance = echarts.init(document.getElementById(this.elId));
+      vm.createdChart()
+      window.onresize = function(){
+        vm.resizeChart()
+      }
     }
   }
 </script>
@@ -211,7 +182,6 @@
 <style scoped>
   .chart{
     float: left;
-    /*width: 450px;*/
     height: 350px;
   }
 </style>

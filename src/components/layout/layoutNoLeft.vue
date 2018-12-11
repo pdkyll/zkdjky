@@ -6,19 +6,6 @@
             <div class="left-logo">
               <img src="../../assets/green-logo.png" alt="">
             </div>
-            <el-dropdown class="nav-bar-right">
-            <div class="head-img-box">
-            <span class="circle-bg">
-              <img src="../../assets/headimg.png" alt="head-img">
-            </span>
-              <span>王小虎</span>
-              <i class="el-icon-caret-bottom"></i>
-            </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>普通用户</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </div>
         <div class="nav-menu-title">
           <span class="menu-title">{{title}}</span>
