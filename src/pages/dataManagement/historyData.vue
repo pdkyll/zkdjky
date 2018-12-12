@@ -14,22 +14,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="日期" class="no-mb">
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker size="small" type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line text-center" :span="2">至</el-col>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.date2"
-                style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
+          <el-date-picker
+            size="small"
+            v-model="ruleForm.time"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            @change="timeChange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
         </el-form-item>
       </el-form>
     </div>
@@ -48,6 +42,7 @@
         </div>
         <div class="mt-20">
           <el-table
+            v-loading="loading"
             :data="tableData"
             border
             style="width: 100%">
@@ -283,6 +278,7 @@ export default{
     return {
       dy: '取消订阅',
       msg: '123',
+      loading:true,
       dialogVisible: false,
       dialogVisible2: false,
       dialogVisible3: false,
@@ -291,6 +287,7 @@ export default{
       tableId: 'product',
       ruleForm: {
         companyName: '',
+        time:'',
         date1: '',
         date2: '',
         input: ''
@@ -635,11 +632,15 @@ export default{
     },
     getHistoryTableHeader () {
       let vm = this
+      vm.loading = true
       let param = vm.tableId
       vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param}).then((res, req)=>{
         if(res.length > 0) {
           vm.historyTableColumnHeader = res
           vm.getHistoryTableContent()
+          vm.$nextTick(() => {
+            vm.loading = false
+          })
         }
       }).catch(error => {
         console.error(error)
@@ -660,6 +661,10 @@ export default{
       }).catch(error => {
         console.error(error)
       });
+    },
+    timeChange(val){
+      this.ruleForm.date1 = val[0]
+      this.ruleForm.date2 = val[1]
     }
   },
   created () {

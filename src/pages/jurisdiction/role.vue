@@ -27,6 +27,7 @@
     </div>
     <div class="mt-20">
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         style="width: 100%">
@@ -136,6 +137,7 @@ export default{
   data () {
     return {
       activeNames: [],
+      loading:true,
       msg: '123',
       dialogVisible: false,
       ruleForm: {
@@ -190,11 +192,13 @@ export default{
       this.roles()
     },
     roles () {
+      let _this = this
       let param = {
         type: '1',
         pageNumber:this.pageNum,
         pageSize:this.pageSize
       }
+      this.loading = true
       let header = {
         accessToken:  sessionStorage.getItem('accessToken')
       }
@@ -210,6 +214,9 @@ export default{
               id:res.data.result.datas[i].id,
             })
           }
+          _this.$nextTick(() => {
+            _this.loading = false
+          })
         }
 
       }).catch((error) => {

@@ -172,9 +172,11 @@
       let vm = this
       vm.chartInstance = echarts.init(document.getElementById(this.elId));
       vm.createdChart()
-      window.onresize = function(){
-        vm.resizeChart()
-      }
+      window.addEventListener("message", function (res) {
+        if(res.data.resize){
+          vm.resizeChart()
+        }
+      }, false)
     }
   }
 </script>

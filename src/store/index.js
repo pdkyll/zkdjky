@@ -12,7 +12,9 @@ export function createStore () {
   return new Vuex.Store({
     state: {
       publicName:'',
-      companyArr: []
+      companyArr: [],
+      userName:'',
+      userType:''
     },
     actions,
     mutations,

@@ -9,12 +9,15 @@
       </a>
       <el-menu class="el-menu-jky"
          background-color="#222e26"
-         text-color="#fff"
+         text-color="#999"
          active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
         <router-link v-for="(item, index) in title_list" :to="item.pathUrl">
-          <el-menu-item :index="index+''"><i class="el-icon-menu"></i>{{item.name}}</el-menu-item>
+          <el-menu-item :index="index+''">
+            <i class="iconfont" :class="item.iClass"></i>
+            {{item.name}}
+          </el-menu-item>
         </router-link>
         <!--<router-link to="publicInformation">
           <el-menu-item index="1"><i class="el-icon-menu"></i>公示信息</el-menu-item>
@@ -141,27 +144,38 @@ export default{
       vm.title_list = [
         {
           name:'历史数据',
-          pathUrl:'historyData'
+          pathUrl:'historyData',
+          iClass:'icon-shuju3'
         },
         {
-          name:'凭证列表',
-          pathUrl:'pzlb'
+          name:'财务凭证',
+          pathUrl:'pzlb',
+          iClass:'icon-yewushouliliebiao'
         },
         {
           name:'新建指标',
-          pathUrl:'newNorm'
+          pathUrl:'newNorm',
+          iClass:'icon-zhishu'
         },
         {
-          name:'财务数据',
-          pathUrl:'publicInformation'
+          name:'财务指标',
+          pathUrl:'publicInformation',
+          iClass:'icon-youxianzijin'
         },
         {
-          name:'销售数据',
-          pathUrl:'publicInformation'
+          name:'销售指标',
+          pathUrl:'publicInformation',
+          iClass:'icon-qiye'
         },
         {
-          name:'产品数据',
-          pathUrl:'publicInformation'
+          name:'产品指标',
+          pathUrl:'publicInformation',
+          iClass:'icon-shumogongjuiconshichangfenxi-'
+        },
+        {
+          name:'人事指标',
+          pathUrl:'publicInformation',
+          iClass:'icon-yezhukaifashang'
         }
       ]
     }
@@ -169,7 +183,8 @@ export default{
       vm.title_list = [
         {
           name:'公示管理',
-          pathUrl:'management'
+          pathUrl:'management',
+          iClass:'icon-guanggaoxianxing'
         }
       ]
     }
@@ -177,19 +192,23 @@ export default{
       vm.title_list = [
         {
           name:'公司管理',
-          pathUrl:'company'
+          pathUrl:'company',
+          iClass:'icon-swticonjiudian'
         },
         {
           name:'部门管理',
-          pathUrl:'department'
+          pathUrl:'department',
+          iClass:'icon-xingzheng'
         },
         {
           name:'角色管理',
-          pathUrl:'role'
+          pathUrl:'role',
+          iClass:'icon-jiaose'
         },
         {
           name:'用户管理',
-          pathUrl:'user'
+          pathUrl:'user',
+          iClass:'icon-men'
         }
       ]
     }

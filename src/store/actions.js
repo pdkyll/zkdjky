@@ -4,6 +4,7 @@
 import {
   login,
   login2,
+  logout,
   /*角色*/
   roles,
   getUserForRoles,
@@ -88,15 +89,47 @@ export default {
    * @constructor
    */
   PUBLIC_HEADER_TYPE:({commit, state}, {name}) =>{
-    console.log('1:'+name)
     commit('SET_PUBLIC_NAME',{name})
     return
   },
+  /**
+   * 存储用户信息
+   * @param commit
+   * @param state
+   * @param name
+   * @constructor
+   */
+  USER_MASSAGE:({commit, state}, {name}) =>{
+    commit('SET_USER_MASSAGE',{name})
+    return
+  },
+  /**
+   * 登陆接口
+   * @param commit
+   * @param state
+   * @param param
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
   LOGIN: ({commit, state}, {param}) => {
     return login(param).then((res, req) => {
       return res
     })
   },
+  /**
+   * 退出接口
+   * @param commit
+   * @param state
+   * @param param
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  LOGOUT: ({commit, state}, {header}) => {
+    return logout(header).then((res, req) => {
+      return res
+    })
+  },
+
   LOGIN2: ({commit, state}, {param}) => {
     return login2(param).then((res, req) => {
       return res

@@ -19,6 +19,7 @@
     <div class="mt-20">
       <el-table
         :data="tableData"
+        v-loading="loading"
         border
         style="width: 100%">
         <el-table-column
@@ -57,9 +58,9 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="100"
+          :page-size=pageSize
           layout="total, prev, pager, next"
-          :total="1000">
+          :total=totalCount>
         </el-pagination>
       </div>
     </div>
@@ -149,6 +150,7 @@
     data () {
       return {
         msg: '123',
+        loading:true,
         optionData: [],
         ruleForm: {
           companyName: 'all'
@@ -175,6 +177,9 @@
             { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ]
         },
+        pageNum:1,
+        pageSize:5,
+        totalCount:0,
         tableData: [],
         bm_name:'',
         bm_desc:'',
@@ -191,12 +196,6 @@
       }
     },
     methods: {
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
-      },
 
       /*添加部门相关的函数*/
       handleClose_tag (tag) {
@@ -205,9 +204,10 @@
       /*初始化部门表格*/
       search_list(){
         let _this = this
+        _this.loading = true
         let param = {
-          pagenum: "1",
-          pagesize:"10000"
+          pagenum: _this.pageNum,
+          pagesize:_this.pageSize
         }
         let header = {
           accountId: sessionStorage.getItem('accountId'),
@@ -215,6 +215,7 @@
         }
         _this.$store.dispatch('PROVIDER_MANAGE_CMP_AND_DEP', { param, header }).then((res, req) => {
           _this.tableData = []
+          _this.totalCount = res.data.totalCounts
           if(res.data.code !== 200){
             return
           }
@@ -228,6 +229,9 @@
               departmentName: resultData[i].departmentName
             })
           }
+          _this.$nextTick(() => {
+            _this.loading = false
+          })
           _this.$notify({
             title: '提示信息',
             message: res.data.code === 200 ? '部门列表加载成功' : '部门列表加载失败',
@@ -237,6 +241,14 @@
         }).catch((error) => {
           console.error(error)
         })
+      },
+      handleSizeChange (val) {
+        this.pageNum = val
+        this.search_list()
+      },
+      handleCurrentChange (val) {
+        this.pageNum = val
+        this.search_list()
       },
       /**
        * 传公司code进行查询部门
@@ -313,6 +325,7 @@
           console.error(error)
         })
       },
+      /*获取公司下拉菜单*/
       getCompanyList () {
         let _this = this
         let param = {
@@ -331,6 +344,15 @@
         }).catch(error => {
             console.error(error)
         })
+      },
+      gs_change(){
+//        let companyName = this.ruleFormModule.companyName
+//        let selectCompanyArr = this.companyList.filter((item,index) => {
+//          return item.id === companyName
+//        })
+//        this.bm_id = selectCompanyArr[0].id
+//        this.bm_code=selectCompanyArr[0].code
+//        console.log(selectCompanyArr[0].code,selectCompanyArr[0].id)
       },
       /*新增部门*/
       insert_BM(){
@@ -380,15 +402,6 @@
       },
       bmClose () {
         this.dialog_bm = false
-      },
-      gs_change(){
-//        let companyName = this.ruleFormModule.companyName
-//        let selectCompanyArr = this.companyList.filter((item,index) => {
-//          return item.id === companyName
-//        })
-//        this.bm_id = selectCompanyArr[0].id
-//        this.bm_code=selectCompanyArr[0].code
-//        console.log(selectCompanyArr[0].code,selectCompanyArr[0].id)
       },
       /*修改公司*/
       xg(val){

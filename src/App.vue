@@ -159,4 +159,9 @@ body .el-table th.gutter{
 .el-textarea__inner:focus{
   border-color: #d5d655;
 }
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px rgb(15,95,112) inset !important;
+  -webkit-text-fill-color: #fff !important;
+}
 </style>

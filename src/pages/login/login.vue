@@ -30,7 +30,7 @@ export default{
   data () {
     return {
       ruleForm: {
-        userName: '723611653',
+        userName: '',
         password: ''
       },
       rules: {
@@ -58,7 +58,13 @@ export default{
         accountPasswd: password
       }
       this.$store.dispatch('LOGIN', { param }).then((res, req) => {
+        console.log(res)
         if (res.code === 0) {
+          let name = {
+            name:res.result.datas.accountName,
+            type:res.result.datas.tenantName
+          }
+          this.$store.dispatch('USER_MASSAGE', { name })
           sessionStorage.setItem('isOk', res.code)
           sessionStorage.setItem('accountId', res.result.datas.accountId)
           sessionStorage.setItem('accessToken', res.result.datas.accessToken)

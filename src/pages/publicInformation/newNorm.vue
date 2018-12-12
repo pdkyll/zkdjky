@@ -4,6 +4,7 @@
       <el-form :inline="true" :model="ruleForm">
         <el-form-item class="no-mb ml-10" label="日期">
           <el-date-picker
+            size="small"
             v-model="ruleForm.time"
             type="daterange"
             value-format="yyyy-MM-dd"
@@ -33,6 +34,7 @@
     <div class="mt-20">
       <el-table
         :data="tableData"
+        v-loading="loading"
         border
         style="width: 100%">
         <el-table-column
@@ -79,16 +81,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">
+      <div class="fy-box">
         <el-pagination
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="100"
+          :page-size=pageSize
           layout="total, prev, pager, next"
-          :total="1000">
+          :total=totalCount>
         </el-pagination>
-      </div>-->
+      </div>
     </div>
     <!--弹框1-->
     <el-dialog
@@ -283,6 +285,10 @@
         dialogVisible3: false,
         updateDialogVisible: false,
         deleteDialogVisible: false,
+        loading:true,
+        pageSize:5,
+        pageNum:1,
+        totalCount:0,
         deleteId: '',
         formData1: {
           remarks: '',
@@ -559,12 +565,6 @@
       change_dy (val) {
         console.log(val)
       },
-      handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
-      },
       /*预览图标的隐藏展示*/
       barShow () {
         let vm = this
@@ -818,6 +818,7 @@
       /*表格回显*/
       getNormTable(){
         let _this = this
+        _this.loading=true
         let header = {
           accessToken:  sessionStorage.getItem('accessToken')
         }
@@ -825,11 +826,16 @@
           accountId: sessionStorage.getItem('accountId'),
           startTime: _this.ruleForm.start,
           endTime: _this.ruleForm.end,
-          indexName: _this.ruleForm.infoName
+          indexName: _this.ruleForm.infoName,
+          pageNum:_this.pageNum,
+          pageSize:_this.pageSize
         }
         _this.$store.dispatch('GET_NORM_TABLE', {param, header}).then(res => {
           if(res.status === 200){
+            console.log(res.data)
+            _this.loading=false,
             _this.tableData = []
+            _this.totalCount = res.data.pop().totalNum -1
             for(let i=0;i<res.data.length;i++){
               _this.tableData.push({
                 statistical_name: res.data[i].statistical_name,
@@ -839,10 +845,10 @@
                 creator: res.data[i].creatorName,
                 likeCount: res.data[i].likeCount,
                 subscibeCount: res.data[i].subscibeCount,
-                fb:res.data[i].creatorResult == 1 ? true : false,
-                qxfb:res.data[i].creatorResult == 1 ? false : true,
-                dy:res.data[i].resultType == 1 ? false : true,
-                qxdy:res.data[i].resultType == 1 ? true : false,
+                fb:res.data[i].creatorResult == 1 ? false : true,
+                qxfb:res.data[i].creatorResult == 1 ? true : false,
+                dy:res.data[i].typeResult == 1 ? false : true,
+                qxdy:res.data[i].typeResult == 1 ? true : false,
                 sc:true,
                 id:res.data[i].id,
                 type:res.data[i].type
@@ -870,6 +876,16 @@
         let vm = this
         this.ruleForm.infoName = val
         vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+      },
+      handleSizeChange (val) {
+        console.log(`每页 ${val} 条`)
+        this.pageNum = val
+        this.getNormTable()
+      },
+      handleCurrentChange (val) {
+        console.log(`当前页: ${val}`)
+        this.pageNum = val
+        this.getNormTable()
       },
       /*发布指标*/
       publishNorm(row){

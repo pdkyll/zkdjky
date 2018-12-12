@@ -26,6 +26,17 @@ export default {
     state.publicName = name
   },
   /**
+   * 登陆成功存储用户信息
+   * @param state
+   * @param name
+   * @param type
+   * @constructor
+   */
+  SET_USER_MASSAGE :(state, {name}) => {
+    state.userName = name.name
+    state.userType = name.type
+  },
+  /**
    * 示例代码，用于引用类型(数组/对象)值改变时
    * Vue.set(target, key, value)
    * target  要改的数据源（数组/对象）

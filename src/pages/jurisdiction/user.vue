@@ -16,7 +16,7 @@
         <el-form-item class="pull-right no-mb">
           <el-input
             size="small"
-            placeholder="输入统计表名称"
+            placeholder="输入用户名称"
             @change="searchUser"
             suffix-icon="el-icon-search"
             style="width: 100%"
@@ -27,6 +27,7 @@
     </div>
     <div class="mt-20">
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         style="width: 100%">
@@ -192,6 +193,7 @@ export default{
   data () {
     return {
       msg: '123',
+      loading:true,
       ruleForm: {
         companyName: '',
         date1: '',
@@ -262,7 +264,7 @@ export default{
   methods: {
     onSubmit () {
       this.dialogVisible = true
-      console.log(this.ruleForm.companyName, this.ruleForm.date1, this.ruleForm.date2)
+      this.getCompany()
     },
     handleClose () {
       this.dialogVisible = false
@@ -280,6 +282,8 @@ export default{
     },
     /*用户列表展示*/
     users () {
+      this.loading = true
+      let _this = this
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
@@ -292,22 +296,26 @@ export default{
         this.tableData = []
         if(res !== null && res.data.code == 0 ){
           this.totalCount = res.data.result.total
-          for(let i =0 ;i<res.data.result.datas.length;i++){
+          let tableList = res.data.result.datas
+          for(let i =0 ;i<tableList.length;i++){
+            let obj = res.data.result.datas[i].extendedProperties || ''
             this.tableData.push({
-              name:res.data.result.datas[i].accountName,
+              name:tableList[i].accountName,
               /*tel:res.data.result.datas[i].telephone,
               email:res.data.result.datas[i].email,*/
-              gs:res.data.result.datas[i].extendedProperties !==null?JSON.parse(res.data.result.datas[i].extendedProperties).company:'',
-              bm:res.data.result.datas[i].extendedProperties !==null?JSON.parse(res.data.result.datas[i].extendedProperties).department:'',
-              region:res.data.result.datas[i].extendedProperties !==null?JSON.parse(res.data.result.datas[i].extendedProperties).region:'',
-              zhmc:res.data.result.datas[i].tenantName,
-              time:res.data.result.datas[i].updateTime,
-              id:res.data.result.datas[i].accountId,
-              desc:res.data.result.datas[i].description,
+              gs:typeof obj == 'Object'? obj.company:'',
+              bm:typeof obj == 'Object'?obj.department:'',
+              region:typeof obj == 'Object'?obj.region:'',
+              zhmc:tableList[i].tenantName,
+              time:tableList[i].updateTime,
+              id:tableList[i].accountId,
+              desc:tableList[i].description,
             })
           }
         }
-
+        _this.$nextTick(() => {
+          _this.loading = false
+        })
       }).catch((error) => {
         console.error(error)
       })
@@ -548,7 +556,6 @@ export default{
   mounted () {
     this.users()
     this.getRegion()
-    this.getCompany()
   }
 }
 </script>

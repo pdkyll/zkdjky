@@ -3,27 +3,16 @@
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
           <el-form-item class="no-mb ml-10" label="日期">
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.sTime"
-                style="width: 150px;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2" style="text-align: center">至</el-col>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker
-                size="small"
-                type="date"
-                placeholder="选择日期"
-                v-model="ruleForm.eTime"
-                style="width: 150px;"></el-date-picker>
-            </el-form-item>
-          </el-col>
+            <el-date-picker
+              size="small"
+              v-model="time"
+              type="daterange"
+              value-format="yyyy-MM-dd"
+              @change="timeChange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </el-form-item>
           <el-form-item class="no-mb" label="凭证编号">
             <el-input
@@ -50,6 +39,7 @@
     </div>
     <div class="mt-20">
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         style="width: 100%">
@@ -127,16 +117,16 @@
           label="冲销标识">
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">-->
-        <!--<el-pagination-->
-          <!--background-->
-          <!--@size-change="handleSizeChange"-->
-          <!--@current-change="handleCurrentChange"-->
-          <!--:page-size="100"-->
-          <!--layout="total, prev, pager, next"-->
-          <!--:total="1000">-->
-        <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="fy-box">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-size=ruleForm.pageSize
+          layout="total, prev, pager, next"
+          :total=totalcount>
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -150,14 +140,19 @@ export default{
   data () {
     return {
       msg: '123',
+      loading:true,
       ptCompany: [],
+      time:'',
       ruleForm: {
         sTime: '',
         eTime: '',
         cpcc: '',
         childCpcc: '',
-        belnr: ''
+        belnr: '',
+        pageNum:1,
+        pageSize:5
       },
+      totalcount:0,
       ruleFormModule: {
         name: '',
         region: '',
@@ -180,10 +175,22 @@ export default{
       console.log(row)
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.ruleForm.pageNum = val
+      this.getTableList ()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.ruleForm.pageNum = val
+      this.getTableList ()
+    },
+    timeChange(val){
+      if(val==null){
+        this.ruleForm.sTime = ''
+        this.ruleForm.eTime = ''
+      }else{
+        this.ruleForm.sTime = val[0]
+        this.ruleForm.eTime = val[1]
+      }
+      this.getTableList()
     },
     /**
      * 获取平台公司信息
@@ -209,12 +216,22 @@ export default{
     },
     getTableList () {
       let vm = this
+      vm.loading= true
       let param = Object.assign({},vm.ruleForm)
+      /*let param = {
+        belnr:vm.ruleForm.belnr,
+        sTime:vm.ruleForm.sTime,
+        eTime:vm.ruleForm.eTime,
+        cpcc:vm.ruleForm.cpcc,
+        pageNum:vm.ruleForm.pageNum,
+        pageSize:vm.ruleForm.pageSize
+      }*/
       let header = {
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
       }
       vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
+        vm.loading= false
           vm.tableData = res || []
       }).catch(error => {
           console.error(error);

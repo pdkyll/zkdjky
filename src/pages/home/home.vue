@@ -9,12 +9,14 @@
           <span class="circle-bg">
             <img src="../../assets/headimg.png" alt="head-img">
           </span>
-          <span>王小虎</span>
+          <span>{{userName}}</span>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>普通用户</el-dropdown-item>
-          <el-dropdown-item><router-link to="/login">退出</router-link></el-dropdown-item>
+          <el-dropdown-item>{{userType}}</el-dropdown-item>
+          <el-dropdown-item>
+            <div @click="logout" style="display: inline-block;width: 100%;height: 100%">退出</div>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-header>
@@ -85,7 +87,9 @@ export default{
       frameShow:false,
       frameDom:'',
       frame:'',
-      loading:false
+      loading:false,
+      userName:'',
+      userType:''
     }
   },
   components: {},
@@ -160,10 +164,29 @@ export default{
         this.frameShow = false
         this.frame.src = ''
       }
+    },
+    /*退出登陆*/
+    logout(){
+      let _this = this
+      let header = {
+        accessToken:sessionStorage.getItem('accessToken')
+      }
+      this.$store.dispatch('LOGOUT', { header }).then((res, req) => {
+        this.$router.push('/login')
+        _this.$notify({
+          title: '提示信息',
+          message: res.msg,
+          type: res.code === 0 ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch((error) => {
+        console.error(error)
+      })
     }
   },
   created (){
-
+    this.userName = this.$store.state.userName
+    this.userType = this.$store.state.userType
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')

@@ -8,6 +8,7 @@
     </div>
     <div class="mt-20">
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         style="width: 100%">
@@ -42,9 +43,9 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="100"
+          :page-size=pageSize
           layout="total, prev, pager, next"
-          :total="1000">
+          :total=totalCount>
         </el-pagination>
       </div>
     </div>
@@ -110,6 +111,7 @@ export default{
   data () {
     return {
       msg: '123',
+      loading:true,
       companyList:[],
       ruleFormModule: {
         name: '',
@@ -125,6 +127,9 @@ export default{
         name: '',
         description: ''
       },
+      pageNum:1,
+      pageSize:5,
+      totalCount:0,
       tableData: [],
       xg_gsmc:'',
       xg_gsms:'',
@@ -144,19 +149,14 @@ export default{
     handleChange (val) {
       console.log(val)
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
-    },
     /*初始化表格*/
     search_list(){
       let _this = this
+      _this.loading = true
       let param = {
         type:'0',
-        pagenum: "1",
-        pagesize:"1000"
+        pagenum: _this.pageNum,
+        pagesize:_this.pageSize
       }
       let header = {
         accountId: sessionStorage.getItem('accountId'),
@@ -164,9 +164,11 @@ export default{
       }
       _this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
         _this.tableData = []
+        _this.totalCount = res.data.totalCounts
         if(res.data.code !== 200){
           return
         }
+
         let resultData = res.data.data || []
         for(let i = 0; i<resultData.length;i++){
           _this.tableData.push({
@@ -176,6 +178,9 @@ export default{
             id: resultData[i].id,
           })
         }
+        _this.$nextTick(() => {
+          _this.loading = false
+        })
         _this.$notify({
           title: '提示信息',
           message: res.data.code === 200 ? '公司列表加载成功' : '公司列表加载失败',
@@ -188,6 +193,14 @@ export default{
     },
     deleteClose(){
       this.dialogDelete = false
+    },
+    handleSizeChange (val) {
+      this.pageNum = val
+      this.search_list()
+    },
+    handleCurrentChange (val) {
+      this.pageNum = val
+      this.search_list()
     },
     handleClick (row) {
       this.dialogDelete = true

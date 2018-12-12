@@ -14,5 +14,10 @@ export default {
   getPublicName (state) {
     const { publicName } = state
     return publicName
+  },
+
+  getUserMassage (state) {
+    const { userName,userType} = state
+    return { userName,userType}
   }
 }

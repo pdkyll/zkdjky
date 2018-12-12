@@ -3,17 +3,16 @@
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm">
         <el-form-item class="no-mb ml-10" label="日期">
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker size="small" type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="ruleForm.startDate" style="width: 100%;" @change="searchList"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="1">至</el-col>
-          <el-col :span="11">
-            <el-form-item>
-              <el-date-picker size="small" type="date" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="ruleForm.endDate" style="width: 100%;" @change="searchList"></el-date-picker>
-            </el-form-item>
-          </el-col>
+          <el-date-picker
+            size="small"
+            v-model="ruleForm.time"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            @change="timeChange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
         </el-form-item>
         <el-form-item class="no-mb" label="名称">
           <el-input
@@ -21,7 +20,7 @@
             placeholder="输入名称"
             style="width: 100%"
             v-model="ruleForm.infoName"
-            @change="searchList">
+            @change="searchInput">
           </el-input>
         </el-form-item>
         <el-form-item class="pull-right no-mb">
@@ -34,6 +33,7 @@
     </div>
     <div class="mt-20">
       <el-table
+        v-loading="loading"
         :data="tableData"
         border
         style="width: 100%">
@@ -88,16 +88,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">
+      <div class="fy-box">
         <el-pagination
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="100"
+          :page-size=ruleForm.pageSize
           layout="total, prev, pager, next"
-          :total="1000">
+          :total=totalCount>
         </el-pagination>
-      </div>-->
+      </div>
     </div>
     <!--弹框-->
     <el-dialog
@@ -135,7 +135,9 @@
             :on-error="uploadError"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">允许.jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.txt,.GIF,.docx,.PDF类型的文件</div>
+            <div style="overflow-wrap: break-word">
+              允许 jpg, jpeg, png, pdf, JPG, JPEG, txt, GIF, docx, PDF 类型的文件
+            </div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -193,6 +195,7 @@ export default{
       dialogVisible: false,
       updateDialogVisible: false,
       deleteDialogVisible: false,
+      loading:true,
       deleteId: '',
       updateForm: {
         id: '',
@@ -206,10 +209,14 @@ export default{
       ],
       msg: '123',
       ruleForm: {
+        time:'',
         startDate: '',
         endDate: '',
-        infoName: ''
+        infoName: '',
+        pageNum:1,
+        pageSize:5,
       },
+      totalCount:0,
       ruleFormModule: {
         info_name: '',
         data_type: '',
@@ -263,10 +270,12 @@ export default{
       console.log(val)
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.ruleForm.pageNum = val
+      this.publicInformationList()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.ruleForm.pageNum = val
+      this.publicInformationList()
     },
     isEmpty (str) {
       console.log(str)
@@ -286,11 +295,27 @@ export default{
         _this.publicInformationList()
       }
     },
+    searchInput(val){
+      let _this = this
+      _this.ruleForm.infoName = val
+      _this.publicInformationList()
+    },
+    timeChange(val){
+      if(val==null){
+        this.ruleForm.startDate = ''
+        this.ruleForm.endDate = ''
+      }else{
+        this.ruleForm.startDate = val[0]
+        this.ruleForm.endDate = val[1]
+      }
+      this.publicInformationList()
+    },
     /**
      * 获取列表
      */
     publicInformationList () {
       let _this = this
+      _this.loading = true
       let header = {
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
@@ -298,9 +323,11 @@ export default{
       let param = Object.assign({}, _this.ruleForm)
       param.infoName = param.infoName.trim()
       _this.$store.dispatch('PUBLIC_INFORMATION_LIST', {param, header}).then(res => {
-        if(res.status === 200 && res.data.length >= 0){
-          _this.tableData = res.data
-        }
+        _this.totalCount = res.data.totalNum
+        _this.tableData = res.data.data
+        _this.$nextTick(() => {
+          _this.loading = false
+        })
       }).catch(error => {
           console.log(error)
       })

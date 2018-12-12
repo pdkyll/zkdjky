@@ -11,6 +11,15 @@ const api = createAPI()
 export function login (param) {
   return api.post('/apis/v1/session', param)
 }
+
+/**
+ * 请求推出接口
+ * @param param
+ * @returns {*|Promise}
+ */
+export function logout (header) {
+  return api.delete('/apis/v1/session',{}, header)
+}
 /**
  *
  * @param param
