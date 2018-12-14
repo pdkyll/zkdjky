@@ -4,7 +4,7 @@
 <template>
   <el-container class="home" v-loading="loading">
     <el-header>
-      <el-dropdown class="nav-bar-right">
+      <!--<el-dropdown class="nav-bar-right">
         <div class="head-img-box">
           <span class="circle-bg">
             <img src="../../assets/headimg.png" alt="head-img">
@@ -13,12 +13,48 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>十大大 ： 苏打飒飒大苏打萨达萨达撒旦</el-dropdown-item>
           <el-dropdown-item>{{userType}}</el-dropdown-item>
           <el-dropdown-item>
             <div @click="logout" style="display: inline-block;width: 100%;height: 100%">退出</div>
           </el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
+      <el-popover
+        class="nav-bar-right"
+        placement="bottom"
+        width="300"
+        trigger="click">
+        <div class="downBox">
+          <div class="downBoxImg">
+            <span class="circleImage">
+              <img src="../../assets/headimg.png" alt="head-img">
+            </span>
+           <p class="userText">{{userType}}</p>
+          </div>
+          <p class="userLab">
+            <span class="mr-20">
+              用户电话：
+            </span>
+            {{userPhone}}
+          </p>
+          <p class="userLab">
+            <span class="mr-20">
+              用户邮箱：
+            </span>
+            {{userEmail}}
+          </p>
+          <el-button type="primary">修改密码</el-button>
+          <el-button type="primary" @click="logout">退出登陆</el-button>
+        </div>
+        <div class="head-img-box" slot="reference">
+          <span class="circle-bg">
+            <img src="../../assets/headimg.png" alt="head-img">
+          </span>
+          <span style="cursor: pointer">{{userName}}</span>
+          <i class="el-icon-caret-bottom"></i>
+        </div>
+      </el-popover>
     </el-header>
     <el-main>
       <ul class="menu">
@@ -62,15 +98,15 @@
       </ul>
     </el-main>
     <div class="frameBox" v-show="frameShow" id="frameBox">
-      <div class="frameTit">
-        <div class="iBox clearFix">
-          <i class="iconfont icon-cross pull-right titBtn ml-10" @click="closeFrame"></i>
-          <i class="iconfont icon--quanbubiankuang pull-right titBtn ml-10" @click="bigFrame"></i>
-          <i class="iconfont icon-jianhao pull-right titBtn ml-10" @click="smallFrame"></i>
+        <div class="frameTit">
+          <div class="iBox clearFix">
+            <i class="iconfont icon-cross pull-right titBtn ml-10" @click="closeFrame"></i>
+            <i class="iconfont icon--quanbubiankuang pull-right titBtn ml-10" @click="bigFrame"></i>
+            <i class="iconfont icon-jianhao pull-right titBtn ml-10" @click="smallFrame"></i>
+          </div>
         </div>
+        <iframe src="/LayoutNoLeft" class="frame" id="frame" frameborder="0"></iframe>
       </div>
-      <iframe src="/LayoutNoLeft" class="frame" id="frame" frameborder="0"></iframe>
-    </div>
   </el-container>
 </template>
 <script>
@@ -89,7 +125,10 @@ export default{
       frame:'',
       loading:false,
       userName:'',
-      userType:''
+      userType:'',
+      userPhone:'',
+      userEmail:'',
+      wrapper:''
     }
   },
   components: {},
@@ -100,6 +139,7 @@ export default{
     frameLink(urlPath){
       let vm = this
       this.loading = true
+      this.wrapper = 'wrapper'
       let name = ''
       if(urlPath == 'LayoutNoLeft'){
         name = '公示信息'
@@ -127,27 +167,36 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://10.220.1.6:31246'
+      this.frame.src= 'http://daas-website.tpaas.youedata.com'
+      /**测试地址
+       * http://daas-website.tpaas.youedata.com
+       */
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
+        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
         vm.loading = false
         vm.frameShow = true
       },1000)
 
     },
     closeFrame(){
-      this.frameDom.style.width = '1200px'
-      this.frameDom.style.height = '500px'
+      this.frameDom.style.width = '90%'
+      this.frameDom.style.height = '80%'
+      this.frameDom.style.transition='all .2s linear'
       this.frameShow = false
       this.frame.src = ''
+      this.wrapper = ''
     },
     bigFrame(){
       if(this.frameDom.style.width=='100%'){
-        this.frameDom.style.width = '1200px'
-        this.frameDom.style.height = '500px'
+        this.frameDom.style.width = '90%'
+        this.frameDom.style.height = '80%'
+        this.frameDom.style.transition='all .2s linear'
+        this.wrapper = 'wrapper'
       }else{
         this.frameDom.style.width = '100%'
         this.frameDom.style.height = '100%'
+        this.frameDom.style.transition='all .2s linear'
+        this.wrapper = ''
       }
       let data = {
         resize:true
@@ -156,13 +205,17 @@ export default{
     },
     smallFrame(){
       if(this.frameDom.style.width=='100%'){
-        this.frameDom.style.width = '1200px'
-        this.frameDom.style.height = '500px'
+        this.frameDom.style.width = '90%'
+        this.frameDom.style.height = '80%'
+        this.frameDom.style.transition='all .2s linear'
+        this.wrapper = 'wrapper'
       }else{
-        this.frameDom.style.width = '1200px'
-        this.frameDom.style.height = '500px'
+        this.frameDom.style.width = '90%'
+        this.frameDom.style.height = '80%'
+        this.frameDom.style.transition='all .2s linear'
         this.frameShow = false
         this.frame.src = ''
+        this.wrapper = ''
       }
     },
     /*退出登陆*/
@@ -176,8 +229,8 @@ export default{
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          type: res.code === 16000003 ? 'success' : 'error',
+          duration: '2000'
         })
       }).catch((error) => {
         console.error(error)
@@ -187,6 +240,8 @@ export default{
   created (){
     this.userName = this.$store.state.userName
     this.userType = this.$store.state.userType
+    this.userPhone = this.$store.state.userPhone
+    this.userEmail = this.$store.state.userEmail
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')
@@ -196,6 +251,32 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+.downBox{
+  text-align: center;
+  color: #6A6A6A;
+  .userLab{
+    text-align: left;
+    margin: 0 0 20px 35px;
+  }
+}
+.downBoxImg{
+  width: 100%;
+  height: 150px;
+  margin: 0 auto 20px;
+  border-bottom: 1px solid #ccc;
+  .circleImage{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    img{
+      width: 99%;
+      height: 99%;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+  }
+}
 .el-main{
   position: relative;
 }
@@ -271,8 +352,8 @@ export default{
 }
 .frameBox{
   background: #f5f5f5;
-  width: 1200px;
-  height: 500px;
+  width: 90%;
+  height: 80%;
   position: absolute;
   top: 0;
   left: 0;
@@ -282,7 +363,7 @@ export default{
   .frameTit{
     width: 100%;
     height: 5%;
-    background: white;
+    background: #bfd046;
     padding: .1% 0;
     position: relative;
     .iBox{
@@ -295,12 +376,11 @@ export default{
       margin:auto;
       padding-right: 5px;
       i{
-        color: black;
-        font-size: 20px;
+        color: white;
+        font-size: 16px;
       }
       i:hover{
-        background: #ccc;
-        color: white;
+        color: #999;
       }
     }
   }

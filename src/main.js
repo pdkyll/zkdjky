@@ -15,7 +15,7 @@ Vue.use(ElementUI)
 Vue.use(echarts)
 const store = createStore()
 /* eslint-disable no-new */
-/*router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
@@ -25,7 +25,7 @@ const store = createStore()
       next()
     }
   }
-})*/
+})
 
 new Vue({
   el: '#app',

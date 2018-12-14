@@ -3,8 +3,8 @@
  */
 <template>
   <div>
-    <el-row class="table-list" :gutter="20">
-      <el-col :span="6" v-for="(i, index) in panel" :key="index">
+    <el-row class="table-list" :gutter="20" v-loading="dialogVisible">
+      <el-col :span="8" v-for="(i, index) in panel" :key="index">
         <div class="panel-publicInformation">
           <div class="panel-heading">
             <div class="panel-title">{{i.title}}</div>
@@ -12,12 +12,15 @@
           <div class="panel-body">
             <ul class="list">
               <li v-for="item in i.content" :key="item.title">
-                <div :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
-                <div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>
-                <div style="text-align: center;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
-                <div style="text-align: right;">
+                <div style="text-align: left; width: 40%" :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
+                <!--<div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>-->
+                <div style="width: 30%;">
+                  <el-rate v-model="item.WEIGHTINESS" :title="'权重'+item.WEIGHTINESS+'星'" disabled style="line-height: 0.2;"></el-rate>
+                </div>
+                <div style="text-align: center; width: 20%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
+                <div style="text-align: right; width: 10%">
                   <!--<i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>-->
-                  <i class="el-icon-download" @click="downItem(item.ID)"></i>
+                  <i class="el-icon-download" style="cursor: pointer" @click="downItem(item.ID)"></i>
                   <i v-if="item.DATA_TYPE===1" class="el-icon-document"></i>
                   <i v-if="item.DATA_TYPE===2" class="el-icon-service"></i>
                   <i v-if="item.DATA_TYPE===3" class="el-icon-caret-right"></i>
@@ -45,8 +48,7 @@ export default{
   data () {
     return {
       dom: '',
-      dialogVisible: false,
-      msg: '123',
+      dialogVisible: true,
       panel: [],
       imgSrc:'',
       playerOptions : {
@@ -133,8 +135,7 @@ export default{
       }
       this.$store.dispatch('LINK_DOWNLOAD', { param, header }).then((res, req) => {
         if(res.status == 200){
-          console.log(res)
-          this.download(res.data);
+          this.download(res.data.data);
         }
       }).catch((error) => {
         console.error(error)
@@ -148,6 +149,7 @@ export default{
     },
     /*获取公司信息*/
     getPublicMsg(company,start,end){
+      this.dialogVisible = true
       let param = {
         startDate:start,
         endDate:end,
@@ -157,14 +159,14 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('PUBLIC_MSG', { param, header }).then((res, req) => {
-        console.log(res)
+        let data = res.data.data
         if(res.status == 200){
           this.panel = []
           var a = {};
-          for (var i = 0; i < res.data.length; i++) {
-            a[res.data[i].CPCC] = new Array();
+          for (var i = 0; i < data.length; i++) {
+            a[data[i].CPCC] = new Array();
           }
-          for (let i of res.data) {
+          for (let i of data) {
             for(let j in a){
               if(i.CPCC==j){
                 a[i.CPCC].push(i);
@@ -173,7 +175,7 @@ export default{
           }
           for (let i in a){
             var temp ={};
-            temp.title=i;
+            temp.title= i ;
             temp.content = new Array();
             for( let  j of a[i]){
               temp.content.push(j);
@@ -181,6 +183,7 @@ export default{
             this.panel.push(temp);
           }
         }
+        this.dialogVisible = false
       }).catch((error) => {
         console.error(error)
       })
@@ -228,7 +231,6 @@ export default{
     font-size: 14px;
     color: #303030;
     >div{
-      flex: 1;
       line-height: 26px;
       overflow: hidden;
       text-align: left;

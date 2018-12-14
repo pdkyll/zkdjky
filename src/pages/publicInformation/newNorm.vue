@@ -29,6 +29,9 @@
             新建指标
           </el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div class="mt-20">
@@ -38,8 +41,8 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="statistical_name"
-          label="统计表名称">
+          prop="indicator_name"
+          label="指标名称">
         </el-table-column>
         <el-table-column
           prop="creation_time"
@@ -265,6 +268,30 @@
         <el-button type="primary" @click="next3">确 定</el-button>
       </span>
     </el-dialog>
+    <!--取消发布提示-->
+    <el-dialog
+      title="提示信息"
+      :visible.sync="cancelNormDialog"
+      width="30%"
+      :before-close="cancelClose">
+      <span>取消发布会同步取消订阅人对此条信息的订阅，是否确定取消发布？</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="cancelNormDialog = false">取 消</el-button>
+    <el-button type="primary" @click="cancelNorm">确 定</el-button>
+  </span>
+    </el-dialog>
+    <!--删除发布提示-->
+    <el-dialog
+      title="提示信息"
+      :visible.sync="deleteNormDialog"
+      width="30%"
+      :before-close="deleteClose">
+      <span>删除本条指标会同步删除订阅人对此条信息的订阅，是否确定删除此条指标？</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="deleteNormDialog = false">取 消</el-button>
+    <el-button type="primary" @click="affirmDeleteNorm">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -283,8 +310,9 @@
         dialogVisible: false,
         dialogVisible2: false,
         dialogVisible3: false,
-        updateDialogVisible: false,
-        deleteDialogVisible: false,
+        cancelNormDialog:false,
+        deleteNormDialog:false,
+        rowId:'',
         loading:true,
         pageSize:5,
         pageNum:1,
@@ -531,7 +559,7 @@
         let _this = this
         _this.$refs['formData3'].validate((valid) => {
           if (valid) {
-            _this.createNorm ()
+            _this.createNorm()
           } else {
             console.log('error submit!')
           }
@@ -561,9 +589,6 @@
       },
       handleClose3 () {
         this.dialogVisible3 = false
-      },
-      change_dy (val) {
-        console.log(val)
       },
       /*预览图标的隐藏展示*/
       barShow () {
@@ -644,6 +669,7 @@
       },
       /*新建指标*/
       createNorm (){
+
         let _this = this
         /**
          * 处理第二页的数据
@@ -690,11 +716,11 @@
         _this.$store.dispatch('NEW_NORM', {param, header}).then(res => {
           _this.$notify({
             title: '提示信息',
-            message: res == 0 ? '新建指标成功' : '新建指标失败',
-            type: res == 0 ? 'success' : 'error',
-            duration: '1000'
+            message: res.code == 16000003 ? '新建指标成功' : '新建指标失败',
+            type: res.code == 16000003 ? 'success' : 'error',
+            duration: '2000'
           })
-          if(res == 0){
+          if(res.code == 16000003){
             _this.dialogVisible3 = false
             _this.getNormTable()
           }
@@ -798,15 +824,15 @@
           }
           _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
             if(res.status === 200){
-              _this.formData3T.typeOld = res.data
+              _this.formData3T.typeOld = res.data.data
               _this.formData3T.typeArr.push({
                 label: param.type,
                 options: []
               })
-              for(var key in res.data){
+              for(var key in res.data.data){
                 _this.formData3T.typeArr[0].options.push({
                   value: key,
-                  label: res.data[key]
+                  label: res.data.data[key]
                 })
               }
             }
@@ -831,29 +857,32 @@
           pageSize:_this.pageSize
         }
         _this.$store.dispatch('GET_NORM_TABLE', {param, header}).then(res => {
-          if(res.status === 200){
-            console.log(res.data)
+          if(res.data.code === 16000003){
             _this.loading=false,
             _this.tableData = []
-            _this.totalCount = res.data.pop().totalNum -1
-            for(let i=0;i<res.data.length;i++){
+            _this.totalCount = res.data.data.pop().totalNum -1
+            let obj = res.data.data
+            /*1是创建者，1是发布*/
+            for(let i=0;i<obj.length;i++){
               _this.tableData.push({
-                statistical_name: res.data[i].statistical_name,
-                creation_time: res.data[i].creation_time,
-                date_range: res.data[i].dateRange,
-                remarks: res.data[i].remarks,
-                creator: res.data[i].creatorName,
-                likeCount: res.data[i].likeCount,
-                subscibeCount: res.data[i].subscibeCount,
-                fb:res.data[i].creatorResult == 1 ? false : true,
-                qxfb:res.data[i].creatorResult == 1 ? true : false,
-                dy:res.data[i].typeResult == 1 ? false : true,
-                qxdy:res.data[i].typeResult == 1 ? true : false,
-                sc:true,
-                id:res.data[i].id,
-                type:res.data[i].type
+                indicator_name: obj[i].indicator_name,
+                creation_time: obj[i].creation_time,
+                date_range: obj[i].dateRange,
+                remarks: obj[i].remarks,
+                creator: obj[i].creatorName,
+                likeCount: obj[i].likeCount,
+                subscibeCount: obj[i].subscibeCount,
+                fb:obj[i].creatorResult == 1 && obj[i].if_publish == 0? true : false,
+                qxfb:obj[i].creatorResult == 1 && obj[i].if_publish == 1? true : false,
+                dy:obj[i].typeResult == 1 ? false : true,
+                qxdy:obj[i].typeResult == 1 ? true : false,
+                sc:obj[i].creatorResult == 1?true:false,
+                id:obj[i].id,
+                type:obj[i].type
               })
             }
+          }else{
+            console.log('接口错误')
           }
         }).catch(error => {
           console.log(error)
@@ -868,22 +897,22 @@
         }
         this.ruleForm.start =this.ruleForm.time[0]
         this.ruleForm.end =this.ruleForm.time[1]
-        setTimeout(function () {
-          vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
-        },100)
       },
       infoChange(val){
         let vm = this
         this.ruleForm.infoName = val
-        vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+      },
+      searchList(){
+        let vm = this
+        setTimeout(function () {
+          vm.getNormTable()
+        },100)
       },
       handleSizeChange (val) {
-        console.log(`每页 ${val} 条`)
         this.pageNum = val
         this.getNormTable()
       },
       handleCurrentChange (val) {
-        console.log(`当前页: ${val}`)
         this.pageNum = val
         this.getNormTable()
       },
@@ -898,13 +927,13 @@
         let urlData = row.id
         this.$store.dispatch('PUBLISH_NORM', {param, header, urlData}).then(res => {
           if(res.status == 200){
-            vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+            vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
             message: res.statusText,
             type: res.status === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
         }).catch(error=>{
           console.error(error);
@@ -912,26 +941,34 @@
       },
       /*取消发布指标*/
       unPublishNorm(row){
+        this.rowId = row.id
+        this.cancelNormDialog = true
+      },
+      cancelNorm(){
         let vm = this
         let header = {
         }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
         }
-        let urlData = row.id
+        let urlData = this.rowId
         this.$store.dispatch('UN_PUBLISH_NORM', {param, header, urlData}).then(res => {
           if(res.status == 200){
-            vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+            vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
             message: res.statusText,
             type: res.status === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
         }).catch(error=>{
           console.error(error);
         })
+        this.cancelNormDialog = false
+      },
+      cancelClose(){
+        this.cancelNormDialog = false
       },
       /*订阅指标*/
       subscriberNorm(row){
@@ -944,13 +981,14 @@
         }
         this.$store.dispatch('SUBSCRIBER_NORM', {param, header}).then(res => {
           if(res.status == 200){
-            vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+
+            vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
             message: res.statusText,
             type: res.status === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
         }).catch(error=>{
           console.error(error);
@@ -967,47 +1005,56 @@
         }
         this.$store.dispatch('UN_SUBSCRIBER_NORM', {param, header}).then(res => {
           if(res.status == 200){
-            vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+
+            vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
             message: res.statusText,
             type: res.status === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
+
         }).catch(error=>{
           console.error(error);
         })
       },
       /*删除订阅指标*/
       deleteNorm(row){
+        this.rowId = row.id
+        this.deleteNormDialog = true
+      },
+      affirmDeleteNorm(){
         let vm = this
-        alert(1)
         let header = {}
         let param = {
           account_id: sessionStorage.getItem('accountId'),
-          id:row.id
+          id:vm.rowId
         }
         this.$store.dispatch('DELETE_INDICATORS', {param, header}).then(res => {
           if(res.status == 200){
-            vm.getNormTable(vm.ruleForm.start,vm.ruleForm.end,vm.ruleForm.infoName)
+            vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
             message: res.statusText,
             type: res.status === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
+
         }).catch(error=>{
           console.error(error);
         })
+        this.deleteNormDialog = false
       },
+      deleteClose(){
+        this.deleteNormDialog = false
+      }
     },
     created () {
       this.getNormTable()
     },
     mounted () {
-
     }
   }
 </script>

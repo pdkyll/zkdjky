@@ -23,6 +23,9 @@
             @change="searchInput">
           </el-input>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
+        </el-form-item>
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
@@ -37,6 +40,11 @@
         :data="tableData"
         border
         style="width: 100%">
+        <el-table-column
+          :resizable=false
+          prop="CREATOR"
+          label="录入人">
+        </el-table-column>
         <el-table-column
           :resizable=false
           prop="CREATION_TIME"
@@ -60,11 +68,6 @@
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="CREATOR"
-          label="录入人">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
           prop="DESCRIBE_INFO"
           label="备注">
         </el-table-column>
@@ -83,8 +86,8 @@
           width="140">
           <template slot-scope="scope">
             <!--<el-button @click="handleClick(scope.row)" type="text" size="small">发布</el-button>-->
-            <el-button @click="deleteHandleClick(scope.row)" type="text" size="small">删除</el-button>
             <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+            <el-button @click="deleteHandleClick(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -103,7 +106,7 @@
     <el-dialog
       title="添加公示信息"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="40%"
       :before-close="handleClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="80px" class="demo-ruleForm">
         <el-form-item label="名称" prop="info_name">
@@ -130,19 +133,19 @@
             :data="ruleFormModule"
             action="/apis/publicInformation/uploadFiles"
             :file-list="fileList"
-            accept=".jpg,.jpeg,.png,.pdf,.JPG,.JPEG,.txt,.GIF,.docx,.PDF"
+            accept=".jpg,.jpeg,.png,.txt,.GIF,.docx,.PDF"
             :on-success="uploadSuccess"
             :on-error="uploadError"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <div style="overflow-wrap: break-word">
-              允许 jpg, jpeg, png, pdf, JPG, JPEG, txt, GIF, docx, PDF 类型的文件
+              允许 jpg, jpeg, png, txt, gif, docx, pdf 类型的文件
             </div>
           </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="cancelFun('ruleFormModule')">取 消</el-button>
         <el-button type="primary" @click="publicInformationUpload">确 定</el-button>
       </div>
     </el-dialog>
@@ -166,7 +169,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="updateDialogVisible = false">取 消</el-button>
+        <el-button @click="cancelFun('updateForm')">取 消</el-button>
         <el-button type="primary" @click="submitUpdateForm('updateForm')">确 定</el-button>
       </div>
     </el-dialog>
@@ -177,7 +180,7 @@
       width="30%">
       <p>是否删除该公示信息？</p>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button @click="cancelFun('')">取 消</el-button>
         <el-button type="primary" @click="deletePublicInformation()">确 定</el-button>
       </div>
     </el-dialog>
@@ -205,7 +208,7 @@ export default{
         weightiness: ''
       },
       fileList: [
-//        {name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
+       //{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}
       ],
       msg: '123',
       ruleForm: {
@@ -243,11 +246,7 @@ export default{
       this.dialogVisible = true
     },
     handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+      this.dialogVisible = false
     },
     /**
      * 打开修改的模态窗口
@@ -298,7 +297,6 @@ export default{
     searchInput(val){
       let _this = this
       _this.ruleForm.infoName = val
-      _this.publicInformationList()
     },
     timeChange(val){
       if(val==null){
@@ -308,6 +306,8 @@ export default{
         this.ruleForm.startDate = val[0]
         this.ruleForm.endDate = val[1]
       }
+    },
+    search(){
       this.publicInformationList()
     },
     /**
@@ -323,8 +323,8 @@ export default{
       let param = Object.assign({}, _this.ruleForm)
       param.infoName = param.infoName.trim()
       _this.$store.dispatch('PUBLIC_INFORMATION_LIST', {param, header}).then(res => {
-        _this.totalCount = res.data.totalNum
-        _this.tableData = res.data.data
+        _this.totalCount = res.data.data.totalNum
+        _this.tableData = res.data.data.data
         _this.$nextTick(() => {
           _this.loading = false
         })
@@ -356,7 +356,7 @@ export default{
               title: '提示信息',
               message: res.data ? '修改公示信息成功' : '修改公示信息失败',
               type: res.data ? 'success' : 'error',
-              duration: '1000'
+              duration: '2000'
             })
           }).catch(error => {
             console.log(error)
@@ -387,7 +387,7 @@ export default{
           title: '提示信息',
           message: res.data ? '删除公示信息成功' : '删除公示信息失败',
           type: res.data ? 'success' : 'error',
-          duration: '1000'
+          duration: '2000'
         })
       }).catch(error => {
         console.log(error)
@@ -399,14 +399,37 @@ export default{
     publicInformationUpload () {
       this.$refs.upload.submit()
     },
-    uploadSuccess () {
+    cancelFun(formName){
       this.dialogVisible = false
+      this.updateDialogVisible = false
+      this.deleteDialogVisible = false
+      if(formName !== ''){
+        this.$refs[formName].resetFields();
+        this.ruleFormModule= {
+          info_name: '',
+          data_type: '',
+          describe_info: '',
+          weightiness: 0,
+          accessToken: sessionStorage.getItem('accessToken')
+        }
+      }
+    },
+    uploadSuccess () {
+      this.cancelFun('ruleFormModule')
       this.$notify({
         title: '提示信息',
         message: '添加公示信息成功',
         type: 'success',
-        duration: '1000'
+        duration: '2000'
       })
+      this.ruleFormModule= {
+          info_name: '',
+          data_type: '',
+          describe_info: '',
+          weightiness: 0,
+          accessToken: sessionStorage.getItem('accessToken')
+      }
+      this.fileList = []
       this.publicInformationList()
     },
     uploadError () {
@@ -415,7 +438,7 @@ export default{
         title: '提示信息',
         message: '添加公示信息失败',
         type: 'error',
-        duration: '1000'
+        duration: '2000'
       })
     }
   },

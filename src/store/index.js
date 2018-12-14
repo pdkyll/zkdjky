@@ -14,7 +14,9 @@ export function createStore () {
       publicName:'',
       companyArr: [],
       userName:'',
-      userType:''
+      userType:'',
+      userPhone:'',
+      userEmail:''
     },
     actions,
     mutations,

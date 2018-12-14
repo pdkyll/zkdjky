@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="shadow-box">
-        <el-button class="join-btn" size="small" @click="add_GS()">
+    <div class="shadow-box clearFix">
+        <el-button class="join-btn pull-right" size="small" @click="add_GS()">
           <i class="el-icon-plus"></i>
           新建公司
         </el-button>
@@ -19,8 +19,8 @@
         </el-table-column>
         <el-table-column
           :resizable=false
-          prop="create_time"
-          label="创建时间">
+          prop="cpcc"
+          label="数据代码">
         </el-table-column>
         <el-table-column
           :resizable=false
@@ -29,12 +29,16 @@
         </el-table-column>
         <el-table-column
           :resizable=false
+          prop="create_time"
+          label="创建时间">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
           label="操作"
-          width="150">
+          width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
             <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
-            <el-button type="text" size="small">停用</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,13 +63,16 @@
         <el-form-item label="公司名称" prop="name">
           <el-input v-model="ruleFormModule.name"></el-input>
         </el-form-item>
+        <el-form-item label="数据代码" prop="cpcc">
+          <el-input v-model="ruleFormModule.cpcc"></el-input>
+        </el-form-item>
         <el-form-item label="公司备注">
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_gs = false">取 消</el-button>
-        <el-button type="primary" @click="insert_GS">确 定</el-button>
+        <el-button type="primary" @click="insert_GS('ruleFormModule')">确 定</el-button>
       </span>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -115,12 +122,17 @@ export default{
       companyList:[],
       ruleFormModule: {
         name: '',
+        cpcc:'',
         desc: '',
       },
       rules: {
         name: [
           { required: true, message: '请输入公司名称', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        cpcc: [
+          { required: true, message: '请输入数据代码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ]
       },
       ruleFormUpdate:{
@@ -142,13 +154,6 @@ export default{
     }
   },
   methods: {
-
-    region_change (val) {
-      console.log(val)
-    },
-    handleChange (val) {
-      console.log(val)
-    },
     /*初始化表格*/
     search_list(){
       let _this = this
@@ -164,29 +169,25 @@ export default{
       }
       _this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
         _this.tableData = []
-        _this.totalCount = res.data.totalCounts
-        if(res.data.code !== 200){
-          return
+        _this.totalCount = res.data.data.totalNum
+        if(res.data.code === 16000003){
+          let resultData = res.data.data.viewResult || []
+          for(let i = 0; i<resultData.length;i++){
+            _this.tableData.push({
+              name: resultData[i].companyName,
+              cpcc: resultData[i].cPCC,
+              description: resultData[i].description,
+              create_time: resultData[i].createTime,
+              id: resultData[i].id,
+            })
+          }
+          _this.$nextTick(() => {
+            _this.loading = false
+          })
+        }else{
+          console.log("接口错误")
         }
 
-        let resultData = res.data.data || []
-        for(let i = 0; i<resultData.length;i++){
-          _this.tableData.push({
-            name: resultData[i].companyName,
-            description: resultData[i].description,
-            create_time: resultData[i].createTime,
-            id: resultData[i].id,
-          })
-        }
-        _this.$nextTick(() => {
-          _this.loading = false
-        })
-        _this.$notify({
-          title: '提示信息',
-          message: res.data.code === 200 ? '公司列表加载成功' : '公司列表加载失败',
-          type: res.data.code === 200 ? 'success' : 'error',
-          duration: '1000'
-        })
       }).catch((error) => {
         console.error(error)
       })
@@ -206,59 +207,52 @@ export default{
       this.dialogDelete = true
       this.deleteId = row.id
     },
-    /*删除某条数据的方法*/
-    delete_data(){
-      let param = {
-        ids: this.deleteId
-      }
-      let header = {
-        accountId: sessionStorage.getItem('accountId'),
-        accessToken: sessionStorage.getItem('accessToken')
-      }
-      this.$store.dispatch('PROVIDER_MANAGE_DEL', { param, header }).then((res, req) => {
-        this.search_list()
-        this.dialogDelete = false
-      }).catch((error) => {
-        console.error(error)
-      })
-    },
     /*新增公司*/
-    insert_GS(){
+    insert_GS(formName){
       let _this = this
-      this.dialog_gs = false
-      let param = {
-        "address":"",
-        "contact":"sjm",
-        "create_by":"sjm",
-        "description":this.ruleFormModule.desc,
-        "level":1,
-        "id":1,
-        "name":this.ruleFormModule.name,
-        "code":"1",
-        "pcode":0,
-        "pid":0,
-        "paramType":1,
-        "postcode":"",
-        "telephone":"13012455623",
-        "type":0
-      }
-      let header = {
-        accountId: sessionStorage.getItem('accountId'),
-        accessToken: sessionStorage.getItem('accessToken')
-      }
-      this.$store.dispatch('PROVIDER_MANAGE_INSERT', { param, header }).then((res, req) => {
-        if(res.code == 200){
-          _this.search_list()
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.dialog_gs = false
+          let param = {
+            "address":"",
+            "contact":"sjm",
+            "create_by":"sjm",
+            "cPCC":this.ruleFormModule.cpcc,
+            "description":this.ruleFormModule.desc,
+            "level":1,
+            "id":1,
+            "name":this.ruleFormModule.name,
+            "code":"1",
+            "pcode":0,
+            "pid":0,
+            "paramType":1,
+            "postcode":"",
+            "telephone":"13012455623",
+            "type":0
+          }
+          let header = {
+            accountId: sessionStorage.getItem('accountId'),
+            accessToken: sessionStorage.getItem('accessToken')
+          }
+          this.$store.dispatch('PROVIDER_MANAGE_INSERT', { param, header }).then((res, req) => {
+            if(res.code === 16000003){
+              this.ruleFormModule.desc = ""
+              this.ruleFormModule.name = ""
+              this.ruleFormModule.cpcc = ""
+              _this.search_list()
+            }
+            _this.$notify({
+              title: '提示信息',
+              message: res.msg,
+              type: res.code === 16000003 ? 'success' : 'error',
+              duration: '2000'
+            })
+          }).catch((error) => {
+            console.error(error)
+          })
+        } else {
+          return false
         }
-        _this.$notify({
-          title: '提示信息',
-          message: res.message,
-          type: res.code === 200 ? 'success' : 'error',
-          duration: '1000'
-        })
-        console.log(res)
-      }).catch((error) => {
-        console.error(error)
       })
     },
     add_GS () {
@@ -277,9 +271,7 @@ export default{
     xgClose(){
       this.dialog_xg = false
     },
-    /**
-     * 修改公司信息
-     */
+    /*修改公司信息*/
     insert_xg(formName){
       let _this = this
       this.$refs[formName].validate((valid) => {
@@ -300,9 +292,9 @@ export default{
           _this.$store.dispatch('PROVIDER_MANAGE_UPDATE', { param, header }).then((res, req) => {
             _this.$notify({
               title: '提示信息',
-              message: res.message,
+              message: res.msg,
               type: res.code === 200 ? 'success' : 'error',
-              duration: '1000'
+              duration: '2000'
             })
             if(res.code !== 200){
               return
@@ -317,6 +309,33 @@ export default{
           return false;
         }
       });
+    },
+    /*删除某条数据的方法*/
+    delete_data(){
+      let _this = this
+      let param = {
+        ids: this.deleteId
+      }
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      this.$store.dispatch('PROVIDER_MANAGE_DEL', { param, header }).then((res, req) => {
+        if(res.code === 16000003){
+          this.search_list()
+          this.dialogDelete = false
+        }else{
+          console.log("接口错误")
+        }
+        _this.$notify({
+          title: '提示信息',
+          message: res.msg,
+          type: res.code === 200 ? 'success' : 'error',
+          duration: '2000'
+        })
+      }).catch((error) => {
+        console.error(error)
+      })
     }
   },
   created(){

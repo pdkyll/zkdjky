@@ -13,12 +13,26 @@
          active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
-        <router-link v-for="(item, index) in title_list" :to="item.pathUrl">
+        <router-link v-if="!item.child" v-for="(item, index) in menu_list" :to="item.pathUrl">
           <el-menu-item :index="index+''">
             <i class="iconfont" :class="item.iClass"></i>
             {{item.name}}
           </el-menu-item>
         </router-link>
+        <el-submenu v-else index="">
+          <template slot="title">
+            <i class="iconfont" :class="item.iClass"></i>
+            <span>{{item.name}}</span>
+          </template>
+          <el-menu-item-group>
+            <router-link :to="child.pathUrl" v-for="(child, ind) in item.childrenList">
+              <el-menu-item :index="index+ ind +''">
+                <i :class="child.iClass" class="iconfont"></i>
+                {{child.name}}
+              </el-menu-item>
+            </router-link>
+          </el-menu-item-group>
+        </el-submenu>
         <!--<router-link to="publicInformation">
           <el-menu-item index="1"><i class="el-icon-menu"></i>公示信息</el-menu-item>
         </router-link>
@@ -104,11 +118,12 @@
  * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
  * import loginButton from './components/loginButton.vue';
  */
+import Watermark from '../../vendor/watermark'
 export default{
   data () {
     return {
       activeIndex: '0',
-      /*title_list: [
+      /*menu_list: [
         '公示管理',
         '历史数据',
         '新建指标',
@@ -126,22 +141,32 @@ export default{
         '财务数据',
         '财务数据1',
       ],*/
+      menu_list:[],
       title_list:[],
-      menuTitle: ''
+      menuTitle: '',
     }
   },
   components: {},
   methods: {
     handleSelect (key, keyPath) {
-      var vm = this
-      vm.menuTitle = vm.title_list[key].name
+      let vm = this
+      vm.menuTitle = vm.title_list[key]
     }
+  },
+  created (){
   },
   mounted () {
     let vm = this
+    /*获取用户信息并通过水印方法显示到屏幕上*/
+    let userName = sessionStorage.getItem('userName')
+    let userType = sessionStorage.getItem('userType')
+    let massage = userName+ '-' +userType
+    Watermark.set(massage)
+    /*根据不同模块显示不同左侧菜单栏*/
     vm.menuTitle = sessionStorage.getItem('publicName')
     if(vm.menuTitle == '历史数据'){
-      vm.title_list = [
+      vm.title_list=['历史数据','财务凭证','财务指标','销售指标','产品指标','人事指标']
+      vm.menu_list = [
         {
           name:'历史数据',
           pathUrl:'historyData',
@@ -153,34 +178,38 @@ export default{
           iClass:'icon-yewushouliliebiao'
         },
         {
-          name:'新建指标',
+          name:'指标统计',
           pathUrl:'newNorm',
+          child:true,
+          childrenList:[
+            {
+              name:'财务指标',
+              pathUrl:'newNorm',
+              iClass:'icon-youxianzijin'
+            },
+            {
+              name:'销售指标',
+              pathUrl:'publicInformation',
+              iClass:'icon-qiye'
+            },
+            {
+              name:'产品指标',
+              pathUrl:'publicInformation',
+              iClass:'icon-shumogongjuiconshichangfenxi-'
+            },
+            {
+              name:'人事指标',
+              pathUrl:'publicInformation',
+              iClass:'icon-yezhukaifashang'
+            }
+          ],
           iClass:'icon-zhishu'
         },
-        {
-          name:'财务指标',
-          pathUrl:'publicInformation',
-          iClass:'icon-youxianzijin'
-        },
-        {
-          name:'销售指标',
-          pathUrl:'publicInformation',
-          iClass:'icon-qiye'
-        },
-        {
-          name:'产品指标',
-          pathUrl:'publicInformation',
-          iClass:'icon-shumogongjuiconshichangfenxi-'
-        },
-        {
-          name:'人事指标',
-          pathUrl:'publicInformation',
-          iClass:'icon-yezhukaifashang'
-        }
       ]
     }
     else if(vm.menuTitle == '公示管理'){
-      vm.title_list = [
+      vm.title_list=['公示管理']
+      vm.menu_list = [
         {
           name:'公示管理',
           pathUrl:'management',
@@ -189,7 +218,8 @@ export default{
       ]
     }
     else if(vm.menuTitle == '公司管理'){
-      vm.title_list = [
+      vm.title_list=['公司管理','部门管理','角色管理','用户管理']
+      vm.menu_list = [
         {
           name:'公司管理',
           pathUrl:'company',

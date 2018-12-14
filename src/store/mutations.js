@@ -35,6 +35,8 @@ export default {
   SET_USER_MASSAGE :(state, {name}) => {
     state.userName = name.name
     state.userType = name.type
+    state.userPhone = name.phone
+    state.userEmail = name.email
   },
   /**
    * 示例代码，用于引用类型(数组/对象)值改变时

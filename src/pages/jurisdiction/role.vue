@@ -2,26 +2,25 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <!--<el-form-item label="角色" class="ml-10 no-mb">
-          <el-select size="small" v-model="ruleForm.companyName" placeholder="选择角色">
-            <el-option label="全部" value="all"></el-option>
-          </el-select>
-        </el-form-item>-->
+        <el-form-item class="no-mb">
+          <el-input
+            size="small"
+            placeholder="输入角色名称"
+            style="width: 100%"
+            @change="searchName"
+            v-model="ruleForm.input">
+            <i
+              class="el-icon-search"
+              slot="suffix"
+              @click="search">
+            </i>
+          </el-input>
+        </el-form-item>
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建角色
           </el-button>
-        </el-form-item>
-        <el-form-item class="pull-right no-mb">
-          <el-input
-            size="small"
-            placeholder="输入角色名称"
-            suffix-icon="el-icon-search"
-            style="width: 100%"
-            @change="searchName"
-            v-model="ruleForm.input">
-          </el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -49,11 +48,10 @@
         <el-table-column
           :resizable=false
           label="操作"
-          width="150">
+          width="100">
           <template slot-scope="scope">
             <el-button @click="updateClick(scope.row)" type="text" size="small">修改</el-button>
             <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
-            <el-button type="text" size="small">停用</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,7 +94,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="insertRole">确 定</el-button>
+        <el-button type="primary" @click="insertRole('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -138,13 +136,13 @@ export default{
     return {
       activeNames: [],
       loading:true,
-      msg: '123',
       dialogVisible: false,
       ruleForm: {
         companyName: '',
         date1: '',
         date2: '',
-        input: ''
+        input: '',
+        filter:''
       },
       ruleFormModule: {
         name: '',
@@ -154,6 +152,9 @@ export default{
       rules: {
         name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' }
+        ],
+        desc: [
+          { required: true, message: '请输入角色备注', trigger: 'blur' }
         ]
       },
       pageNum:1,
@@ -175,7 +176,6 @@ export default{
   methods: {
     onSubmit () {
       this.dialogVisible = true
-      console.log(this.ruleForm.companyName, this.ruleForm.date1, this.ruleForm.date2)
     },
     handleClose () {
       this.dialogVisible = false
@@ -257,7 +257,7 @@ export default{
           title: '提示信息',
           message: res.msg,
           type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          duration: '2000'
         })
       }).catch(error=>{
         console.error(error);
@@ -286,14 +286,22 @@ export default{
           title: '提示信息',
           message: res.msg,
           type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          duration: '2000'
         })
       }).catch(error=>{
         console.error(error);
       })
     },
-    insertRole(){
-      this.insertUserForRoles()
+    insertRole(formName){
+      let _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          _this.insertUserForRoles()
+        } else {
+          return false;
+        }
+      });
+
     },
     /*修改角色*/
     xgClose(){
@@ -320,7 +328,7 @@ export default{
           title: '提示信息',
           message: res.msg,
           type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          duration: '2000'
         })
       }).catch(error=>{
         console.error(error);
@@ -342,7 +350,6 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('MAKE_COMPANY_SELECT', { param, header}).then(res => {
-        console.log(res)
         let data = res.data.result.datas
         this.moduleData = []
         this.arrayToJson(data)
@@ -401,12 +408,15 @@ export default{
     },
     /*查询*/
     searchName(val){
+      this.filter = 'rolename=_'+ val +'_'
+    },
+    search(val){
       let param = {
         type: '1',
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
         extend:true,
-        filter:'rolename=_'+ val +'_'
+        filter:this.filter
       }
       let header = {
         accessToken: '2b5ed38e041c4d8a9bcbd284892ea78b'
@@ -435,7 +445,7 @@ export default{
     this.makeCompanySelect()
   },
   mounted () {
-    this.getUserForRoles();
+    this.getUserForRoles()
   }
 }
 </script>

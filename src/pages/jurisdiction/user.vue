@@ -2,26 +2,25 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <!--<el-form-item label="角色" class="ml-10 no-mb">
-          <el-select size="small" v-model="ruleForm.companyName" placeholder="选择角色">
-            <el-option label="全部" value="all"></el-option>
-          </el-select>
-        </el-form-item>-->
+        <el-form-item class="no-mb">
+          <el-input
+            size="small"
+            placeholder="输入用户名称"
+            @change="searchUser"
+            style="width: 100%"
+            v-model="ruleForm.input">
+            <i
+              class="el-icon-search"
+              slot="suffix"
+              @click="search">
+            </i>
+          </el-input>
+        </el-form-item>
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建用户
           </el-button>
-        </el-form-item>
-        <el-form-item class="pull-right no-mb">
-          <el-input
-            size="small"
-            placeholder="输入用户名称"
-            @change="searchUser"
-            suffix-icon="el-icon-search"
-            style="width: 100%"
-            v-model="ruleForm.input">
-          </el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -36,11 +35,6 @@
           prop="name"
           label="用户名称">
         </el-table-column>
-        <!--<el-table-column
-          :resizable=false
-          prop="tel"
-          label="用户电话">
-        </el-table-column>-->
         <el-table-column
           :resizable=false
           prop="region"
@@ -111,21 +105,21 @@
         </el-form-item>
         <el-form-item label="公司选择">
           <el-select v-model="ruleFormModule.gs" style="width: 100%" placeholder="请选择类型" @change="gsChange">
-            <el-option :label="item.name" :value="item.name" v-for="item in ruleFormModule.gsList" :key="item.code"></el-option>
+            <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModule.gsList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门选择">
           <el-select v-model="ruleFormModule.bm" style="width: 100%" placeholder="请选择类型">
-            <el-option :label="item.name" :value="item.name" v-for="item in ruleFormModule.bmList" :key="item.code"></el-option>
+            <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModule.bmList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色备注" prop="desc">
+        <el-form-item label="用户备注">
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="insertUser">确 定</el-button>
+        <el-button type="primary" @click="insertUser('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -150,10 +144,10 @@
         <el-form-item label="用户名">
           <el-input v-model="ruleFormModuleUpdate.name" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="登陆密码">
+        <el-form-item label="登陆密码" prop="pass">
           <el-input v-model="ruleFormModuleUpdate.pass" placeholder="******"></el-input>
         </el-form-item>
-        <el-form-item label="确认密码">
+        <el-form-item label="确认密码" prop="pass2">
           <el-input v-model="ruleFormModuleUpdate.pass2" placeholder="******"></el-input>
         </el-form-item>
         <el-form-item label="角色选择">
@@ -177,22 +171,16 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_xg = false">取 消</el-button>
-        <el-button type="primary" @click="yh_xg">确 定</el-button>
+        <el-button type="primary" @click="yh_xg('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
-/**
- * import '../../assets/vendor/iCkeck-v1.0.2/js/icheck.min';
- * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
- * import loginButton from './components/loginButton.vue';
- */
 import {sha1} from '@/assets/js/HashEncrypt.min'
 export default{
   data () {
     return {
-      msg: '123',
       loading:true,
       ruleForm: {
         companyName: '',
@@ -298,14 +286,15 @@ export default{
           this.totalCount = res.data.result.total
           let tableList = res.data.result.datas
           for(let i =0 ;i<tableList.length;i++){
-            let obj = res.data.result.datas[i].extendedProperties || ''
+            let str = res.data.result.datas[i].extendedProperties
+            let obj = JSON.parse(str) || ''
             this.tableData.push({
               name:tableList[i].accountName,
               /*tel:res.data.result.datas[i].telephone,
               email:res.data.result.datas[i].email,*/
-              gs:typeof obj == 'Object'? obj.company:'',
-              bm:typeof obj == 'Object'?obj.department:'',
-              region:typeof obj == 'Object'?obj.region:'',
+              gs:obj.company == undefined?'':obj.company,
+              bm:obj.department== undefined?'':obj.department,
+              region:obj.region== undefined?'':obj.region,
               zhmc:tableList[i].tenantName,
               time:tableList[i].updateTime,
               id:tableList[i].accountId,
@@ -323,10 +312,12 @@ export default{
     /*模糊查询用户*/
     searchUser(val){
       this.ruleForm.input = val
+    },
+    search(){
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
-        accountNames:val,
+        accountNames:this.ruleForm.input,
         filter:'status=1'
       }
       let header = {
@@ -335,7 +326,6 @@ export default{
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
         this.tableData = []
         if(res !== null && res.data.code == 0 ){
-          console.log(res)
           this.totalCount = res.data.result.total
           for(let i =0 ;i<res.data.result.datas.length;i++){
             this.tableData.push({
@@ -358,7 +348,6 @@ export default{
     },
     /*删除用户*/
     removeClick(val){
-      console.log(val)
       this.del_id = val.id
       this.dialogDelete = true
     },
@@ -404,7 +393,6 @@ export default{
         "description": this.ruleFormModule.desc,
         "extendedProperties": extendedProperties,
       }
-      console.log(param)
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
@@ -426,7 +414,7 @@ export default{
           title: '提示信息',
           message: res.msg,
           type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          duration: '2000'
         })
       }).catch(error=>{
         console.error(error);
@@ -434,7 +422,6 @@ export default{
     },
     updateClick (row) {
       this.xg_id = row.id
-      console.log(row)
       this.ruleFormModuleUpdate.name = row.name
       this.ruleFormModuleUpdate.region = row.region
       this.ruleFormModuleUpdate.desc = row.desc
@@ -445,37 +432,51 @@ export default{
     xgClose(){
       this.dialog_xg = false
     },
-    yh_xg(){
+    yh_xg(formName){
       let _this = this
-      let param = {
-        accountPasswd: sha1(this.ruleFormModuleUpdate.pass),
-        description: this.ruleFormModuleUpdate.desc
-      }
-      let header = {
-        accessToken: sessionStorage.getItem('accessToken')
-      }
-      let urlData = this.xg_id
-      this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
-        if(res !== null && res.code == 0){
-          _this.users()
-          this.dialog_xg = false
-          this.ruleFormModuleUpdate.pass=''
-          this.ruleFormModuleUpdate.desc = ''
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let param = {
+            accountPasswd: sha1(this.ruleFormModuleUpdate.pass),
+            description: this.ruleFormModuleUpdate.desc
+          }
+          let header = {
+            accessToken: sessionStorage.getItem('accessToken')
+          }
+          let urlData = this.xg_id
+          this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
+            if(res !== null && res.code == 0){
+              _this.users()
+              this.dialog_xg = false
+              this.ruleFormModuleUpdate.pass=''
+              this.ruleFormModuleUpdate.desc = ''
+            }
+            _this.$notify({
+              title: '提示信息',
+              message: res.msg,
+              type: res.code === 0 ? 'success' : 'error',
+              duration: '1000'
+            })
+          }).catch(error=>{
+            console.error(error);
+          })
+        } else {
+          return false;
         }
-        _this.$notify({
-          title: '提示信息',
-          message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
-        })
-      }).catch(error=>{
-        console.error(error);
-      })
+      });
+
     },
     /*新建用户*/
-    insertUser(){
-      this.dialogVisible = false
-      this.insertUserForUsers()
+    insertUser(formName){
+      let _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          _this.insertUserForUsers()
+          _this.dialogVisible = false
+        } else {
+          return false;
+        }
+      });
     },
     /*获取角色-公司-部门下拉菜单*/
     getRegion(){
@@ -510,7 +511,6 @@ export default{
       this.ruleFormModule.gsList = []
       this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
         if(res !== null && res.data.code == 200 ){
-          console.log(res)
           for(let i =0 ;i<res.data.data.length;i++){
             this.ruleFormModule.gsList.push({
               name:res.data.data[i].companyName,

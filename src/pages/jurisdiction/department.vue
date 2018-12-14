@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item class="pull-right">
-          <el-button class="join-btn" size="small" @click="add_BM()">
+          <el-button class="join-btn" size="small" @click="add_BM">
             <i class="el-icon-plus"></i>
             新建部门
           </el-button>
@@ -45,17 +45,17 @@
         <el-table-column
           :resizable=false
           label="操作"
-          width="150">
+          width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
             <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
-            <el-button type="text" size="small">停用</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="fy-box">
         <el-pagination
           background
+          v-show="pageShow"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :page-size=pageSize
@@ -71,8 +71,8 @@
       width="30%"
       :before-close="bmClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司名称">
-          <el-select size="small" style="width: 100%" prop="companyName" v-model="ruleFormModule.companyName" placeholder="请选择公司" @change="gs_change">
+        <el-form-item label="公司名称" prop="companyName">
+          <el-select size="small" style="width: 100%" v-model="ruleFormModule.companyName" placeholder="请选择公司" @change="gs_change">
             <el-option v-for="items in optionData" :key="'opt' + items.id" :label="items.companyName" :value="items.id"></el-option>
           </el-select>
         </el-form-item>
@@ -94,13 +94,16 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="数据代码" prop="cpcc">
+          <el-input v-model="ruleFormModule.cpcc"></el-input>
+        </el-form-item>
         <el-form-item label="部门备注">
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_bm = false">取 消</el-button>
-        <el-button type="primary" @click="insert_BM">确 定</el-button>
+        <el-button type="primary" @click="insert_BM('ruleFormModule')">确 定</el-button>
       </span>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -121,12 +124,12 @@
       :visible.sync="dialog_xg"
       width="30%"
       :before-close="xgClose">
-      <el-form ref="updateForm" :model="updateForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司名称">
+      <el-form :model="updateForm" :rules="rules"  ref="updateForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="公司名称" prop="companyName">
           <el-input type="text" :disabled="true" v-model="updateCompanyName"></el-input>
           <input type="hidden" v-model="updateForm.id">
         </el-form-item>
-        <el-form-item label="部门名称" prop="name">
+        <el-form-item label="部门名称" prop="departName">
           <el-input v-model="updateForm.name"></el-input>
         </el-form-item>
         <el-form-item label="部门备注">
@@ -152,6 +155,7 @@
         msg: '123',
         loading:true,
         optionData: [],
+        pageShow:true,
         ruleForm: {
           companyName: 'all'
         },
@@ -166,11 +170,19 @@
         updateForm: {
           id: '',
           name: '',
+          cpcc:'',
           description: ''
         },
         rules: {
           companyName: [
             { required: true, message: '请选择公司', trigger: 'change' }
+          ],
+          departName: [
+            { required: true, message: '请选择部门', trigger: 'blur' }
+          ],
+          cpcc: [
+            { required: true, message: '请输入数据代码', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
           ],
           name: [
             { required: true, message: '部门名字不能为空', trigger: 'blur' },
@@ -214,29 +226,25 @@
           accessToken: sessionStorage.getItem('accessToken')
         }
         _this.$store.dispatch('PROVIDER_MANAGE_CMP_AND_DEP', { param, header }).then((res, req) => {
-          _this.tableData = []
-          _this.totalCount = res.data.totalCounts
-          if(res.data.code !== 200){
-            return
-          }
-          let resultData = res.data.data || []
-          for(let i = 0; i<resultData.length;i++){
-            _this.tableData.push({
-              name: resultData[i].companyName,
-              description: resultData[i].description,
-              createTime: resultData[i].createTime,
-              id: resultData[i].id,
-              departmentName: resultData[i].departmentName
-            })
+          console.log(res)
+          if(res.code === 16000003){
+            _this.tableData = []
+            _this.totalCount = res.data.totalCounts
+            let resultData = res.data.data || []
+            for(let i = 0; i<resultData.length;i++){
+              _this.tableData.push({
+                name: resultData[i].companyName,
+                description: resultData[i].description,
+                createTime: resultData[i].createTime,
+                id: resultData[i].id,
+                departmentName: resultData[i].departmentName
+              })
+            }
+          }else{
+            console.error('接口错误')
           }
           _this.$nextTick(() => {
             _this.loading = false
-          })
-          _this.$notify({
-            title: '提示信息',
-            message: res.data.code === 200 ? '部门列表加载成功' : '部门列表加载失败',
-            type: res.data.code === 200 ? 'success' : 'error',
-            duration: '1000'
           })
         }).catch((error) => {
           console.error(error)
@@ -256,8 +264,11 @@
       search_param_list () {
         let _this = this
         if(_this.ruleForm.companyName === 'all'){
+          _this.pageShow = true
           _this.search_list()
           return
+        }else{
+          _this.pageShow = false
         }
         let param = {
           code: _this.ruleForm.companyName,
@@ -289,7 +300,7 @@
             title: '提示信息',
             message: res.data.code === 200 ? '部门列表加载成功' : '部门列表加载失败',
             type: res.data.code === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
         }).catch((error) => {
           console.error(error)
@@ -317,7 +328,7 @@
             title: '提示信息',
             message: res.code !== 200 ? res.message : '部门删除成功',
             type: res.code === 200 ? 'success' : 'error',
-            duration: '1000'
+            duration: '2000'
           })
           _this.search_list()
           _this.dialogDelete = false
@@ -355,46 +366,56 @@
 //        console.log(selectCompanyArr[0].code,selectCompanyArr[0].id)
       },
       /*新增部门*/
-      insert_BM(){
+      insert_BM(formName){
         let _this = this
-        _this.dialog_bm = false
-        let optionSelected = _this.optionData.filter(function (item,index) {
-          return item.id === _this.ruleFormModule.companyName
-        })
-        let param = {
-          "type": 1,
-          "address":"",
-          "contact":"test",
-          "create_by":"sjm",
-          "description": _this.ruleFormModule.desc,
-          "level":2,
-          "id": _this.ruleFormModule.companyName,  //父及Id
-          //"name":"tttt",   //name不可重复
-          "depNames": _this.ruleFormModule.departmentName,   //数组
-          "code": optionSelected[0].code,   //父及code
-          "pcode":"1",  //固定参数
-          "pid":1, //固定参数
-          "paramType":1,
-          "postcode":"",
-          "telephone":"13011455214"
-        }
-        let header = {
-          accountId: sessionStorage.getItem('accountId'),
-          accessToken: sessionStorage.getItem('accessToken')
-        }
-        this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
-          if(res.code === 200){
-            _this.search_list()
+        _this.$refs[formName].validate((valid) => {
+          if (valid) {
+            _this.dialog_bm = false
+            let optionSelected = _this.optionData.filter(function (item,index) {
+              return item.id === _this.ruleFormModule.companyName
+            })
+            let param = {
+              "type": 1,
+              "address":"",
+              "contact":"test",
+              "create_by":"sjm",
+              "description": _this.ruleFormModule.desc,
+              "level":2,
+              "id": _this.ruleFormModule.companyName,  //父及Id
+              //"name":"tttt",   //name不可重复
+              "depNames": _this.ruleFormModule.departmentName,   //数组
+              "code": optionSelected[0].code,   //父及code
+              "pcode":"1",  //固定参数
+              "pid":1, //固定参数
+              "paramType":1,
+              "postcode":"",
+              "telephone":"13011455214"
+            }
+            let header = {
+              accountId: sessionStorage.getItem('accountId'),
+              accessToken: sessionStorage.getItem('accessToken')
+            }
+            this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
+              if(res.code === 200){
+                _this.search_list()
+                _this.ruleFormModule.desc= ''
+                _this.ruleFormModule.departmentName= []
+                _this.ruleFormModule.companyName= ''
+                _this.$refs[formName].resetFields()
+              }
+              _this.$notify({
+                title: '提示信息',
+                message: res.msg,
+                type: res.code === 200 ? 'success' : 'error',
+                duration: '2000'
+              })
+            }).catch((error) => {
+              console.error(error)
+            })
+          } else {
+            return false;
           }
-          _this.$notify({
-            title: '提示信息',
-            message: res.msg,
-            type: res.code === 200 ? 'success' : 'error',
-            duration: '1000'
-          })
-        }).catch((error) => {
-          console.error(error)
-        })
+        });
       },
       add_BM () {
         this.dialog_bm = true
@@ -436,7 +457,7 @@
                 title: '提示信息',
                 message: res.message,
                 type: res.code === 200 ? 'success' : 'error',
-                duration: '1000'
+                duration: '2000'
               })
               if(res.code !== 200){
                 return
@@ -447,7 +468,6 @@
               console.error(error)
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         });

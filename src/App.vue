@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'App',
-  components: {}
+  components: {},
 }
 </script>
 
@@ -133,7 +133,7 @@ body .el-table th.gutter{
     background-image: linear-gradient(to right, #b7cc41,#d5d655);
   }
 }
-.el-button--primary,.el-button--default{
+.el-button--primary{
   color: white;
   border-color: #d5d655;
   background-image: linear-gradient(to right, #b7cc41,#d5d655);
@@ -142,6 +142,16 @@ body .el-table th.gutter{
     color: white;
     border-color: #d5d655;
     background-image: linear-gradient(to right, #A2B53A,#A7A842);
+  }
+}
+.el-button--default{
+  color: #d5d655;
+  border-color: #d5d655;
+  &:hover,
+  &:focus{
+    color: #d5d655;
+    border-color: #d5d655;
+    background-image: linear-gradient(to right, #fff,#f1f1f1);
   }
 }
 .el-button--text{
@@ -164,4 +174,22 @@ input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px rgb(15,95,112) inset !important;
   -webkit-text-fill-color: #fff !important;
 }
+.el-menu-jky{
+  border-right: none;
+}
+.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover{
+  background-color:#b7cc41;
+  color: white;
+}
+.el-dialog__header{
+  padding: 10px 20px 10px;
+  background: #D7DFE4;
+}
+.el-dialog__headerbtn{
+  top: 15px;
+}
+.el-dialog__headerbtn:focus .el-dialog__close, .el-dialog__headerbtn:hover .el-dialog__close{
+  color: #b7cc41;
+}
+
 </style>

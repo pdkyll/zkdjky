@@ -36,7 +36,7 @@ export default{
       rules: {
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 16, message: '长度在 3 到 16 个字符', trigger: 'blur' }
+          { min: 1, max: 20, message: '长度不能超过 20 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -48,7 +48,13 @@ export default{
   components: {},
   methods: {
     submitForm (formName) {
-      this.login(this.ruleForm.userName, this.ruleForm.password)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.login(this.ruleForm.userName, this.ruleForm.password)
+        } else {
+          return false;
+        }
+      });
     },
     login (user, pass) {
       let _this = this
@@ -58,23 +64,29 @@ export default{
         accountPasswd: password
       }
       this.$store.dispatch('LOGIN', { param }).then((res, req) => {
-        console.log(res)
-        if (res.code === 0) {
+        if (res.code === 16000003) {
+          console.log(res.data)
+          let data = res.data.datas
           let name = {
-            name:res.result.datas.accountName,
-            type:res.result.datas.tenantName
+            name:data.accountName,
+            type:data.tenantName,
+            phone:data.telephone==null?'暂无':data.telephone,
+            email: data.email==null?'暂无':data.email,
           }
           this.$store.dispatch('USER_MASSAGE', { name })
           sessionStorage.setItem('isOk', res.code)
-          sessionStorage.setItem('accountId', res.result.datas.accountId)
-          sessionStorage.setItem('accessToken', res.result.datas.accessToken)
+          sessionStorage.setItem('accountId', data.accountId)
+          sessionStorage.setItem('accessToken', data.accessToken)
+          /*用于水印显示的session存储*/
+          sessionStorage.setItem('userName', data.accountName)
+          sessionStorage.setItem('userType', data.tenantName)
           this.$router.push('/home')
         }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
-          duration: '1000'
+          type: res.code === 16000003 ? 'success' : 'error',
+          duration: '2000'
         })
       }).catch((error) => {
         console.error(error)

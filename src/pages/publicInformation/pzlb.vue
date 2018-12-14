@@ -35,6 +35,9 @@
               v-model="ruleForm.childCpcc">
             </el-input>
           </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div class="mt-20">
@@ -171,9 +174,6 @@ export default{
     }
   },
   methods: {
-    handleClick (row) {
-      console.log(row)
-    },
     handleSizeChange (val) {
       this.ruleForm.pageNum = val
       this.getTableList ()
@@ -190,6 +190,8 @@ export default{
         this.ruleForm.sTime = val[0]
         this.ruleForm.eTime = val[1]
       }
+    },
+    searchList(){
       this.getTableList()
     },
     /**
@@ -218,21 +220,18 @@ export default{
       let vm = this
       vm.loading= true
       let param = Object.assign({},vm.ruleForm)
-      /*let param = {
-        belnr:vm.ruleForm.belnr,
-        sTime:vm.ruleForm.sTime,
-        eTime:vm.ruleForm.eTime,
-        cpcc:vm.ruleForm.cpcc,
-        pageNum:vm.ruleForm.pageNum,
-        pageSize:vm.ruleForm.pageSize
-      }*/
       let header = {
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
       }
       vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
-        vm.loading= false
-          vm.tableData = res || []
+        if(res.code === 16000003){
+          vm.loading= false
+          vm.totalcount = res.data.pop().totalnum
+          vm.tableData = res.data || []
+        }else{
+          console.log('接口错误')
+        }
       }).catch(error => {
           console.error(error);
       })

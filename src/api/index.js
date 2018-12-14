@@ -46,7 +46,6 @@ export function roles (param, header) {
  * @returns {*|Promise}
  */
 export function getUserForRoles (param, header, urlData) {
-  console.log(param, header, urlData)
   return api.get(`/apis/v1/roles/${urlData[0]}/datarole/${urlData[1]}`, param, header)
 }
 
@@ -149,7 +148,6 @@ export function updateUserForUsers ( param, header, urlData) {
  * @returns {*|Promise}
  */
 export function publicMsg (param, header) {
-  console.log(param, header)
   return api.get('/apis/publicInformation/publicInformation', param, header)
 }
 
@@ -160,7 +158,6 @@ export function publicMsg (param, header) {
  * @returns {*|Promise}
  */
 export function linkDownload (param, header) {
-  console.log(param, header)
   return api.get('/apis/publicInformation/linkDownload', param, header)
 }
 

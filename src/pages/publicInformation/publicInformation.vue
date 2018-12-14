@@ -22,6 +22,7 @@
              value-format="yyyy-MM-dd"
              @change="timeChange"
              range-separator="-"
+             size="small"
              start-placeholder="开始日期"
              end-placeholder="结束日期">
            </el-date-picker>
@@ -29,7 +30,7 @@
          </el-col>
        </el-form-item>
        <el-form-item>
-         <el-button type="primary" size="small" @click="onSubmit" class="green-btn">查询</el-button>
+         <el-button type="primary" size="mini" @click="onSubmit" class="green-btn">查询</el-button>
        </el-form-item>
      </el-form>
    </el-row>

@@ -205,16 +205,16 @@
           width="140">
         </el-table-column>
       </el-table>
-      <!--<div class="fy-box">-->
-        <!--<el-pagination-->
-          <!--background-->
-          <!--@size-change="handleSizeChange"-->
-          <!--@current-change="handleCurrentChange"-->
-          <!--:page-size="100"-->
-          <!--layout="total, prev, pager, next"-->
-          <!--:total="1000">-->
-        <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="fy-box">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-size=pageSize
+          layout="total, prev, pager, next"
+          :total=totalCount>
+        </el-pagination>
+      </div>
     </div>
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff">
@@ -240,30 +240,42 @@ export default{
       tableData: [],
       lowerCase: '',
       upperCase: '',
-      loading: null
+      loading: null,
+      pageNum:1,
+      pageSize:5,
+      totalCount:0,
     }
   },
   methods: {
-    handleClick (row) {
-      console.log(row)
-    },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      this.pageNum = val
+      this.getListDetails()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.pageNum = val
+      this.getListDetails()
     },
     getListDetails () {
+      this.loading = this.$loading({
+        lock: true,
+        text: '正在加载凭证信息',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       let vm = this
       let belnr = vm.$route.query.belnr
       let param = {
-        belnr: belnr
+        belnr: belnr,
+        pageNum:1,
+        pageSize:5
       }
       let header = {
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
       }
       vm.$store.dispatch('GET_FINANCE_DETAILS', {param, header}).then((res, req) => {
+        console.log(res)
+        vm.totalCount = res.data.listdseg.pop().totalnum
         vm.details = res.data.listbkpf
         vm.tableData = res.data.listdseg
         vm.lowerCase = res.data.lowerCase
@@ -275,12 +287,6 @@ export default{
     }
   },
   created () {
-    this.loading = this.$loading({
-      lock: true,
-      text: '正在加载凭证信息',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
-    })
   },
   mounted () {
     this.getListDetails()

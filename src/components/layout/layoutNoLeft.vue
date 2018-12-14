@@ -23,6 +23,7 @@
  * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
  * import loginButton from './components/loginButton.vue';
  */
+import Watermark from '../../vendor/watermark'
 export default{
   data () {
     return {
@@ -36,6 +37,11 @@ export default{
 
   },
   mounted () {
+    /*获取用户信息并通过水印方法显示到屏幕上*/
+    let userName = sessionStorage.getItem('userName')
+    let userType = sessionStorage.getItem('userType')
+    let massage = userName+ '-' +userType
+    Watermark.set(massage)
     this.title = window.sessionStorage.getItem('publicName')
   }
 }

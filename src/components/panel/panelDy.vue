@@ -167,7 +167,6 @@ export default{
         creator: sessionStorage.getItem('accountId'),
       }
       _this.$store.dispatch('GET_ATTENTION_LIST', {param, header}).then(res => {
-        console.log(res.data)
         if(res.status === 200){
           for(let i=0;i<res.data.length;i++){
             let time = res.data[i].dateRange.split('&')
@@ -214,7 +213,6 @@ export default{
         type:type
       }
       _this.$store.dispatch('ATTENTION_LIKE', {param, header}).then(res => {
-        console.log(res)
         _this.$notify({
           title: '提示信息',
           message: '点赞成功',
@@ -236,7 +234,6 @@ export default{
         type:type
       }
       _this.$store.dispatch('ATTENTION_NOT_LIKE', {param, header}).then(res => {
-        console.log(res)
         _this.$notify({
           title: '提示信息',
           message: '取消点赞成功',
