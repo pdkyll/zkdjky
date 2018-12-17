@@ -4,7 +4,7 @@
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
         <el-form-item label="公司名称" class="no-mb ml-10">
-          <el-select size="small" v-model="ruleForm.companyName" placeholder="请选择公司">
+          <el-select size="small" v-model="ruleForm.companyName" @change="selectChange" placeholder="请选择公司">
             <el-option
               v-for="item in companyOptions"
               :key="'opt' + item.value"
@@ -12,21 +12,6 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="日期" class="no-mb">
-          <el-date-picker
-            size="small"
-            v-model="ruleForm.time"
-            type="daterange"
-            value-format="yyyy-MM-dd"
-            @change="timeChange"
-            range-separator="-"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -104,15 +89,11 @@ export default{
       ruleForm: {
         companyName: '',
         time:'',
-        date1: '',
-        date2: '',
         input: ''
       },
       ruleFormModule: {
         name: '',
         rq: '',
-        date1: '',
-        date2: '',
         checkList: ['柱状图'],
         gs: '',
         dq: '',
@@ -322,7 +303,12 @@ export default{
      */
     getTreeData () {
       let vm = this;
-      vm.$store.dispatch('HISTORY_TREE').then((res, req)=>{
+      let param = {}
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      vm.$store.dispatch('HISTORY_TREE', {param,header}).then((res, req)=>{
         if(res.data.length > 0) {
           vm.data = vm.data.concat(res.data)
         }
@@ -332,7 +318,12 @@ export default{
     },
     getCompanysData () {
       let vm = this;
-      vm.$store.dispatch('GET_HISTORY_COMPANY').then((res, req)=>{
+      let param = {}
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      vm.$store.dispatch('GET_HISTORY_COMPANY', {param,header}).then((res, req)=>{
         if(res.data.length > 0) {
           vm.companyOptions = res.data
         }
@@ -344,7 +335,11 @@ export default{
       let vm = this
       vm.loading = true
       let param = vm.tableId
-      vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param}).then((res, req)=>{
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param,header}).then((res, req)=>{
         if(res.length > 0) {
           vm.historyTableColumnHeader = res
           vm.getHistoryTableContent()
@@ -364,8 +359,13 @@ export default{
           pageNum: vm.pageNum,
           pageSize: vm.pageSize
       }
-      vm.$store.dispatch('GET_HISTORY_INFO_BY_TABLE_NAME', {param}).then((res, req)=>{
-        console.log(res)
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      vm.$store.dispatch('GET_HISTORY_INFO_BY_TABLE_NAME', {param,header}).then((res, req)=>{
+        console.log(res.data)
+        vm.totalCount = res.data.pop().totalNum
         if(res.code === 16000003){
           vm.tableData = res.data;
         }else{
@@ -376,12 +376,8 @@ export default{
         console.error(error)
       });
     },
-    timeChange(val){
-      this.ruleForm.date1 = val[0]
-      this.ruleForm.date2 = val[1]
-    },
-    /*点击查询按钮查询*/
-    searchList(){
+    /*下拉菜单选择以后查询数据*/
+    selectChange(){
       this.getHistoryTableContent()
     },
     /*分页点击查询*/

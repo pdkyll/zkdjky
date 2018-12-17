@@ -28,6 +28,10 @@ export function createAPI () {
   axios.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8'
   axios.interceptors.response.use(res => {
     if (res.status >= 200 && res.status < 400) {
+      /*if(res.data.code == 16000003 || res.code == 16000003){
+        window.location = "http://localhost:8080"
+        return
+      }*/
       return res
     }
     return Promise.reject(res)
@@ -118,7 +122,8 @@ export function createAPI () {
         if (objKeyLen > 0) {
           headers = Object.assign({}, headers, header)
         }
-        axios.delete(target, {params, headers}).then(res => {
+        console.log(params,header)
+        axios.delete(target, { params, headers }).then(res => {
           resolve(res.data)
         }).catch((err) => {
           reject(err)

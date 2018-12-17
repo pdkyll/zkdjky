@@ -47,8 +47,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
             <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -125,11 +125,11 @@
       width="30%"
       :before-close="xgClose">
       <el-form :model="updateForm" :rules="rules"  ref="updateForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="公司名称" prop="companyName">
+        <el-form-item label="公司名称">
           <el-input type="text" :disabled="true" v-model="updateCompanyName"></el-input>
           <input type="hidden" v-model="updateForm.id">
         </el-form-item>
-        <el-form-item label="部门名称" prop="departName">
+        <el-form-item label="部门名称">
           <el-input v-model="updateForm.name"></el-input>
         </el-form-item>
         <el-form-item label="部门备注">
@@ -138,7 +138,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialog_xg = false">取 消</el-button>
-        <el-button type="primary" @click="insert_xg('updateForm')">确 定</el-button>
+        <el-button type="primary" @click="insert_xg()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -226,11 +226,11 @@
           accessToken: sessionStorage.getItem('accessToken')
         }
         _this.$store.dispatch('PROVIDER_MANAGE_CMP_AND_DEP', { param, header }).then((res, req) => {
-          console.log(res)
-          if(res.code === 16000003){
+          console.log(res.data)
+          if(res.data.code === 16000003){
             _this.tableData = []
-            _this.totalCount = res.data.totalCounts
-            let resultData = res.data.data || []
+            _this.totalCount = res.data.data.totalNum
+            let resultData = res.data.data.viewResult || []
             for(let i = 0; i<resultData.length;i++){
               _this.tableData.push({
                 name: resultData[i].companyName,
@@ -278,8 +278,9 @@
           accessToken: sessionStorage.getItem('accessToken')
         }
         _this.$store.dispatch('PROVIDER_MANAGE_BY_CODE', { param, header }).then((res, req) => {
+          console.log(res)
           _this.tableData = []
-          if(res.data.code !== 200){
+          if(res.data.code !== 16000003){
             return
           }
           let resultData = res.data.data || []
@@ -298,8 +299,8 @@
           }
           _this.$notify({
             title: '提示信息',
-            message: res.data.code === 200 ? '部门列表加载成功' : '部门列表加载失败',
-            type: res.data.code === 200 ? 'success' : 'error',
+            message: res.data.code === 16000003 ? '部门列表加载成功' : '部门列表加载失败',
+            type: res.data.code === 16000003 ? 'success' : 'error',
             duration: '2000'
           })
         }).catch((error) => {
@@ -326,8 +327,8 @@
         _this.$store.dispatch('PROVIDER_MANAGE_DEL', { param, header }).then((res, req) => {
           _this.$notify({
             title: '提示信息',
-            message: res.code !== 200 ? res.message : '部门删除成功',
-            type: res.code === 200 ? 'success' : 'error',
+            message: res.code !== 16000003 ? res.message : '部门删除成功',
+            type: res.code === 16000003 ? 'success' : 'error',
             duration: '2000'
           })
           _this.search_list()
@@ -349,7 +350,7 @@
           accessToken: sessionStorage.getItem('accessToken')
         }
         _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
-          if(res.data.code === 200){
+          if(res.data.code === 16000003){
             _this.optionData = res.data.data
           }
         }).catch(error => {
@@ -396,7 +397,7 @@
               accessToken: sessionStorage.getItem('accessToken')
             }
             this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
-              if(res.code === 200){
+              if(res.code === 16000003){
                 _this.search_list()
                 _this.ruleFormModule.desc= ''
                 _this.ruleFormModule.departmentName= []
@@ -406,7 +407,7 @@
               _this.$notify({
                 title: '提示信息',
                 message: res.msg,
-                type: res.code === 200 ? 'success' : 'error',
+                type: res.code === 16000003 ? 'success' : 'error',
                 duration: '2000'
               })
             }).catch((error) => {
@@ -435,42 +436,36 @@
       xgClose(){
         this.dialog_xg = false
       },
-      insert_xg(formName){
+      insert_xg(){
         let _this = this
-        _this.$refs[formName].validate((valid) => {
-          if (valid) {
-            let param = {
-              name: "",
-              telephone: "13012455623",
-              contact: "张三",
-              description: "",
-              update_by: "岸本齐史",
-              address: "菁蓉镇"
-            }
-            param = Object.assign({}, param, _this.updateForm)
-            let header = {
-              accountId: sessionStorage.getItem('accountId'),
-              accessToken: sessionStorage.getItem('accessToken')
-            }
-            _this.$store.dispatch('PROVIDER_MANAGE_UPDATE', { param, header }).then((res, req) => {
-              _this.$notify({
-                title: '提示信息',
-                message: res.message,
-                type: res.code === 200 ? 'success' : 'error',
-                duration: '2000'
-              })
-              if(res.code !== 200){
-                return
-              }
-              _this.dialog_xg = false
-              _this.search_list()
-            }).catch((error) => {
-              console.error(error)
-            })
-          } else {
-            return false;
+        let param = {
+          name: "",
+          telephone: "13012455623",
+          contact: "张三",
+          description: "",
+          update_by: "岸本齐史",
+          address: "菁蓉镇"
+        }
+        param = Object.assign({}, param, _this.updateForm)
+        let header = {
+          accountId: sessionStorage.getItem('accountId'),
+          accessToken: sessionStorage.getItem('accessToken')
+        }
+        _this.$store.dispatch('PROVIDER_MANAGE_UPDATE', { param, header }).then((res, req) => {
+          _this.$notify({
+            title: '提示信息',
+            message: res.msg,
+            type: res.code === 16000003 ? 'success' : 'error',
+            duration: '2000'
+          })
+          if(res.code !== 16000003){
+            return
           }
-        });
+          _this.dialog_xg = false
+          _this.search_list()
+        }).catch((error) => {
+          console.error(error)
+        })
       }
     },
     created(){

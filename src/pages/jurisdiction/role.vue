@@ -79,17 +79,16 @@
         <el-form-item label="角色备注" prop="desc">
           <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
         </el-form-item>
-        <el-form-item label="公司选择">
-          <el-collapse accordion v-model="activeNames" @change="handleChange">
-            <el-collapse-item v-for="item in moduleData" :key="item.id" :title="item.tit" :name="item.id">
-              <el-tree
-                :data="item.children"
-                show-checkbox
-                accordion
-                :props="item.defaultProps">
-              </el-tree>
-            </el-collapse-item>
-          </el-collapse>
+        <el-form-item label="权限选择">
+          <el-tree
+            :data="treeData"
+            accordion
+            show-checkbox
+            node-key="id"
+            ref="tree"
+            highlight-current
+            :props="defaultProps">
+          </el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -121,6 +120,18 @@
         </el-form-item>
         <el-form-item label="角色描述">
           <el-input type="textarea" v-model="xg_jsms"></el-input>
+        </el-form-item>
+        <el-form-item label="权限选择">
+          <el-tree
+            :data="treeDataForUpdate"
+            accordion
+            show-checkbox
+            node-key="id"
+            :default-checked-keys= echoList
+            ref="treeForUpdate"
+            highlight-current
+            :props="defaultPropsForUpdate">
+          </el-tree>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -161,6 +172,20 @@ export default{
       pageSize: 5,
       totalCount: 25,
       tableData: [],
+      treeData: [],
+      checkIdList:[],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      /*修改的树状菜单数据*/
+      echoList:[],
+      treeDataForUpdate: [],
+      checkIdListForUpdate:[],
+      defaultPropsForUpdate: {
+        children: 'children',
+        label: 'label'
+      },
       /*删除角色相关参数*/
       dialogDelete: false,
       del_id:'',
@@ -179,9 +204,6 @@ export default{
     },
     handleClose () {
       this.dialogVisible = false
-    },
-    handleChange (val) {
-      console.log(val)
     },
     handleSizeChange (val) {
       this.pageNum = val
@@ -204,14 +226,15 @@ export default{
       }
       this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
         this.tableData = []
-        if(res !== null && res.data.code == 0 ){
-          this.totalCount = res.data.result.totalCounts
-          for(let i =0 ;i<res.data.result.datas.length;i++){
+        if(res !== null && res.data.code == 16000003){
+          this.totalCount = res.data.data.totalNum
+          let data = res.data.data.datas
+          for(let i =0 ;i<data.length;i++){
             this.tableData.push({
-              name:res.data.result.datas[i].rolename,
-              description:res.data.result.datas[i].description,
-              date:res.data.result.datas[i].createtime,
-              id:res.data.result.datas[i].id,
+              name:data[i].rolename,
+              description:data[i].description,
+              date:data[i].createtime,
+              id:data[i].id,
             })
           }
           _this.$nextTick(() => {
@@ -246,17 +269,22 @@ export default{
       let _this = this
       this.dialogDelete = false
       let header = {
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
-      let urlData =  this.del_id
-      this.$store.dispatch('DEL_USER_FOR_ROLES', { header, urlData}).then(res => {
-        if(res !== null && res.code == 0){
+      let id = []
+      id.push(_this.del_id)
+      let param = {
+        ids:id
+      }
+      this.$store.dispatch('DEL_USER_FOR_ROLES', { param, header }).then(res => {
+        if(res !== null && res.code == 16000003){
           _this.roles()
         }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
       }).catch(error=>{
@@ -267,25 +295,31 @@ export default{
     insertUserForRoles (){
       let _this = this
       let param = {
-        "rolename": this.ruleFormModule.name,
-        "description": this.ruleFormModule.desc,
-        "type": 1
+        roles:[
+          {
+            "rolename": _this.ruleFormModule.name,
+            "description": _this.ruleFormModule.desc,
+            "type": 1
+          }
+        ],
+        permissionList:_this.checkIdList
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
-      let urlData =  this.del_id
       this.$store.dispatch('INSERT_USER_FOR_ROLES', { param, header}).then(res => {
-        if(res !== null && res.code == 0){
+        if(res !== null && res.code == 16000003){
           _this.roles()
-          this.dialogVisible = false
-          this.ruleFormModule.name = ''
-          this.ruleFormModule.desc = ''
+          _this.dialogVisible = false
+          _this.ruleFormModule.name = ''
+          _this.ruleFormModule.desc = ''
+          _this.checkIdList = []
+          _this.$refs.tree.setCheckedKeys([])
         }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
       }).catch(error=>{
@@ -296,6 +330,14 @@ export default{
       let _this = this
       _this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.checkIdList = []
+          let idList = this.$refs.tree.getCheckedKeys()
+          for(let i=0;i<idList.length;i++){
+            this.checkIdList.push({
+              checked:"1",
+              menuid:idList[i]
+            })
+          }
           _this.insertUserForRoles()
         } else {
           return false;
@@ -308,26 +350,40 @@ export default{
       this.dialog_xg = false
     },
     js_xg(){
+      let idList = this.$refs.treeForUpdate.getCheckedKeys()
+      this.checkIdListForUpdate = []
+      for(let i=0;i<idList.length;i++){
+        this.checkIdListForUpdate.push({
+          checked:"1",
+          menuid:idList[i]
+        })
+      }
       let _this = this
       let param = {
-        id: this.xg_id,
-        rolename: this.xg_jsmc,
-        description: this.xg_jsms
+        roles:[
+          {
+            "rolename": _this.xg_jsmc,
+            "description": _this.xg_jsms,
+            "id": _this.xg_id
+          }
+        ],
+        permissionList:_this.checkIdListForUpdate
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('UPDATE_USER_FOR_ROLES', { param, header}).then(res => {
-        if(res !== null && res.code == 0){
+        if(res !== null && res.code == 16000003){
           _this.roles()
           this.dialog_xg = false
-          this.xg_jsmc = ''
+          /*this.xg_jsmc = ''
           this.xg_jsms = ''
+          _this.$refs.treeForUpdate.setCheckedKeys([])*/
         }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
       }).catch(error=>{
@@ -335,12 +391,32 @@ export default{
       })
     },
     updateClick (row) {
-      this.dialog_xg = true
+      let _this = this
       this.xg_jsmc = row.name
       this.xg_jsms = row.description
       this.xg_id = row.id
+      this.dialog_xg = true
+      this.echoList = []
+      let param = {
+        id: this.xg_id,
+        type:'2'
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      this.$store.dispatch('UPDATE_USER_ECHO', { param, header}).then(res => {
+        if(res !== null && res.data.code == 16000003){
+          for(let i=0;i<res.data.data.length;i++){
+            _this.echoList.push(res.data.data[i]*1)
+          }
+        }
+        _this.$refs.treeForUpdate.setCheckedKeys(_this.echoList)
+      }).catch(error=>{
+        console.error(error);
+      })
     },
-    /*获取公司选择的列表*/
+    /*获取权限选择的列表*/
     makeCompanySelect(){
       let param = {
         type: 1,
@@ -350,27 +426,9 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('MAKE_COMPANY_SELECT', { param, header}).then(res => {
-        let data = res.data.result.datas
-        this.moduleData = []
+        let data = res.data.data.datas
+        this.treeData = []
         this.arrayToJson(data)
-        /*for(let i=0;i<data.length;i++){
-          if(!data[i].pcode){
-            this.moduleData.push({
-                tit:data[i].name,
-                id:data[i].id,
-                data:[]
-            })
-          }
-          for(let j=0;j<this.moduleData.length; j++){
-            if(data[i].pcode == this.moduleData[j].id){
-              this.moduleData[j].data.push({
-                id:data[i].id,
-                label:data[i].name,
-                children:[]
-              })
-            }
-          }
-        }*/
       }).catch(error=>{
         console.error(error);
       })
@@ -379,7 +437,7 @@ export default{
       let _this = this
       for(let i =0;i<treeArray.length;i++){
         if(!treeArray[i].pcode){
-          treeArray[i].tit = treeArray[i].name
+          treeArray[i].label = treeArray[i].name
         }else{
           treeArray[i].label = treeArray[i].name
         }
@@ -402,7 +460,8 @@ export default{
           }
         } else {
           //如果没有这个Key值，那就代表没有父级,直接放在最外层
-          _this.moduleData.push(treeArray[i]);
+          _this.treeData.push(treeArray[i]);
+          _this.treeDataForUpdate.push(treeArray[i]);
         }
       }
     },
@@ -411,6 +470,10 @@ export default{
       this.filter = 'rolename=_'+ val +'_'
     },
     search(val){
+      if(this.filter == undefined){
+        this.filter = 'rolename=__'
+      }
+      let _this = this
       let param = {
         type: '1',
         pageNumber:this.pageNum,
@@ -423,16 +486,20 @@ export default{
       }
       this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
         this.tableData = []
-        if(res !== null && res.data.code == 0 ){
-          this.totalCount = res.data.result.totalCounts
-          for(let i =0 ;i<res.data.result.datas.length;i++){
+        if(res !== null && res.data.code == 16000003){
+          this.totalCount = res.data.data.totalNum
+          let data = res.data.data.datas
+          for(let i =0 ;i<data.length;i++){
             this.tableData.push({
-              name:res.data.result.datas[i].rolename,
-              description:res.data.result.datas[i].description,
-              date:res.data.result.datas[i].createtime,
-              id:res.data.result.datas[i].id,
+              name:data[i].rolename,
+              description:data[i].description,
+              date:data[i].createtime,
+              id:data[i].id,
             })
           }
+          _this.$nextTick(() => {
+            _this.loading = false
+          })
         }
 
       }).catch((error) => {
@@ -445,7 +512,7 @@ export default{
     this.makeCompanySelect()
   },
   mounted () {
-    this.getUserForRoles()
+    //this.getUserForRoles()
   }
 }
 </script>

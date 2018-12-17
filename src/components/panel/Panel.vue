@@ -49,7 +49,29 @@ export default{
     return {
       dom: '',
       dialogVisible: true,
-      panel: [],
+      panel: [{
+        title:'123',
+        content:[
+          {
+            CPCC: "108",
+            CPCCName: "中可点击yy",
+            CREATION_TIME: "2018-12-14",
+            DATA_TYPE: 1,
+            ID: 21,
+            INFO_NAME: "win10激活密码",
+            WEIGHTINESS: 2,
+          },
+          {
+            CPCC: "108",
+            CPCCName: "中可点击yy",
+            CREATION_TIME: "2018-12-14",
+            DATA_TYPE: 1,
+            ID: 21,
+            INFO_NAME: "win10激活密码",
+            WEIGHTINESS: 2,
+          }
+        ]
+      }],
       imgSrc:'',
       playerOptions : {
         playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
@@ -160,16 +182,16 @@ export default{
       }
       this.$store.dispatch('PUBLIC_MSG', { param, header }).then((res, req) => {
         let data = res.data.data
-        if(res.status == 200){
+        if(res.data.code == 16000003){
           this.panel = []
           var a = {};
           for (var i = 0; i < data.length; i++) {
-            a[data[i].CPCC] = new Array();
+            a[data[i].CPCCName] = new Array();
           }
           for (let i of data) {
             for(let j in a){
-              if(i.CPCC==j){
-                a[i.CPCC].push(i);
+              if(i.CPCCName==j){
+                a[i.CPCCName].push(i);
               }
             }
           }
@@ -177,11 +199,12 @@ export default{
             var temp ={};
             temp.title= i ;
             temp.content = new Array();
-            for( let  j of a[i]){
+            for( let j of a[i]){
               temp.content.push(j);
             }
             this.panel.push(temp);
           }
+          console.log(this.panel)
         }
         this.dialogVisible = false
       }).catch((error) => {

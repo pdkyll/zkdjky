@@ -275,11 +275,11 @@ export default{
       }
       vm.$store.dispatch('GET_FINANCE_DETAILS', {param, header}).then((res, req) => {
         console.log(res)
-        vm.totalCount = res.data.listdseg.pop().totalnum
-        vm.details = res.data.listbkpf
-        vm.tableData = res.data.listdseg
-        vm.lowerCase = res.data.lowerCase
-        vm.upperCase = res.data.upperCase
+        vm.totalCount = res.data.data.totalNum
+        vm.details = res.data.data.listbkpf
+        vm.tableData = res.data.data.listdseg
+        vm.lowerCase = res.data.data.lowerCase
+        vm.upperCase = res.data.data.upperCase
         vm.loading.close()
       }).catch(error => {
         console.error(error);

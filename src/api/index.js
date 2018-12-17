@@ -51,12 +51,12 @@ export function getUserForRoles (param, header, urlData) {
 
 /**
  * 角色管理-删除角色
+ * @param param
  * @param header
- * @param urlData
  * @returns {*|Promise}
  */
-export function delUserForRoles ( header, urlData) {
-  return api.delete(`/apis/v1/roles/${urlData}`, {}, header)
+export function delUserForRoles (param, header) {
+  return api.delete('/apis/v1/rolesAndPermissions', param, header)
 }
 
 /**
@@ -66,7 +66,16 @@ export function delUserForRoles ( header, urlData) {
  * @returns {*|Promise}
  */
 export function insertUserForRoles ( param, header) {
-  return api.post('/apis/v1/roles', param, header)
+  return api.post('/apis/v1/rolesAndPermissions', param, header)
+}
+/**
+ * 角色管理-修改角色回显权限
+ * @param param
+ * @param header
+ * @returns {*}
+ */
+export function updateUserEcho ( param, header) {
+  return api.get('/apis/v1/role/permissions', param, header)
 }
 
 /**
@@ -76,7 +85,7 @@ export function insertUserForRoles ( param, header) {
  * @returns {*}
  */
 export function updateUserForRoles ( param, header) {
-  return api.put('/apis/v1/roles', param, header)
+  return api.put('/apis/v1/rolesAndPermissions', param, header)
 }
 
 /**
@@ -273,31 +282,31 @@ export function publicInformationUpload(param, header) {
  * 历史数据-树形结构
  * @returns {*|Promise}
  */
-export function historyTree () {
-  return api.get('/apis/history/tree')
+export function historyTree (param, header) {
+  return api.get('/apis/history/tree', param, header)
 }
 /**
  * 历史数据-列表信息展示
  * @param param
  * @returns {*|Promise}
  */
-export function getHistoryInfoByTableName (param) {
-  return api.post('/apis/history/getHistoryInfoByTableName', param)
+export function getHistoryInfoByTableName (param,header) {
+  return api.post('/apis/history/getHistoryInfoByTableName', param,header)
 }
 /**
  * 历史数据-列表头展示
  * @param param
  * @returns {*|Promise}
  */
-export function getHistoryNotesByTableName (param) {
-  return api.post('/apis/history/getHistoryNotesByTableName', param)
+export function getHistoryNotesByTableName (param,header) {
+  return api.post('/apis/history/getHistoryNotesByTableName', param,header)
 }
 /**
  * 历史数据-公司信息
  * @returns {*|Promise}
  */
-export function getHistoryCompany () {
-  return api.get('/apis/history/getHistoryCompany')
+export function getHistoryCompany (param,header) {
+  return api.get('/apis/history/getHistoryCompany', param,header)
 }
 /**
  * 凭证列表-平台公司的列表

@@ -12,6 +12,7 @@ import {
   insertUserForRoles,
   updateUserForRoles,
   makeCompanySelect,
+  updateUserEcho,
   /*用户*/
   users,
   getUserForUsers,
@@ -174,8 +175,8 @@ export default {
    * @returns {Promise.<TResult>}
    * @constructor
    */
-  DEL_USER_FOR_ROLES: ({commit, state}, { header, urlData}) => {
-    return delUserForRoles( header, urlData).then((res, req) => {
+  DEL_USER_FOR_ROLES: ({commit, state}, {param, header}) => {
+    return delUserForRoles(param, header).then((res, req) => {
       return res
     })
   },
@@ -190,10 +191,26 @@ export default {
    * @constructor
    */
   INSERT_USER_FOR_ROLES: ({commit, state}, { param, header}) => {
-    return insertUserForRoles( param, header).then((res, req) => {
+    return insertUserForRoles(param, header).then((res, req) => {
       return res
     })
   },
+
+  /**
+   * 角色管理-修改角色是回显权限
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>|*}
+   * @constructor
+   */
+  UPDATE_USER_ECHO: ({commit, state}, { param, header}) => {
+    return updateUserEcho( param, header).then((res, req) => {
+      return res
+    })
+  },
+
   /**
    * 角色管理-修改角色
    * @param commit
@@ -205,6 +222,7 @@ export default {
    * @constructor
    */
   UPDATE_USER_FOR_ROLES: ({commit, state}, { param, header}) => {
+    console.log(param)
     return updateUserForRoles( param, header).then((res, req) => {
       return res
     })
@@ -508,8 +526,8 @@ export default {
    * @returns {Promise.<TResult>|*}
    * @constructor
    */
-  HISTORY_TREE: ({commit, state}) => {
-    return historyTree().then((res, req) => {
+  HISTORY_TREE: ({commit, state}, {param,header}) => {
+    return historyTree(param,header).then((res, req) => {
       return res
     })
   },
@@ -519,8 +537,8 @@ export default {
    * @param state
    * @returns {Promise.<TResult>|*}
    */
-  GET_HISTORY_COMPANY: ({commit, state}) => {
-    return getHistoryCompany().then((res, req) => {
+  GET_HISTORY_COMPANY: ({commit, state}, {param,header}) => {
+    return getHistoryCompany(param,header).then((res, req) => {
       return res
     })
   },
@@ -531,8 +549,8 @@ export default {
    * @param param
    * @returns {Promise.<TResult>|*}
    */
-  GET_HISTORY_INFO_BY_TABLE_NAME: ({commit, state}, {param}) => {
-    return getHistoryInfoByTableName(param).then((res, req) => {
+  GET_HISTORY_INFO_BY_TABLE_NAME: ({commit, state}, {param,header}) => {
+    return getHistoryInfoByTableName(param,header).then((res, req) => {
       return res
     })
   },
@@ -543,8 +561,8 @@ export default {
    * @param param
    * @returns {Promise.<TResult>|*}
    */
-  GET_HISTORY_NOTES_BY_TABLE_NAME: ({commit, state}, {param}) => {
-    return getHistoryNotesByTableName(param).then((res, req) => {
+  GET_HISTORY_NOTES_BY_TABLE_NAME: ({commit, state}, {param,header}) => {
+    return getHistoryNotesByTableName(param,header).then((res, req) => {
       return res
     })
   },

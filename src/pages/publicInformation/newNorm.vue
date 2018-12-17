@@ -1005,7 +1005,6 @@
         }
         this.$store.dispatch('UN_SUBSCRIBER_NORM', {param, header}).then(res => {
           if(res.status == 200){
-
             vm.getNormTable()
           }
           vm.$notify({

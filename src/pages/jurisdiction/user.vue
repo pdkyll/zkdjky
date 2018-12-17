@@ -62,6 +62,11 @@
         </el-table-column>
         <el-table-column
           :resizable=false
+          prop="desc"
+          label="用户备注">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
           label="操作"
           width="100">
           <template slot-scope="scope">
@@ -100,7 +105,7 @@
         </el-form-item>
         <el-form-item label="角色选择">
           <el-select v-model="ruleFormModule.region" style="width: 100%" placeholder="请选择类型" @change="region_change">
-            <el-option :label="item" :value="item" v-for="item in ruleFormModule.regionList" :key="item"></el-option>
+            <el-option :label="item.name" :value="item.name"  v-for="item in ruleFormModule.regionList" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="公司选择">
@@ -144,28 +149,28 @@
         <el-form-item label="用户名">
           <el-input v-model="ruleFormModuleUpdate.name" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="登陆密码" prop="pass">
-          <el-input v-model="ruleFormModuleUpdate.pass" placeholder="******"></el-input>
+        <el-form-item label="登陆密码">
+          <el-input v-model="ruleFormModuleUpdate.pass" :disabled="true" placeholder="******"></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" prop="pass2">
-          <el-input v-model="ruleFormModuleUpdate.pass2" placeholder="******"></el-input>
+        <el-form-item label="确认密码">
+          <el-input v-model="ruleFormModuleUpdate.pass2" :disabled="true" placeholder="******"></el-input>
         </el-form-item>
         <el-form-item label="角色选择">
-          <el-select :disabled="true" v-model="ruleFormModuleUpdate.region"  style="width: 100%" placeholder="请选择类型" @change="region_change">
-            <el-option :label="item" :value="item" v-for="item in ruleFormModuleUpdate.regionList" :key="item"></el-option>
+          <el-select  v-model="ruleFormModuleUpdate.region" :disabled="true" style="width: 100%" placeholder="请选择类型" @change="region_change">
+            <el-option :label="item.name" :value="item.name" v-for="item in ruleFormModuleUpdate.regionList" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="公司选择">
-          <el-select :disabled="true" v-model="ruleFormModuleUpdate.gs" style="width: 100%" placeholder="请选择公司" @change="gsChange">
-            <el-option :label="item.name" :value="item.name" v-for="item in ruleFormModuleUpdate.gsList" :key="item.code"></el-option>
+          <el-select v-model="ruleFormModuleUpdate.gs" :disabled="true" style="width: 100%" placeholder="请选择公司" @change="gsChange_upData">
+            <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModuleUpdate.gsList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门选择">
-          <el-select :disabled="true" v-model="ruleFormModuleUpdate.bm" style="width: 100%" placeholder="请选择部门">
+          <el-select v-model="ruleFormModuleUpdate.bm" :disabled="true" style="width: 100%" placeholder="请选择部门">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModuleUpdate.bmList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色备注">
+        <el-form-item label="用户备注">
           <el-input type="textarea" v-model="ruleFormModuleUpdate.desc"></el-input>
         </el-form-item>
       </el-form>
@@ -252,7 +257,7 @@ export default{
   methods: {
     onSubmit () {
       this.dialogVisible = true
-      this.getCompany()
+
     },
     handleClose () {
       this.dialogVisible = false
@@ -267,6 +272,7 @@ export default{
     },
     region_change (val) {
       console.log(val)
+      this.ruleFormModule.region = val
     },
     /*用户列表展示*/
     users () {
@@ -281,24 +287,25 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
+        console.log(res)
         this.tableData = []
-        if(res !== null && res.data.code == 0 ){
-          this.totalCount = res.data.result.total
-          let tableList = res.data.result.datas
+        if(res !== null && res.data.code == 16000003 ){
+          this.totalCount = res.data.data.totalNum
+          let tableList = res.data.data.datas
           for(let i =0 ;i<tableList.length;i++){
-            let str = res.data.result.datas[i].extendedProperties
+            let str = res.data.data.datas[i].extendedProperties
             let obj = JSON.parse(str) || ''
             this.tableData.push({
               name:tableList[i].accountName,
               /*tel:res.data.result.datas[i].telephone,
               email:res.data.result.datas[i].email,*/
-              gs:obj.company == undefined?'':obj.company,
-              bm:obj.department== undefined?'':obj.department,
+              gs:obj.company == undefined?'':obj.companyName,
+              bm:obj.department== undefined?'':obj.departmentName,
               region:obj.region== undefined?'':obj.region,
               zhmc:tableList[i].tenantName,
               time:tableList[i].updateTime,
               id:tableList[i].accountId,
-              desc:tableList[i].description,
+              desc:tableList[i].description==null?'':tableList[i].description,
             })
           }
         }
@@ -325,19 +332,23 @@ export default{
       }
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
         this.tableData = []
-        if(res !== null && res.data.code == 0 ){
-          this.totalCount = res.data.result.total
-          for(let i =0 ;i<res.data.result.datas.length;i++){
+        if(res !== null && res.data.code == 16000003 ){
+          this.totalCount = res.data.data.totalNum
+          let tableList = res.data.data.datas
+          for(let i =0 ;i<tableList.length;i++){
+            let str = res.data.data.datas[i].extendedProperties
+            let obj = JSON.parse(str) || ''
             this.tableData.push({
-              name:res.data.result.datas[i].accountName,
+              name:tableList[i].accountName,
               /*tel:res.data.result.datas[i].telephone,
               email:res.data.result.datas[i].email,*/
-              gs:res.data.result.datas[i].extendedProperties !==null?JSON.parse(res.data.result.datas[i].extendedProperties).company:'',
-              bm:res.data.result.datas[i].extendedProperties !==null?JSON.parse(res.data.result.datas[i].extendedProperties).department:'',
-              zhmc:res.data.result.datas[i].tenantName,
-              time:res.data.result.datas[i].updateTime,
-              id:res.data.result.datas[i].accountId,
-              desc:res.data.result.datas[i].description
+              gs:obj.company == undefined?'':obj.company,
+              bm:obj.department== undefined?'':obj.department,
+              region:obj.region== undefined?'':obj.region,
+              zhmc:tableList[i].tenantName,
+              time:tableList[i].updateTime,
+              id:tableList[i].accountId,
+              desc:tableList[i].description,
             })
           }
         }
@@ -362,13 +373,14 @@ export default{
       }
       let urlData =  this.del_id
       this.$store.dispatch('DEL_USER_FOR_USERS', { header, urlData}).then(res => {
-        if(res !== null && res.code == 0){
+        console.log(res)
+        if(res !== null && res.code == 16000003){
           _this.users()
         }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '1000'
         })
       }).catch(error=>{
@@ -377,12 +389,109 @@ export default{
     },
     /*修改的相关参数*/
     /*修改角色*/
+    updateClick (row) {
+      this.xg_id = row.id
+      this.ruleFormModuleUpdate.name = row.name
+      this.ruleFormModuleUpdate.region = row.region
+      this.ruleFormModuleUpdate.desc = row.desc
+      this.ruleFormModuleUpdate.gs = row.gs
+      this.ruleFormModuleUpdate.bm = row.bm
+      this.dialog_xg = true
+      console.log(row)
+      /*获取当前公司的部门信息*/
+      let vm = this
+      let code = ''
+      for(let i = 0;i<vm.ruleFormModuleUpdate.gsList.length;i++){
+        if(vm.ruleFormModuleUpdate.gsList[i].code == row.gs){
+          code = vm.ruleFormModuleUpdate.gsList[i].code
+        }
+      }
+      let param = {
+        type:'',
+        code:code
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      this.ruleFormModuleUpdate.bmList = []
+      this.$store.dispatch('GET_DEPARTMENT', { param, header }).then((res, req) => {
+        if(res !== null && res.data.code == 16000003 ){
+          for(let i =0 ;i<res.data.data.length;i++){
+            this.ruleFormModuleUpdate.bmList.push({
+              name:res.data.data[i].name,
+              code:res.data.data[i].code
+            })
+          }
+        }
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
+    xgClose(){
+      this.dialog_xg = false
+    },
+    yh_xg(formName){
+      let _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          /*let roleId = ''
+          for(let i = 0;i<this.ruleFormModuleUpdate.regionList.length;i++){
+            if(this.ruleFormModuleUpdate.regionList[i].name == this.ruleFormModuleUpdate.region){
+              roleId = this.ruleFormModuleUpdate.regionList[i].value
+            }
+          }
+          let extendedProperties = {
+            "company" : this.ruleFormModuleUpdate.gs,
+            "department" : this.ruleFormModuleUpdate.bm,
+            "region" : this.ruleFormModuleUpdate.region,
+            "roleId" : roleId,
+            "projectId":sessionStorage.getItem('projectId')
+          }
+          extendedProperties = JSON.stringify(extendedProperties)*/
+          let param = {
+            "description": this.ruleFormModuleUpdate.desc,
+            //"extendedProperties": extendedProperties,
+          }
+          let header = {
+            accessToken: sessionStorage.getItem('accessToken')
+          }
+          let urlData =  this.xg_id
+          console.log(urlData)
+          this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
+            if(res !== null && res.code == 16000003){
+              _this.users()
+              this.dialog_xg = false
+            }
+            _this.$notify({
+              title: '提示信息',
+              message: res.msg,
+              type: res.code === 16000003 ? 'success' : 'error',
+              duration: '1000'
+            })
+          }).catch(error=>{
+            console.error(error);
+          })
+        } else {
+          return false;
+        }
+      });
+
+    },
+    /*新建用户*/
     insertUserForUsers(){
       let _this = this
+      let roleId = ''
+      for(let i = 0;i<this.ruleFormModule.regionList.length;i++){
+        if(this.ruleFormModule.regionList[i].name == this.ruleFormModule.region){
+          roleId = this.ruleFormModule.regionList[i].value
+        }
+      }
       let extendedProperties = {
         "company" : this.ruleFormModule.gs,
         "department" : this.ruleFormModule.bm,
-        "region" : this.ruleFormModule.region
+        "region" : this.ruleFormModule.region,
+        "roleId" : roleId,
+        "projectId":sessionStorage.getItem('projectId')
       }
       extendedProperties = JSON.stringify(extendedProperties)
       let pass = this.ruleFormModule.pass
@@ -398,7 +507,7 @@ export default{
       }
       let urlData =  this.del_id
       this.$store.dispatch('INSERT_USER_FOR_USERS', { param, header}).then(res => {
-        if(res !== null && res.code == 0){
+        if(res !== null && res.code == 16000003){
           _this.users()
           this.dialogVisible = false
           _this.ruleFormModule.name = ''
@@ -413,60 +522,13 @@ export default{
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 0 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
       }).catch(error=>{
         console.error(error);
       })
     },
-    updateClick (row) {
-      this.xg_id = row.id
-      this.ruleFormModuleUpdate.name = row.name
-      this.ruleFormModuleUpdate.region = row.region
-      this.ruleFormModuleUpdate.desc = row.desc
-      this.ruleFormModuleUpdate.gs = row.gs
-      this.ruleFormModuleUpdate.bm = row.bm
-      this.dialog_xg = true
-    },
-    xgClose(){
-      this.dialog_xg = false
-    },
-    yh_xg(formName){
-      let _this = this
-      _this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let param = {
-            accountPasswd: sha1(this.ruleFormModuleUpdate.pass),
-            description: this.ruleFormModuleUpdate.desc
-          }
-          let header = {
-            accessToken: sessionStorage.getItem('accessToken')
-          }
-          let urlData = this.xg_id
-          this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
-            if(res !== null && res.code == 0){
-              _this.users()
-              this.dialog_xg = false
-              this.ruleFormModuleUpdate.pass=''
-              this.ruleFormModuleUpdate.desc = ''
-            }
-            _this.$notify({
-              title: '提示信息',
-              message: res.msg,
-              type: res.code === 0 ? 'success' : 'error',
-              duration: '1000'
-            })
-          }).catch(error=>{
-            console.error(error);
-          })
-        } else {
-          return false;
-        }
-      });
-
-    },
-    /*新建用户*/
     insertUser(formName){
       let _this = this
       _this.$refs[formName].validate((valid) => {
@@ -492,9 +554,16 @@ export default{
       }
       this.ruleFormModule.regionList = []
       this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
-        if(res !== null && res.data.code == 0 ){
-          for(let i =0 ;i<res.data.result.datas.length;i++){
-            this.ruleFormModule.regionList.push(res.data.result.datas[i].rolename)
+        if(res !== null && res.data.code == 16000003 ){
+          for(let i =0 ;i<res.data.data.datas.length;i++){
+            this.ruleFormModule.regionList.push({
+              name:res.data.data.datas[i].rolename,
+              value:res.data.data.datas[i].id
+            })
+            this.ruleFormModuleUpdate.regionList.push({
+              name:res.data.data.datas[i].rolename,
+              value:res.data.data.datas[i].id
+            })
           }
         }
       }).catch((error) => {
@@ -509,12 +578,17 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.ruleFormModule.gsList = []
+      this.ruleFormModuleUpdate.gsList = []
       this.$store.dispatch('PROVIDER_MANAGE', { param, header }).then((res, req) => {
-        if(res !== null && res.data.code == 200 ){
-          for(let i =0 ;i<res.data.data.length;i++){
+        if(res !== null && res.data.code == 16000003 ){
+          for(let i =0 ;i<res.data.data.viewResult.length;i++){
             this.ruleFormModule.gsList.push({
-              name:res.data.data[i].companyName,
-              code:res.data.data[i].code
+              name:res.data.data.viewResult[i].companyName,
+              code:res.data.data.viewResult[i].code
+            })
+            this.ruleFormModuleUpdate.gsList.push({
+              name:res.data.data.viewResult[i].companyName,
+              code:res.data.data.viewResult[i].code
             })
           }
         }
@@ -527,7 +601,7 @@ export default{
       let vm = this
       let code = ''
       for(let i = 0;i<vm.ruleFormModule.gsList.length;i++){
-        if(vm.ruleFormModule.gsList[i].name == val){
+        if(vm.ruleFormModule.gsList[i].code == val){
           code = vm.ruleFormModule.gsList[i].code
         }
       }
@@ -540,7 +614,8 @@ export default{
       }
       this.ruleFormModule.bmList = []
       this.$store.dispatch('GET_DEPARTMENT', { param, header }).then((res, req) => {
-        if(res !== null && res.data.code == 200 ){
+
+        if(res !== null && res.data.code == 16000003 ){
           for(let i =0 ;i<res.data.data.length;i++){
             this.ruleFormModule.bmList.push({
               name:res.data.data[i].name,
@@ -551,10 +626,41 @@ export default{
       }).catch((error) => {
         console.error(error)
       })
+    },
+    gsChange_upData(val){
+      let vm = this
+      let code = ''
+      for(let i = 0;i<vm.ruleFormModuleUpdate.gsList.length;i++){
+        if(vm.ruleFormModuleUpdate.gsList[i].code == val){
+          code = vm.ruleFormModuleUpdate.gsList[i].code
+        }
+      }
+      let param = {
+        type:'',
+        code:code
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      this.ruleFormModuleUpdate.bmList = []
+      this.$store.dispatch('GET_DEPARTMENT', { param, header }).then((res, req) => {
+        if(res !== null && res.data.code == 16000003 ){
+          for(let i =0 ;i<res.data.data.length;i++){
+            this.ruleFormModuleUpdate.bmList.push({
+              name:res.data.data[i].name,
+              code:res.data.data[i].code
+            })
+          }
+        }
+      }).catch((error) => {
+        console.error(error)
+      })
     }
+
   },
   mounted () {
     this.users()
+    this.getCompany()
     this.getRegion()
   }
 }

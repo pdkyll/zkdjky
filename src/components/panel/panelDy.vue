@@ -40,7 +40,7 @@
           <span class="mr-10 color-999">
             有帮助吗？
           </span>
-          <el-button class="qx">取消订阅</el-button>
+          <el-button class="qx" @click="cancelItem(item.index)">取消订阅</el-button>
           <el-button class="ll" @click="open_hide(item.index,item.dis.ref,item.bar.ref,item.line.ref,item.pie.ref)">浏览全部</el-button>
         </p>
       </div>
@@ -162,17 +162,18 @@ export default{
     getAttention(){
       let _this = this
       let header = {
+        accessToken: sessionStorage.getItem('accessToken')
       }
       let param = {
         creator: sessionStorage.getItem('accountId'),
       }
       _this.$store.dispatch('GET_ATTENTION_LIST', {param, header}).then(res => {
-        if(res.status === 200){
-          for(let i=0;i<res.data.length;i++){
-            let time = res.data[i].dateRange.split('&')
+        if(res.data.code === 16000003){
+          let data = res.data.data
+          for(let i=0;i<data.length;i++){
+            let time = data[i].dateRange.split('&')
             time = time[0]+'至'+time[1]
-            let atlasArr = res.data[i].atlas.split(',')
-
+            let atlasArr = data[i].atlas.split(',')
             let obj = {
               isShow: false,
               dis: atlasArr.indexOf('4')>=0?{show:true,ref:'dis_'+i+'_4'}:{show:false,ref:'dis_'+i+'_4'},
@@ -180,19 +181,19 @@ export default{
               line: atlasArr.indexOf('2')>=0?{show:true,ref:'line_'+i+'_2'}:{show:false,ref:'line_'+i+'_2'},
               pie: atlasArr.indexOf('3')>=0?{show:true,ref:'pie_'+i+'_3'}:{show:false,ref:'pie_'+i+'_3'},
               index: i,
-              data_id:res.data[i].id,
-              type:res.data[i].type,
-              name:res.data[i].statisticalName,
+              data_id: data[i].id,
+              type: data[i].type,
+              name: data[i].statisticalName,
               sj: time,
-              gs: res.data[i].companyName,
-              cp: res.data[i].productName,
-              bm: res.data[i].departmentName,
-              md: res.data[i].remarks,
-              view:res.data[i].subscribeCount,
-              like:res.data[i].funp,
-              chartData:res.data[i].financialMap,
-              tableHeader:  res.data[i].totalTableData.headerMap,
-              tableData: res.data[i].totalTableData.transformData
+              gs: data[i].companyName,
+              cp: data[i].productName,
+              bm: data[i].departmentName,
+              md: data[i].remarks,
+              view: data[i].subscribeCount,
+              like: data[i].funp,
+              chartData: data[i].financialMap,
+              tableHeader: data[i].totalTableData.headerMap,
+              tableData: data[i].totalTableData.transformData
             }
 
             _this.tjList.push(obj)
@@ -261,6 +262,33 @@ export default{
         })
       }).catch(error => {
         console.log(error)
+      })
+    },
+    /*取消单挑订阅*/
+    cancelItem(flag){
+      let vm = this
+      let dataId = this.tjList[flag].data_id
+      let type = this.tjList[flag].type
+      let header = {
+      }
+      let param = {
+        account_id: sessionStorage.getItem('accountId'),
+        data_id:dataId,
+        type:type
+      }
+      this.$store.dispatch('UN_SUBSCRIBER_NORM', {param, header}).then(res => {
+        if(res.data.code == 16000003){
+          vm.getAttention()
+        }
+        vm.$notify({
+          title: '提示信息',
+          message: res.data.msg,
+          type: res.data.code === 16000003 ? 'success' : 'error',
+          duration: '2000'
+        })
+
+      }).catch(error=>{
+        console.error(error);
       })
     },
     openDialog(){

@@ -77,6 +77,7 @@ export default{
           sessionStorage.setItem('isOk', res.code)
           sessionStorage.setItem('accountId', data.accountId)
           sessionStorage.setItem('accessToken', data.accessToken)
+          sessionStorage.setItem('projectId', '0ba94f86769c42a4aba6282834aee3b9')
           /*用于水印显示的session存储*/
           sessionStorage.setItem('userName', data.accountName)
           sessionStorage.setItem('userType', data.tenantName)

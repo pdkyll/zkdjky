@@ -37,8 +37,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
             <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -293,10 +293,10 @@ export default{
             _this.$notify({
               title: '提示信息',
               message: res.msg,
-              type: res.code === 200 ? 'success' : 'error',
+              type: res.code === 16000003 ? 'success' : 'error',
               duration: '2000'
             })
-            if(res.code !== 200){
+            if(res.code !== 16000003){
               return
             }
             _this.dialog_xg = false
@@ -330,7 +330,7 @@ export default{
         _this.$notify({
           title: '提示信息',
           message: res.msg,
-          type: res.code === 200 ? 'success' : 'error',
+          type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
       }).catch((error) => {
