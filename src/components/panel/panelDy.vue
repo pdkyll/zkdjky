@@ -5,7 +5,7 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="24">
-        <el-button class="pull-right qx" size="small" v-if="tjList.length > 0" @click="openDialog">取消全部订阅</el-button>
+        <el-button class="pull-right qx" size="small" v-if="tjList.length > 0 && $store.getters.getPermissions.indexOf('unsubscribeAllInformationAttention')>-1" @click="openDialog">取消全部订阅</el-button>
       </el-col>
     </el-row>
     <div class="box-wrapper" v-for="(item, index) in tjList" :key="index">
@@ -40,8 +40,8 @@
           <span class="mr-10 color-999">
             有帮助吗？
           </span>
-          <el-button class="qx" @click="cancelItem(item.index)">取消订阅</el-button>
-          <el-button class="ll" @click="open_hide(item.index,item.dis.ref,item.bar.ref,item.line.ref,item.pie.ref)">浏览全部</el-button>
+          <el-button class="qx" v-if="$store.getters.getPermissions.indexOf('unsubscribeInformationAttention')>-1" @click="cancelItem(item.index)">取消订阅</el-button>
+          <el-button class="ll" v-if="$store.getters.getPermissions.indexOf('viewAllInformationAttention')>-1" @click="open_hide(item.index,item.dis.ref,item.bar.ref,item.line.ref,item.pie.ref)">浏览全部</el-button>
         </p>
       </div>
       <div class="right-chart">

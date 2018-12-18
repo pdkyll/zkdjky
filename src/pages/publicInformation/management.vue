@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm">
-        <el-form-item class="no-mb ml-10" label="日期">
+      <el-form :inline="true" :model="ruleForm" >
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1" class="no-mb ml-10" label="日期">
           <el-date-picker
             size="small"
             v-model="ruleForm.time"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item class="no-mb" label="名称">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1" class="no-mb" label="名称">
           <el-input
             size="small"
             placeholder="输入名称"
@@ -23,10 +23,10 @@
             @change="searchInput">
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
-        <el-form-item class="pull-right no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('addFormulaManagement')>-1" class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建信息
@@ -86,8 +86,8 @@
           width="140">
           <template slot-scope="scope">
             <!--<el-button @click="handleClick(scope.row)" type="text" size="small">发布</el-button>-->
-            <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-            <el-button @click="deleteHandleClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small"  v-if="$store.getters.getPermissions.indexOf('editFormulaManagement')>-1">修改</el-button>
+            <el-button @click="deleteHandleClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('delFormulaManagement')>-1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -13,13 +13,13 @@
          active-text-color="#fff"
         :default-active="activeIndex"
         @select="handleSelect">
-        <router-link v-if="!item.child" v-for="(item, index) in menu_list" :to="item.pathUrl">
+        <router-link v-if="!item.child && item.flag" v-for="(item, index) in menu_list" :to="item.pathUrl">
           <el-menu-item :index="index+''">
             <i class="iconfont" :class="item.iClass"></i>
             {{item.name}}
           </el-menu-item>
         </router-link>
-        <el-submenu v-else index="">
+        <el-submenu v-if="item.child && item.flag" v-for="(item, index) in menu_list" index="">
           <template slot="title">
             <i class="iconfont" :class="item.iClass"></i>
             <span>{{item.name}}</span>
@@ -154,6 +154,9 @@ export default{
     }
   },
   created (){
+    let userPermissionsStr = sessionStorage.getItem('userPermissions')
+    let permissions = userPermissionsStr.split(',')
+    this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   mounted () {
     let vm = this
@@ -173,37 +176,50 @@ export default{
         {
           name:'历史数据',
           pathUrl:'historyData',
-          iClass:'icon-shuju3'
+          iClass:'icon-shuju3',
+          child:false,
+          flag:this.$store.getters.getPermissions.indexOf('historicalData')>-1?true:false
         },
         {
           name:'财务凭证',
           pathUrl:'pzlb',
-          iClass:'icon-yewushouliliebiao'
+          child:false,
+          iClass:'icon-yewushouliliebiao',
+          flag:this.$store.getters.getPermissions.indexOf('financialCertificate')>-1?true:false
         },
         {
           name:'指标统计',
           pathUrl:'newNorm',
           child:true,
+          flag:this.$store.getters.getPermissions.indexOf('indexStatistics')>-1?true:false,
           childrenList:[
             {
               name:'财务指标',
               pathUrl:'newNorm',
-              iClass:'icon-youxianzijin'
+              child:false,
+              iClass:'icon-youxianzijin',
+              flag:this.$store.getters.getPermissions.indexOf('financialIndex')>-1?true:false
             },
             {
               name:'销售指标',
               pathUrl:'publicInformation',
-              iClass:'icon-qiye'
+              iClass:'icon-qiye',
+              child:false,
+              flag:this.$store.getters.getPermissions.indexOf('salesIndex')>-1?true:false
             },
             {
               name:'产品指标',
               pathUrl:'publicInformation',
-              iClass:'icon-shumogongjuiconshichangfenxi-'
+              child:false,
+              iClass:'icon-shumogongjuiconshichangfenxi-',
+              flag:this.$store.getters.getPermissions.indexOf('productIndex')>-1?true:false
             },
             {
               name:'人事指标',
               pathUrl:'publicInformation',
-              iClass:'icon-yezhukaifashang'
+              iClass:'icon-yezhukaifashang',
+              child:false,
+              flag:this.$store.getters.getPermissions.indexOf('personnelIndex')>-1?true:false
             }
           ],
           iClass:'icon-zhishu'
@@ -216,7 +232,9 @@ export default{
         {
           name:'公示管理',
           pathUrl:'management',
-          iClass:'icon-guanggaoxianxing'
+          child:false,
+          iClass:'icon-guanggaoxianxing',
+          flag:this.$store.getters.getPermissions.indexOf('formulaManagement')>-1?true:false
         }
       ]
     }
@@ -226,22 +244,30 @@ export default{
         {
           name:'公司管理',
           pathUrl:'company',
-          iClass:'icon-swticonjiudian'
+          child:false,
+          iClass:'icon-swticonjiudian',
+          flag:this.$store.getters.getPermissions.indexOf('companyManagement')>-1?true:false
         },
         {
           name:'部门管理',
           pathUrl:'department',
-          iClass:'icon-xingzheng'
+          child:false,
+          iClass:'icon-xingzheng',
+          flag:this.$store.getters.getPermissions.indexOf('divisionalManagement')>-1?true:false
         },
         {
           name:'角色管理',
           pathUrl:'role',
-          iClass:'icon-jiaose'
+          child:false,
+          iClass:'icon-jiaose',
+          flag:this.$store.getters.getPermissions.indexOf('roleManagement')>-1?true:false
         },
         {
           name:'用户管理',
           pathUrl:'user',
-          iClass:'icon-men'
+          child:false,
+          iClass:'icon-men',
+          flag:this.$store.getters.getPermissions.indexOf('userManagement')>-1?true:false
         }
       ]
     }

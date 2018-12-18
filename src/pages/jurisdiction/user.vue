@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <el-form-item class="no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1" class="no-mb">
           <el-input
             size="small"
             placeholder="输入用户名称"
@@ -11,10 +11,10 @@
             v-model.trim="ruleForm.input">
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
-        <el-form-item class="pull-right no-mb">
+        <el-form-item class="pull-right no-mb" v-if="$store.getters.getPermissions.indexOf('addUserManagement')>-1">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建用户
@@ -68,8 +68,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="updateClick(scope.row)" type="text" size="small">修改</el-button>
-            <el-button type="text" size="small" @click="removeClick(scope.row)">删除</el-button>
+            <el-button @click="updateClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('editUserManagement')>-1">修改</el-button>
+            <el-button type="text" size="small" @click="removeClick(scope.row)" v-if="$store.getters.getPermissions.indexOf('delUserManagement')>-1">删除</el-button>
             <!--<el-button type="text" size="small">停用</el-button>-->
           </template>
         </el-table-column>

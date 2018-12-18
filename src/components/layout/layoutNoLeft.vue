@@ -27,8 +27,7 @@ import Watermark from '../../vendor/watermark'
 export default{
   data () {
     return {
-      title: '',
-      userPermissions: []
+      title: ''
     }
   },
   components: {},
@@ -36,8 +35,7 @@ export default{
   },
   created (){
     let userPermissionsStr = sessionStorage.getItem('userPermissions')
-    this.userPermissions = userPermissionsStr.split(',')
-    let permissions = this.userPermissions
+    let permissions = userPermissionsStr.split(',')
     this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   mounted () {

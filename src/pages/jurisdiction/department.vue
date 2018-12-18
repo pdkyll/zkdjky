@@ -2,13 +2,13 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm">
-        <el-form-item label="公司名称" class="ml-10 no-mb">
+        <el-form-item label="公司名称" class="ml-10 no-mb" v-if="$store.getters.getPermissions.indexOf('queryDivisionalManagement')>-1">
           <el-select size="small" v-model="ruleForm.companyName" placeholder="请选择公司名称" @change="search_param_list">
             <el-option label="全部" value="all"></el-option>
             <el-option v-for="item in optionData" :key="'opt' + item.code" :label="item.companyName" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="pull-right">
+        <el-form-item class="pull-right" v-if="$store.getters.getPermissions.indexOf('addDivisionalManagement')>-1">
           <el-button class="join-btn" size="small" @click="add_BM">
             <i class="el-icon-plus"></i>
             新建部门
@@ -47,8 +47,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="xg(scope.row)" v-if="$store.getters.getPermissions.indexOf('editDivisionalManagement')>-1">修改</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('delDivisionalManagement')>-1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

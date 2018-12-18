@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <el-form-item class="no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="no-mb">
           <el-input
             size="small"
             placeholder="输入角色名称"
@@ -11,10 +11,10 @@
             v-model="ruleForm.input">
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
-        <el-form-item class="pull-right no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('addRoleManagement')>-1" class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建角色
@@ -48,8 +48,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button @click="updateClick(scope.row)" type="text" size="small">修改</el-button>
-            <el-button @click="deleteClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button @click="updateClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('editRoleManagement')>-1">修改</el-button>
+            <el-button @click="deleteClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('delRoleManagement')>-1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

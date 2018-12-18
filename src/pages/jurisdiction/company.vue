@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="shadow-box clearFix">
+    <div class="shadow-box clearFix" v-if="$store.getters.getPermissions.indexOf('addCompanyManagement')>-1">
         <el-button class="join-btn pull-right" size="small" @click="add_GS()">
           <i class="el-icon-plus"></i>
           新建公司
@@ -37,8 +37,8 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="xg(scope.row)">修改</el-button>
-            <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="xg(scope.row)" v-if="$store.getters.getPermissions.indexOf('editCompanyManagement')>-1">修改</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('delCompanyManagement')>-1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

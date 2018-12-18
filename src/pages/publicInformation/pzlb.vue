@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline" v-if="$store.getters.getPermissions.indexOf('queryFinancialCertificate')>-1">
           <el-form-item class="no-mb ml-10" label="日期">
             <el-date-picker
               size="small"

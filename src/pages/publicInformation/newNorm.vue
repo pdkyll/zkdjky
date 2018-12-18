@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm">
-        <el-form-item class="no-mb ml-10" label="日期">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="no-mb ml-10" label="日期">
           <el-date-picker
             size="small"
             v-model="ruleForm.time"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item class="no-mb" label="名称">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="no-mb" label="名称">
           <el-input
             size="small"
             placeholder="输入名称"
@@ -23,14 +23,14 @@
             v-model.trim="ruleForm.infoName">
           </el-input>
         </el-form-item>
-        <el-form-item class="pull-right no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1">
+          <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
+        </el-form-item>
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('addFinancialIndex')>-1" class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
             <i class="el-icon-plus"></i>
             新建指标
           </el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -76,11 +76,11 @@
           align
           width="200">
           <template slot-scope="scope">
-               <el-button type="text" v-show="scope.row.fb" @click="publishNorm(scope.row)" size="small">发布</el-button><!--
-            --><el-button type="text" v-show="scope.row.qxfb" @click="unPublishNorm(scope.row)" size="small">取消发布</el-button><!--
-            --><el-button type="text" v-show="scope.row.dy" @click="subscriberNorm(scope.row)" size="small">订阅</el-button><!--
-            --><el-button type="text" v-show="scope.row.qxdy" @click="un_SubscriberNorm(scope.row)" size="small">取消订阅</el-button><!--
-            --><el-button type="text" v-show="scope.row.sc" @click="deleteNorm(scope.row)" size="small">删除</el-button>
+               <el-button type="text" v-show="scope.row.fb" @click="publishNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('publishFinancialIndex')>-1">发布</el-button><!--
+            --><el-button type="text" v-show="scope.row.qxfb" @click="unPublishNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('unpublishFinancialIndex')>-1">取消发布</el-button><!--
+            --><el-button type="text" v-show="scope.row.dy" @click="subscriberNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('subscriptionFinancialIndex')>-1">订阅</el-button><!--
+            --><el-button type="text" v-show="scope.row.qxdy" @click="un_SubscriberNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('unsubscribeFinancialIndex')>-1">取消订阅</el-button><!--
+            --><el-button type="text" v-show="scope.row.sc" @click="deleteNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('delFinancialIndex')>-1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

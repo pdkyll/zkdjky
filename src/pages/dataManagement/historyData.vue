@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline"  v-if="$store.getters.getPermissions.indexOf('queryHistoricalData')>-1">
         <el-form-item label="公司名称" class="no-mb ml-10">
           <el-select size="small" v-model="ruleForm.companyName" @change="selectChange" placeholder="请选择公司">
             <el-option
@@ -26,7 +26,7 @@
       </div>
       <div class="right-table pull-left shadow">
         <div class="clearFix">
-          <el-button class="qx pull-right" size="small" @click="export2Excel(tableData)">导出</el-button>
+          <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="export2Excel(tableData)">导出</el-button>
         </div>
         <div class="mt-20">
           <el-table
