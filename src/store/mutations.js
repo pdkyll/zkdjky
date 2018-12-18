@@ -13,8 +13,23 @@ export default {
   SET_LIST: (state, {ids}) => {
     state.string = ids
   },
+  /**
+   * 添加公司
+   * @param state
+   * @param companyArr
+   * @constructor
+   */
   COMMIT_COMPANY: (state, {companyArr}) =>{
     state.companyArr = companyArr
+  },
+  /**
+   * 添加用户权限的状态
+   * @param state
+   * @param permissions
+   * @constructor
+   */
+  USER_PERMISSIONS: (state, {permissions}) =>{
+    state.permissions = permissions
   },
   /**
    * iframe打开更改公共头部信息

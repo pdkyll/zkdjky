@@ -4,7 +4,7 @@
 <template>
  <div>
    <el-row class="table-header" :gutter="20">
-     <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
+     <el-form :inline="true" :model="ruleForm" class="demo-form-inline" v-if="$store.getters.getPermissions.indexOf('queryFormulaSetting')>-1">
        <el-form-item label="公司名称" class="ml-10">
          <el-select v-model="ruleForm.companyName" size="small" @change="companyChange"  placeholder="请选择活动区域">
            <el-option :label="item.name" :value="item.value" v-for="item in companyList"></el-option>

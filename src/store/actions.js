@@ -85,6 +85,17 @@ export default {
     return
   },
   /**
+   * 存储权限的状态
+   * @param commit
+   * @param state
+   * @param companyArr
+   * @constructor
+   */
+  SET_USER_PERMISSIONS:({commit, state}, {permissions}) => {
+    commit('USER_PERMISSIONS', {permissions})
+    return
+  },
+  /**
    * iframe内公共头部
    * @param commit
    * @param state

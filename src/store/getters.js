@@ -19,5 +19,9 @@ export default {
   getUserMassage (state) {
     const { userName,userType} = state
     return { userName,userType}
+  },
+  getPermissions (state) {
+    const { permissions } = state
+    return permissions
   }
 }

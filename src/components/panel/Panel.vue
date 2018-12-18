@@ -20,7 +20,7 @@
                 <div style="text-align: center; width: 19%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
                 <div style="text-align: right; width: 9%">
                   <!--<i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>-->
-                  <i class="el-icon-download" style="cursor: pointer" @click="downItem(item.ID)"></i>
+                  <i class="el-icon-download" v-if="$store.getters.getPermissions.indexOf('downloFormulaSetting')>-1" style="cursor: pointer" @click="downItem(item.ID)"></i>
                   <i v-if="item.DATA_TYPE===1" class="el-icon-document"></i>
                   <i v-if="item.DATA_TYPE===2" class="el-icon-service"></i>
                   <i v-if="item.DATA_TYPE===3" class="el-icon-caret-right"></i>

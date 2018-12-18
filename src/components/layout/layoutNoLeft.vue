@@ -4,7 +4,7 @@
       <el-header style="height: auto">
         <div>
             <div class="left-logo">
-              <img src="../../assets/green-logo.png" alt="">
+              <img src="@/assets/green-logo.png" alt="">
             </div>
         </div>
         <div class="nav-menu-title">
@@ -27,14 +27,18 @@ import Watermark from '../../vendor/watermark'
 export default{
   data () {
     return {
-      title: ''
+      title: '',
+      userPermissions: []
     }
   },
   components: {},
   methods: {
   },
   created (){
-
+    let userPermissionsStr = sessionStorage.getItem('userPermissions')
+    this.userPermissions = userPermissionsStr.split(',')
+    let permissions = this.userPermissions
+    this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   mounted () {
     /*获取用户信息并通过水印方法显示到屏幕上*/

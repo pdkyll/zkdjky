@@ -13,6 +13,7 @@ export function createStore () {
     state: {
       publicName:'',
       companyArr: [],
+      permissions:[],
       userName:'',
       userType:'',
       userPhone:'',
