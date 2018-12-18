@@ -3,14 +3,14 @@
 let watermark = {}
 
 let setWatermark = (str) => {
-  let arr = str.split('-')
+  //let arr = str.split('-')
   let id = '1.23452384164.123412415'
   if (document.getElementById(id) !== null) {
     document.body.removeChild(document.getElementById(id))
   }
-  console.log(arr)
+  //console.log(arr)
   let can = document.createElement('canvas')
-  can.width = 400
+  can.width = 500
   can.height = 200
   let cans = can.getContext('2d')
   cans.rotate(-10 * Math.PI / 180)
@@ -18,8 +18,8 @@ let setWatermark = (str) => {
   cans.fillStyle = 'rgba(200, 200, 200, 0.5)'
   cans.textAlign = 'left'
   cans.textBaseline = 'Middle'
-  cans.fillText(arr[0], can.width/2, can.height -40)
-  cans.fillText(arr[1], can.width/2, can.height -80)
+  cans.fillText(str, can.width/3, can.height -40)
+  //cans.fillText(arr[1], can.width/2, can.height -80)
   //cans.fillText(arr[2], can.width/2, can.height -120)
   //cans.fillText(arr[3], can.width/2, can.height -160)
   let div = document.createElement('div')
