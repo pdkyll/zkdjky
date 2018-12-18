@@ -723,6 +723,48 @@
           if(res.code == 16000003){
             _this.dialogVisible3 = false
             _this.getNormTable()
+            _this.formData1={
+              remarks: '',
+              statisticalName: ''
+            }
+            _this.formData2= {
+              date1: '',
+              date2: '',
+              companys: [],
+              departments: [],
+              products: [],
+              dateType: '1'
+            }
+            _this.formData2T= {
+              dateType: [{
+                type: 'date',
+                format: 'yyyy 年 MM 月 dd 日',
+                value_format: 'yyyy-MM-dd'
+              },{
+                type: 'month',
+                format: 'yyyy 年 MM 月',
+                value_format: 'yyyy-MM'
+              },{
+                type: 'quarter',
+                format: 'yyyy 年 M 季',
+                value_format: 'yyyy-M'
+              },{
+                type: 'year',
+                format: 'yyyy 年',
+                value_format: 'yyyy'
+              }],
+                companyTransfer: [],
+                departmentsTree: [],
+                productsArr: [],
+            }
+            _this.formData3= {
+              indicatorIndex: '',
+                atlas: []
+            }
+            _this.formData3T= {
+              typeArr: [],
+                typeOld: {}
+            }
           }
         }).catch(error => {
           console.log(error)
@@ -776,9 +818,8 @@
         param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
         param = Object.assign({}, param, _this.formData1)
         _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
-          if(res != 1){
-            console.log(res)
-            _this.chartData = res
+          if(res.code == 16000003){
+            _this.chartData = res.data
           }else{
             _this.$notify({
               title: '提示信息',
@@ -805,7 +846,8 @@
             accessId: sessionStorage.getItem('accessId')
           }
           _this.$store.dispatch('PROVIDER_MANAGE', {param, header}).then(res=>{
-            let companyArr = _this.generateData(res.data.data)
+            console.log(res.data.data.viewResult)
+            let companyArr = _this.generateData(res.data.data.viewResult)
             _this.$store.dispatch('SET_COMPANY_STATE',{companyArr})
             _this.formData2T.companyTransfer = companyArr
           }).catch(error=>{
@@ -818,12 +860,16 @@
       getNormSelect(){
         let _this = this
         if(_this.formData3T.typeArr.length == 0){
-          let header = {}
+          let header = {
+            accessToken: sessionStorage.getItem('accessToken'),
+            projectId: sessionStorage.getItem('projectId')
+          }
           let param = {
             type:'财务'
           }
           _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
-            if(res.status === 200){
+            console.log(res.data.data)
+            if(res.data.code === 16000003){
               _this.formData3T.typeOld = res.data.data
               _this.formData3T.typeArr.push({
                 label: param.type,
@@ -860,12 +906,12 @@
           if(res.data.code === 16000003){
             _this.loading=false,
             _this.tableData = []
-            _this.totalCount = res.data.data.pop().totalNum -1
+            _this.totalCount = res.data.data.pop().totalNum
             let obj = res.data.data
             /*1是创建者，1是发布*/
             for(let i=0;i<obj.length;i++){
               _this.tableData.push({
-                indicator_name: obj[i].indicator_name,
+                indicator_name: obj[i].STATISTICAL_NAME,
                 creation_time: obj[i].creation_time,
                 date_range: obj[i].dateRange,
                 remarks: obj[i].remarks,
@@ -920,19 +966,21 @@
       publishNorm(row){
         let vm = this
         let header = {
+          accessToken:  sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
         }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
         }
         let urlData = row.id
         this.$store.dispatch('PUBLISH_NORM', {param, header, urlData}).then(res => {
-          if(res.status == 200){
+          if(res.data.code == 16000003){
             vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
-            message: res.statusText,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type:res.data.code == 16000003 ? 'success' : 'error',
             duration: '2000'
           })
         }).catch(error=>{
@@ -947,19 +995,21 @@
       cancelNorm(){
         let vm = this
         let header = {
+          accessToken:  sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
         }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
         }
         let urlData = this.rowId
         this.$store.dispatch('UN_PUBLISH_NORM', {param, header, urlData}).then(res => {
-          if(res.status == 200){
+          if(res.data.code == 16000003){
             vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
-            message: res.statusText,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type:res.data.code == 16000003 ? 'success' : 'error',
             duration: '2000'
           })
         }).catch(error=>{
@@ -973,21 +1023,24 @@
       /*订阅指标*/
       subscriberNorm(row){
         let vm = this
-        let header = {}
+        let header = {
+          accessToken:  sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
+        }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
           data_id:row.id,
           type:row.type
         }
         this.$store.dispatch('SUBSCRIBER_NORM', {param, header}).then(res => {
-          if(res.status == 200){
-
+          console.log(res.data)
+          if(res.data.code == 16000003){
             vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
-            message: res.statusText,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type:res.data.code == 16000003 ? 'success' : 'error',
             duration: '2000'
           })
         }).catch(error=>{
@@ -997,20 +1050,23 @@
       /*取消订阅指标*/
       un_SubscriberNorm(row){
         let vm = this
-        let header = {}
+        let header = {
+          accessToken:  sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
+        }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
           data_id:row.id,
           type:row.type
         }
         this.$store.dispatch('UN_SUBSCRIBER_NORM', {param, header}).then(res => {
-          if(res.status == 200){
+          if(res.data.code == 16000003){
             vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
-            message: res.statusText,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type:res.data.code == 16000003 ? 'success' : 'error',
             duration: '2000'
           })
 
@@ -1025,19 +1081,22 @@
       },
       affirmDeleteNorm(){
         let vm = this
-        let header = {}
+        let header = {
+          accessToken:  sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
+        }
         let param = {
           account_id: sessionStorage.getItem('accountId'),
           id:vm.rowId
         }
         this.$store.dispatch('DELETE_INDICATORS', {param, header}).then(res => {
-          if(res.status == 200){
+          if(res.data.code == 16000003){
             vm.getNormTable()
           }
           vm.$notify({
             title: '提示信息',
-            message: res.statusText,
-            type: res.status === 200 ? 'success' : 'error',
+            message: res.data.msg,
+            type:res.data.code == 16000003 ? 'success' : 'error',
             duration: '2000'
           })
 

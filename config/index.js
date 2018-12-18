@@ -10,7 +10,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        target: 'http://172.168.17.50:8086/yyqxzx',
+        target: 'http://172.168.17.98:8086/yyqxzx',
         //target: 'http://172.168.17.84:8086/yyqxzx',          //目标接口域名
         changeOrigin: true,  //重写接口
         pathRewrite: {

@@ -2,6 +2,7 @@
  * Created by zhangxin on 2018/11/13.
  */
 import axios from 'axios'
+import { Notification } from 'element-ui';
 /**
  * 转换参数形式
  * @param data
@@ -27,11 +28,21 @@ export function createAPI () {
   axios.defaults.headers.delete['Content-Type'] = 'application/json;charset=UTF-8'
   axios.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8'
   axios.interceptors.response.use(res => {
+    if(res.data.code == 11030113 || res.code == 11030113){
+        Notification({
+          title: '提示信息',
+          message: 'token失效请重新登陆',
+          type: 'error',
+          duration: '2000'
+        })
+        setTimeout(function () {
+          sessionStorage.clear()
+          history.go(0)
+          parent.location.href="http://localhost:8080";
+        },2000)
+        return false
+      }
     if (res.status >= 200 && res.status < 400) {
-      /*if(res.data.code == 16000003 || res.code == 16000003){
-        window.location = "http://localhost:8080"
-        return
-      }*/
       return res
     }
     return Promise.reject(res)
@@ -109,7 +120,7 @@ export function createAPI () {
       })
     },
     /**
-     * delete请求
+     * delete请求 通过URL传参
      * @param target
      * @param params
      * @param header
@@ -122,8 +133,28 @@ export function createAPI () {
         if (objKeyLen > 0) {
           headers = Object.assign({}, headers, header)
         }
-        console.log(params,header)
         axios.delete(target, { params, headers }).then(res => {
+          resolve(res.data)
+        }).catch((err) => {
+          reject(err)
+        })
+      })
+    },
+    /**
+     * delete请求，后台接收对象类型的参数
+     * @param target
+     * @param params
+     * @param header
+     * @returns {Promise}
+     */
+    delete_data (target, params = {}, header = {}) {
+      return new Promise((resolve, reject) => {
+        let headers = { projectId: '0ba94f86769c42a4aba6282834aee3b9'}
+        let objKeyLen = Object.keys(header).length
+        if (objKeyLen > 0) {
+          headers = Object.assign({}, headers, header)
+        }
+        axios.delete(target, { data:params, headers }).then(res => {
           resolve(res.data)
         }).catch((err) => {
           reject(err)

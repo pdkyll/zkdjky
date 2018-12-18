@@ -71,7 +71,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialog_gs = false">取 消</el-button>
+        <el-button @click="cancelInsert('ruleFormModule')">取 消</el-button>
         <el-button type="primary" @click="insert_GS('ruleFormModule')">确 定</el-button>
       </span>
     </el-dialog>
@@ -260,6 +260,11 @@ export default{
     },
     gsClose () {
       this.dialog_gs = false
+      this.$refs['ruleFormModule'].resetFields()
+    },
+    cancelInsert(formName){
+      this.dialog_gs = false
+      this.$refs[formName].resetFields()
     },
     /*修改公司*/
     xg(val){

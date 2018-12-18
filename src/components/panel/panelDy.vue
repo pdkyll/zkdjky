@@ -8,7 +8,7 @@
         <el-button class="pull-right qx" size="small" v-if="tjList.length > 0" @click="openDialog">取消全部订阅</el-button>
       </el-col>
     </el-row>
-    <div class="box-wrapper" v-for="item in tjList" :key="item.index">
+    <div class="box-wrapper" v-for="(item, index) in tjList" :key="index">
       <div class="left-msg">
         <p class="msg-list">
           <span class="msg-name">统计表名称 : </span>
@@ -169,6 +169,7 @@ export default{
       }
       _this.$store.dispatch('GET_ATTENTION_LIST', {param, header}).then(res => {
         if(res.data.code === 16000003){
+          _this.tjList = []
           let data = res.data.data
           for(let i=0;i<data.length;i++){
             let time = data[i].dateRange.split('&')
@@ -254,6 +255,7 @@ export default{
         account_id: sessionStorage.getItem('accountId'),
       }
       _this.$store.dispatch('CANCEL_ALL_ATTENTION', {param, header}).then(res => {
+        _this.tjList = []
         _this.$notify({
           title: '提示信息',
           message: '取消全部订阅成功',
@@ -270,6 +272,8 @@ export default{
       let dataId = this.tjList[flag].data_id
       let type = this.tjList[flag].type
       let header = {
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let param = {
         account_id: sessionStorage.getItem('accountId'),

@@ -56,7 +56,7 @@ export function getUserForRoles (param, header, urlData) {
  * @returns {*|Promise}
  */
 export function delUserForRoles (param, header) {
-  return api.delete('/apis/v1/rolesAndPermissions', param, header)
+  return api.delete_data('/apis/v1/rolesAndPermissions', param, header)
 }
 
 /**
@@ -459,4 +459,14 @@ export function attentionNotLike(param, header) {
  */
 export function cancelAllAttention(param, header) {
   return api.get('/apis/dataStatisticsService/cancelAllSubscriptionMetrics', param, header)
+}
+
+/**
+ * 获取权限列表
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function getJurisdiction(param, header) {
+  return api.get('/apis/v1/account/permissions', param, header)
 }

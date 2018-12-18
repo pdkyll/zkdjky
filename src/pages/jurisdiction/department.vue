@@ -102,7 +102,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialog_bm = false">取 消</el-button>
+        <el-button @click="cancelInsert('ruleFormModule')">取 消</el-button>
         <el-button type="primary" @click="insert_BM('ruleFormModule')">确 定</el-button>
       </span>
     </el-dialog>
@@ -223,7 +223,8 @@
         }
         let header = {
           accountId: sessionStorage.getItem('accountId'),
-          accessToken: sessionStorage.getItem('accessToken')
+          accessToken: sessionStorage.getItem('accessToken'),
+          projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_CMP_AND_DEP', { param, header }).then((res, req) => {
           console.log(res.data)
@@ -275,7 +276,8 @@
         }
         let header = {
           accountId: sessionStorage.getItem('accountId'),
-          accessToken: sessionStorage.getItem('accessToken')
+          accessToken: sessionStorage.getItem('accessToken'),
+          projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_BY_CODE', { param, header }).then((res, req) => {
           console.log(res)
@@ -322,7 +324,8 @@
         }
         let header = {
           accountId: sessionStorage.getItem('accountId'),
-          accessToken: sessionStorage.getItem('accessToken')
+          accessToken: sessionStorage.getItem('accessToken'),
+          projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_DEL', { param, header }).then((res, req) => {
           _this.$notify({
@@ -347,7 +350,8 @@
         }
         let header = {
           accountId: sessionStorage.getItem('accountId'),
-          accessToken: sessionStorage.getItem('accessToken')
+          accessToken: sessionStorage.getItem('accessToken'),
+          projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
           if(res.data.code === 16000003){
@@ -381,6 +385,7 @@
               "contact":"test",
               "create_by":"sjm",
               "description": _this.ruleFormModule.desc,
+              "cPCC":_this.ruleFormModule.cpcc,
               "level":2,
               "id": _this.ruleFormModule.companyName,  //父及Id
               //"name":"tttt",   //name不可重复
@@ -394,7 +399,8 @@
             }
             let header = {
               accountId: sessionStorage.getItem('accountId'),
-              accessToken: sessionStorage.getItem('accessToken')
+              accessToken: sessionStorage.getItem('accessToken'),
+              projectId :sessionStorage.getItem('projectId'),
             }
             this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
               if(res.code === 16000003){
@@ -424,6 +430,11 @@
       },
       bmClose () {
         this.dialog_bm = false
+        this.$refs['ruleFormModule'].resetFields()
+      },
+      cancelInsert(formName){
+        this.dialog_bm = false
+        this.$refs[formName].resetFields()
       },
       /*修改公司*/
       xg(val){

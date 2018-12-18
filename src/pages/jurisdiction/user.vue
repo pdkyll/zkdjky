@@ -123,7 +123,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="cancelInsert('ruleForm')">取 消</el-button>
         <el-button type="primary" @click="insertUser('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
@@ -260,6 +260,7 @@ export default{
 
     },
     handleClose () {
+      this.$refs['ruleForm'].resetFields()
       this.dialogVisible = false
     },
     handleSizeChange (val) {
@@ -539,6 +540,10 @@ export default{
           return false;
         }
       });
+    },
+    cancelInsert(formName){
+      this.dialogVisible = false
+      this.$refs[formName].resetFields()
     },
     /*获取角色-公司-部门下拉菜单*/
     getRegion(){

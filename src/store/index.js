@@ -16,7 +16,9 @@ export function createStore () {
       userName:'',
       userType:'',
       userPhone:'',
-      userEmail:''
+      userEmail:'',
+      companyName:'',
+      departmentName:''
     },
     actions,
     mutations,

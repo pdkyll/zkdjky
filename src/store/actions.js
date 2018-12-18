@@ -67,7 +67,9 @@ import {
   getAttentionList,
   attentionLike,
   attentionNotLike,
-  cancelAllAttention
+  cancelAllAttention,
+  /*获取权限*/
+  getJurisdiction
 } from '../api'
 
 export default {
@@ -788,6 +790,10 @@ export default {
     return cancelAllAttention(param, header).then((res, req) => {
       return res
     })
-  }
-
+  },
+  GET_JURISDICTION: ({commit, state}, {param, header}) => {
+  return getJurisdiction(param, header).then((res, req) => {
+    return res
+  })
+}
 }

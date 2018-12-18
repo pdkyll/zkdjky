@@ -42,6 +42,11 @@
         style="width: 100%">
         <el-table-column
           :resizable=false
+          prop="INFO_NAME"
+          label="名称">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
           prop="CREATOR"
           label="录入人">
         </el-table-column>
@@ -49,11 +54,6 @@
           :resizable=false
           prop="CREATION_TIME"
           label="日期">
-        </el-table-column>
-        <el-table-column
-          :resizable=false
-          prop="INFO_NAME"
-          label="名称">
         </el-table-column>
         <el-table-column
           :resizable=false
@@ -128,10 +128,12 @@
         </el-form-item>
         <el-form-item label="文件">
           <el-upload
+            :limit= 1
             class="upload-demo"
             ref="upload"
             :data="ruleFormModule"
             action="/apis/publicInformation/uploadFiles"
+            :headers= uploadHeader
             :file-list="fileList"
             accept=".jpg,.jpeg,.png,.txt,.GIF,.docx,.PDF"
             :on-success="uploadSuccess"
@@ -200,6 +202,11 @@ export default{
       deleteDialogVisible: false,
       loading:true,
       deleteId: '',
+      uploadHeader:{
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId :sessionStorage.getItem('projectId'),
+      },
       updateForm: {
         id: '',
         info_name: '',
@@ -317,6 +324,7 @@ export default{
       let _this = this
       _this.loading = true
       let header = {
+        projectId :sessionStorage.getItem('projectId'),
         accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken')
       }
@@ -342,7 +350,8 @@ export default{
         if (valid) {
           let header = {
             accountId: sessionStorage.getItem('accountId'),
-            accessToken: sessionStorage.getItem('accessToken')
+            accessToken: sessionStorage.getItem('accessToken'),
+            projectId :sessionStorage.getItem('projectId'),
           }
           let param = Object.assign({}, _this.updateForm)
           let urlData = param.id
@@ -373,7 +382,8 @@ export default{
       let _this = this
       let header = {
         accountId: sessionStorage.getItem('accountId'),
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId :sessionStorage.getItem('projectId'),
       }
       let urlData = _this.deleteId
       let param = {}

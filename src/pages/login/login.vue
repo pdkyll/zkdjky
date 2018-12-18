@@ -65,13 +65,14 @@ export default{
       }
       this.$store.dispatch('LOGIN', { param }).then((res, req) => {
         if (res.code === 16000003) {
-          console.log(res.data)
           let data = res.data.datas
           let name = {
             name:data.accountName,
             type:data.tenantName,
             phone:data.telephone==null?'暂无':data.telephone,
             email: data.email==null?'暂无':data.email,
+            companyName:res.data.companyName==null?'暂无':res.data.companyName,
+            departmentName: res.data.departmentName==null?'暂无':res.data.departmentName,
           }
           this.$store.dispatch('USER_MASSAGE', { name })
           sessionStorage.setItem('isOk', res.code)

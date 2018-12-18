@@ -92,7 +92,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="cancelInsert('ruleForm')">取 消</el-button>
         <el-button type="primary" @click="insertRole('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
@@ -204,6 +204,7 @@ export default{
     },
     handleClose () {
       this.dialogVisible = false
+      this.$refs['ruleForm'].resetFields()
     },
     handleSizeChange (val) {
       this.pageNum = val
@@ -222,7 +223,8 @@ export default{
       }
       this.loading = true
       let header = {
-        accessToken:  sessionStorage.getItem('accessToken')
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
         this.tableData = []
@@ -249,7 +251,8 @@ export default{
     getUserForRoles () {
       let param = {a: 1, b: 2}
       let header = {
-        accessToken:  sessionStorage.getItem('accessToken')
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let urlData = [1 , 2]
       this.$store.dispatch('GET_USER_FOR_ROLES', {param, header, urlData}).then(res => {
@@ -305,7 +308,8 @@ export default{
         permissionList:_this.checkIdList
       }
       let header = {
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('INSERT_USER_FOR_ROLES', { param, header}).then(res => {
         if(res !== null && res.code == 16000003){
@@ -344,6 +348,10 @@ export default{
         }
       });
 
+    },
+    cancelInsert(formName){
+      this.dialogVisible = false
+      this.$refs[formName].resetFields()
     },
     /*修改角色*/
     xgClose(){
@@ -423,7 +431,8 @@ export default{
         pageSize:200
       }
       let header = {
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('MAKE_COMPANY_SELECT', { param, header}).then(res => {
         let data = res.data.data.datas
@@ -482,7 +491,8 @@ export default{
         filter:this.filter
       }
       let header = {
-        accessToken: '2b5ed38e041c4d8a9bcbd284892ea78b'
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
         this.tableData = []

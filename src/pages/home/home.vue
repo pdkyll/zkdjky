@@ -44,6 +44,18 @@
             </span>
             {{userEmail}}
           </p>
+          <p class="userLab">
+            <span class="mr-20">
+              所属公司：
+            </span>
+            {{companyName}}
+          </p>
+          <p class="userLab">
+            <span class="mr-20">
+              所属部门：
+            </span>
+            {{departmentName}}
+          </p>
           <el-button type="primary">修改密码</el-button>
           <el-button type="primary" @click="logout">退出登陆</el-button>
         </div>
@@ -128,6 +140,8 @@ export default{
       userType:'',
       userPhone:'',
       userEmail:'',
+      departmentName:'',
+      companyName:'',
       wrapper:''
     }
   },
@@ -167,12 +181,15 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://daas-website.tpaas.youedata.com'
+      this.frame.src= 'http://10.220.1.6:31246'
       /**测试地址
        * http://daas-website.tpaas.youedata.com
        */
+      /**线上地址
+       * http://10.220.1.6:31246
+       */
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
+        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
         vm.loading = false
         vm.frameShow = true
       },1000)
@@ -218,6 +235,22 @@ export default{
         this.wrapper = ''
       }
     },
+    /*获取权限*/
+
+    getJurisdiction(){
+      //GET_JURISDICTION
+      let _this = this
+      let header = {
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      let param = {}
+      this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
+        console.log(res)
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     /*退出登陆*/
     logout(){
       let _this = this
@@ -242,6 +275,9 @@ export default{
     this.userType = this.$store.state.userType
     this.userPhone = this.$store.state.userPhone
     this.userEmail = this.$store.state.userEmail
+    this.departmentName= this.$store.state.departmentName
+    this.companyName = this.$store.state.companyName
+    //this.getJurisdiction()
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')

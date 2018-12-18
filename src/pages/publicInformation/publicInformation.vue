@@ -6,11 +6,8 @@
    <el-row class="table-header" :gutter="20">
      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
        <el-form-item label="公司名称" class="ml-10">
-         <el-select v-model="ruleForm.companyName" size="small" placeholder="请选择活动区域">
-           <el-option label="全部" value=""></el-option>
-           <el-option label="1" value="1"></el-option>
-           <el-option label="(NULL)为其全文" value="为其全文"></el-option>
-           <el-option label="a2341134" value="a2341134"></el-option>
+         <el-select v-model="ruleForm.companyName" size="small" @change="companyChange"  placeholder="请选择活动区域">
+           <el-option :label="item.name" :value="item.value" v-for="item in companyList"></el-option>
          </el-select>
        </el-form-item>
        <el-form-item label="日期">
@@ -53,11 +50,15 @@ export default{
     return {
       msg: '123',
       ruleForm: {
-        companyName: '',
+        companyName: '全部',
         time: '',
         start:'',
         end:''
-      }
+      },
+      companyList:[{
+        name:'全部',
+        value:''
+      }]
     }
   },
   components: {
@@ -67,6 +68,9 @@ export default{
     onSubmit () {
       this.$refs.myChild.getPublicMsg(this.ruleForm.companyName,this.ruleForm.start,this.ruleForm.end);
     },
+    companyChange(val){
+      console.log(val)
+    },
     timeChange(val){
       if(val == null){
         this.ruleForm.time=['','']
@@ -75,7 +79,35 @@ export default{
       }
       this.ruleForm.start =this.ruleForm.time[0]
       this.ruleForm.end =this.ruleForm.time[1]
-    }
+    },
+    /*获取公司下拉菜单*/
+    getCompanyList () {
+      let _this = this
+      let param = {
+        type: '0',
+        pagenum: "1",
+        pagesize:"10000"
+      }
+      let header = {
+        accountId: sessionStorage.getItem('accountId'),
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
+        if(res.data.code === 16000003){
+          for(let i=0;i<res.data.data.length;i++){
+            _this.companyList.push({
+              name:res.data.data[i].companyName,
+              value:res.data.data[i].code,
+            })
+          }
+        }
+      }).catch(error => {
+        console.error(error)
+      })
+    },
+  },
+  created(){
+    this.getCompanyList()
   },
   mounted () {
   }

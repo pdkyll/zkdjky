@@ -37,6 +37,8 @@ export default {
     state.userType = name.type
     state.userPhone = name.phone
     state.userEmail = name.email
+    state.companyName = name.companyName
+    state.departmentName = name.departmentName
   },
   /**
    * 示例代码，用于引用类型(数组/对象)值改变时

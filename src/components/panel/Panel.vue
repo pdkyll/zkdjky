@@ -32,7 +32,6 @@
         </div>
       </el-col>
     </el-row>
-
   </div>
 </template>
 <script>
@@ -52,7 +51,7 @@ export default{
       panel: [{
         title:'123',
         content:[
-          {
+          /*{
             CPCC: "108",
             CPCCName: "中可点击yy",
             CREATION_TIME: "2018-12-14",
@@ -69,7 +68,7 @@ export default{
             ID: 21,
             INFO_NAME: "win10激活密码",
             WEIGHTINESS: 2,
-          }
+          }*/
         ]
       }],
       imgSrc:'',
@@ -186,12 +185,12 @@ export default{
           this.panel = []
           var a = {};
           for (var i = 0; i < data.length; i++) {
-            a[data[i].CPCCName] = new Array();
+            a[data[i].CPCC] = new Array();
           }
           for (let i of data) {
             for(let j in a){
-              if(i.CPCCName==j){
-                a[i.CPCCName].push(i);
+              if(i.CPCC==j){
+                a[i.CPCC].push(i);
               }
             }
           }
@@ -202,15 +201,17 @@ export default{
             for( let j of a[i]){
               temp.content.push(j);
             }
-            this.panel.push(temp);
+            if(temp.title!=='null'){
+              this.panel.push(temp);
+            }
           }
-          console.log(this.panel)
         }
         this.dialogVisible = false
       }).catch((error) => {
         console.error(error)
       })
-    }
+    },
+
   },
   created () {
     /*this.dom = document.getElementById('iframeBox')*/
@@ -242,7 +243,7 @@ export default{
     }
   }
   .panel-body{
-    height: 200px;
+    height: 100%;
     overflow-y: auto;
     padding-top: 20px;
     padding-bottom: 20px;
