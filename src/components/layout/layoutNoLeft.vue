@@ -47,7 +47,7 @@ export default{
     let company = sessionStorage.getItem('company')
     let department = sessionStorage.getItem('department')
     //let massage = userName + '-' + userType + '-' + company + '-' + department
-    let massage = userName + '-' + '正大健康云平台'
+    let massage = '正大健康云平台' + '-' + userName
     Watermark.set(massage)
     this.title = window.sessionStorage.getItem('publicName')
   }
