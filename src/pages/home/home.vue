@@ -149,6 +149,7 @@
  * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
  * import loginButton from './components/loginButton.vue';
  */
+import {sha1} from '@/assets/js/HashEncrypt.min'
 export default{
   data () {
     let validatePass = (rule, value, callback) => {
@@ -342,50 +343,31 @@ export default{
       let _this = this
       _this.$refs[formName].validate((valid) => {
         if (valid) {
-          _this.dialog = false
-          /*let optionSelected = _this.optionData.filter(function (item,index) {
-            return item.id === _this.ruleFormModule.companyName
-          })
+          let newPass= sha1(_this.ruleFormModule.pass)
+          let oldPass= sha1(_this.ruleFormModule.oldPass)
           let param = {
-            "type": 1,
-            "address":"",
-            "contact":"test",
-            "create_by":"sjm",
-            "description": _this.ruleFormModule.desc,
-            "cPCC":_this.ruleFormModule.cpcc,
-            "level":2,
-            "id": _this.ruleFormModule.companyName,  //父及Id
-            //"name":"tttt",   //name不可重复
-            "depNames": _this.ruleFormModule.departmentName,   //数组
-            "code": optionSelected[0].code,   //父及code
-            "pcode":"1",  //固定参数
-            "pid":1, //固定参数
-            "paramType":1,
-            "postcode":"",
-            "telephone":"13011455214"
+            oldPasswd:oldPass,
+            accountPasswd:newPass,
+            accountId:sessionStorage.getItem('accountId')
           }
           let header = {
-            accountId: sessionStorage.getItem('accountId'),
-            accessToken: sessionStorage.getItem('accessToken'),
-            projectId :sessionStorage.getItem('projectId'),
+            accessToken: sessionStorage.getItem('accessToken')
           }
-          this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
-            if(res.code === 16000003){
-              _this.search_list()
-              _this.ruleFormModule.desc= ''
-              _this.ruleFormModule.departmentName= []
-              _this.ruleFormModule.companyName= ''
-              _this.$refs[formName].resetFields()
+          let urlData = sessionStorage.getItem('accountId')
+          this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
+            console.log(res)
+            if(res !== null && res.code == 16000003){
+              this.dialog = false
             }
             _this.$notify({
               title: '提示信息',
               message: res.msg,
               type: res.code === 16000003 ? 'success' : 'error',
-              duration: '2000'
+              duration: '1000'
             })
-          }).catch((error) => {
-            console.error(error)
-          })*/
+          }).catch(error=>{
+            console.error(error);
+          })
         } else {
           return false;
         }

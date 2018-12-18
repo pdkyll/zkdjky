@@ -40,9 +40,9 @@ export default{
     /*获取用户信息并通过水印方法显示到屏幕上*/
     let userName = sessionStorage.getItem('userName')
     let userType = sessionStorage.getItem('userType')
-    let userCompany = sessionStorage.getItem('userCompany')
-    //let userType = sessionStorage.getItem('userType')
-    let massage = userName+ '-' +userType
+    let company = sessionStorage.getItem('company')
+    let department = sessionStorage.getItem('department')
+    let massage = userName + '-' + userType + company + '-' + department
     Watermark.set(massage)
     this.title = window.sessionStorage.getItem('publicName')
   }

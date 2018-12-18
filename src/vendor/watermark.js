@@ -9,8 +9,8 @@ let setWatermark = (str) => {
     document.body.removeChild(document.getElementById(id))
   }
   let can = document.createElement('canvas')
-  can.width = 500
-  can.height = 200
+  can.width = 300
+  can.height = 160
   let cans = can.getContext('2d')
   cans.rotate(-5 * Math.PI / 180)
   cans.font = '20px Vedana'
@@ -18,7 +18,9 @@ let setWatermark = (str) => {
   cans.textAlign = 'left'
   cans.textBaseline = 'Middle'
   cans.fillText(arr[0], can.width / 2, can.height / 2)
-  cans.fillText(arr[1], can.width / 2, can.height / 1)
+  cans.fillText(arr[1], can.width / 2, can.height / 1.5)
+  cans.fillText(arr[2], can.width / 2, can.height / 1)
+  cans.fillText(arr[3], can.width / 2, can.height / 0.5)
   let div = document.createElement('div')
   div.id = id
   div.style.pointerEvents = 'none'

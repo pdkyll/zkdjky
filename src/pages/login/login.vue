@@ -109,6 +109,9 @@ export default{
           /*用于水印显示的session存储*/
           sessionStorage.setItem('userName', data.accountName)
           sessionStorage.setItem('userType', data.tenantName)
+          sessionStorage.setItem('company', res.data.companyName)
+          sessionStorage.setItem('department', res.data.departmentName)
+
           this.$router.push('/home')
         }
         _this.$notify({
@@ -280,7 +283,7 @@ export default{
 	height: 16px;
 	background: url(../../assets/login/login_nochecked.png) no-repeat;
 	background-size: 100% 100%;
-	vertical-align: middle;	
+	vertical-align: middle;
 	margin-right: 8px;
   }
   .saveLogin span{
@@ -293,7 +296,7 @@ export default{
   	bottom: 20px;
 	font-size: 12px;
 	color:#fff;
-   }  
+   }
   .borderLinear{
      margin: 10px 0 14px 0;
      height: 1px;
