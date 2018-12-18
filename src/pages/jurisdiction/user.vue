@@ -8,13 +8,11 @@
             placeholder="输入用户名称"
             @change="searchUser"
             style="width: 100%"
-            v-model="ruleForm.input">
-            <i
-              class="el-icon-search"
-              slot="suffix"
-              @click="search">
-            </i>
+            v-model.trim="ruleForm.input">
           </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
@@ -95,13 +93,13 @@
       :before-close="handleClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="name">
-          <el-input v-model="ruleFormModule.name"></el-input>
+          <el-input v-model.trim="ruleFormModule.name"></el-input>
         </el-form-item>
         <el-form-item label="登陆密码" prop="pass">
-          <el-input v-model="ruleFormModule.pass"></el-input>
+          <el-input v-model.trim="ruleFormModule.pass"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="pass2">
-          <el-input v-model="ruleFormModule.pass2"></el-input>
+          <el-input v-model.trim="ruleFormModule.pass2"></el-input>
         </el-form-item>
         <el-form-item label="角色选择">
           <el-select v-model="ruleFormModule.region" style="width: 100%" placeholder="请选择类型" @change="region_change">
@@ -119,7 +117,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户备注">
-          <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -152,26 +150,26 @@
         <el-form-item label="登陆密码">
           <el-input v-model="ruleFormModuleUpdate.pass" :disabled="true" placeholder="******"></el-input>
         </el-form-item>
-        <el-form-item label="确认密码">
+        <el-form-item label="确认密码" >
           <el-input v-model="ruleFormModuleUpdate.pass2" :disabled="true" placeholder="******"></el-input>
         </el-form-item>
         <el-form-item label="角色选择">
-          <el-select  v-model="ruleFormModuleUpdate.region" :disabled="true" style="width: 100%" placeholder="请选择类型" @change="region_change">
+          <el-select  v-model="ruleFormModuleUpdate.region" style="width: 100%" placeholder="请选择类型" @change="region_change">
             <el-option :label="item.name" :value="item.name" v-for="item in ruleFormModuleUpdate.regionList" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="公司选择">
-          <el-select v-model="ruleFormModuleUpdate.gs" :disabled="true" style="width: 100%" placeholder="请选择公司" @change="gsChange_upData">
+          <el-select v-model="ruleFormModuleUpdate.gs" style="width: 100%" placeholder="请选择公司" @change="gsChange_upData">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModuleUpdate.gsList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门选择">
-          <el-select v-model="ruleFormModuleUpdate.bm" :disabled="true" style="width: 100%" placeholder="请选择部门">
+          <el-select v-model="ruleFormModuleUpdate.bm" style="width: 100%" placeholder="请选择部门">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModuleUpdate.bmList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户备注">
-          <el-input type="textarea" v-model="ruleFormModuleUpdate.desc"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModuleUpdate.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -221,13 +219,16 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         pass: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         pass2: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         gs: [
           { required: true, message: '请选择公司', trigger: 'change' }
@@ -241,8 +242,8 @@ export default{
       },
       /*列表*/
       pageNum:1,
-      pageSize:5,
-      totalCount:10,
+      pageSize:10,
+      totalCount:0,
       tableData: [],
       /*删除相关的参数*/
       dialogDelete:false,
@@ -398,7 +399,6 @@ export default{
       this.ruleFormModuleUpdate.gs = row.gs
       this.ruleFormModuleUpdate.bm = row.bm
       this.dialog_xg = true
-      console.log(row)
       /*获取当前公司的部门信息*/
       let vm = this
       let code = ''
@@ -435,7 +435,7 @@ export default{
       let _this = this
       _this.$refs[formName].validate((valid) => {
         if (valid) {
-          /*let roleId = ''
+          let roleId = ''
           for(let i = 0;i<this.ruleFormModuleUpdate.regionList.length;i++){
             if(this.ruleFormModuleUpdate.regionList[i].name == this.ruleFormModuleUpdate.region){
               roleId = this.ruleFormModuleUpdate.regionList[i].value
@@ -448,18 +448,19 @@ export default{
             "roleId" : roleId,
             "projectId":sessionStorage.getItem('projectId')
           }
-          extendedProperties = JSON.stringify(extendedProperties)*/
+          extendedProperties = JSON.stringify(extendedProperties)
           let param = {
+            "extendedProperties": extendedProperties,
             "description": this.ruleFormModuleUpdate.desc,
-            //"extendedProperties": extendedProperties,
           }
           let header = {
             accessToken: sessionStorage.getItem('accessToken')
           }
           let urlData =  this.xg_id
-          console.log(urlData)
           this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
             if(res !== null && res.code == 16000003){
+              _this.ruleFormModuleUpdate.pass = ''
+              _this.ruleFormModuleUpdate.pass2 = ''
               _this.users()
               this.dialog_xg = false
             }

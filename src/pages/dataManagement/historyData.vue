@@ -81,7 +81,7 @@ export default{
       msg: '123',
       loading:true,
       pageNum:1,
-      pageSize:5,
+      pageSize:10,
       totalCount:0,
       companyOptions:[],
       historyTableColumnHeader: [],
@@ -217,13 +217,15 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         rq: [
           { required: true, message: '请选择日期', trigger: 'blur' }
         ],
         gs: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         dq: [
           { required: true, message: '请选择类型', trigger: 'check' }

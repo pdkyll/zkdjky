@@ -95,10 +95,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="数据代码" prop="cpcc">
-          <el-input v-model="ruleFormModule.cpcc"></el-input>
+          <el-input v-model.trim="ruleFormModule.cpcc"></el-input>
         </el-form-item>
         <el-form-item label="部门备注">
-          <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -126,14 +126,14 @@
       :before-close="xgClose">
       <el-form :model="updateForm" :rules="rules"  ref="updateForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司名称">
-          <el-input type="text" :disabled="true" v-model="updateCompanyName"></el-input>
+          <el-input type="text" :disabled="true" v-model.trim="updateCompanyName"></el-input>
           <input type="hidden" v-model="updateForm.id">
         </el-form-item>
         <el-form-item label="部门名称">
-          <el-input v-model="updateForm.name"></el-input>
+          <el-input v-model.trim="updateForm.name"></el-input>
         </el-form-item>
         <el-form-item label="部门备注">
-          <el-input type="textarea" v-model="updateForm.description"></el-input>
+          <el-input type="textarea" v-model.trim="updateForm.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -190,7 +190,7 @@
           ]
         },
         pageNum:1,
-        pageSize:5,
+        pageSize:10,
         totalCount:0,
         tableData: [],
         bm_name:'',

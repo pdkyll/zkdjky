@@ -12,13 +12,13 @@
           <div class="panel-body">
             <ul class="list">
               <li v-for="item in i.content" :key="item.title">
-                <div style="text-align: left; width: 40%" :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
+                <div style="text-align: left; width: 43%" :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
                 <!--<div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>-->
-                <div style="width: 30%;">
+                <div style="width: 29%;">
                   <el-rate v-model="item.WEIGHTINESS" :title="'权重'+item.WEIGHTINESS+'星'" disabled style="line-height: 0.2;"></el-rate>
                 </div>
-                <div style="text-align: center; width: 20%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
-                <div style="text-align: right; width: 10%">
+                <div style="text-align: center; width: 19%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
+                <div style="text-align: right; width: 9%">
                   <!--<i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>-->
                   <i class="el-icon-download" style="cursor: pointer" @click="downItem(item.ID)"></i>
                   <i v-if="item.DATA_TYPE===1" class="el-icon-document"></i>
@@ -185,12 +185,12 @@ export default{
           this.panel = []
           var a = {};
           for (var i = 0; i < data.length; i++) {
-            a[data[i].CPCC] = new Array();
+            a[data[i].CPCCName] = new Array();
           }
           for (let i of data) {
             for(let j in a){
-              if(i.CPCC==j){
-                a[i.CPCC].push(i);
+              if(i.CPCCName==j){
+                a[i.CPCCName].push(i);
               }
             }
           }
@@ -243,7 +243,7 @@ export default{
     }
   }
   .panel-body{
-    height: 100%;
+    height: 80%;
     overflow-y: auto;
     padding-top: 20px;
     padding-bottom: 20px;

@@ -3,24 +3,22 @@
 let watermark = {}
 
 let setWatermark = (str) => {
+  let arr = str.split('-')
   let id = '1.23452384164.123412415'
-
   if (document.getElementById(id) !== null) {
     document.body.removeChild(document.getElementById(id))
   }
-
   let can = document.createElement('canvas')
   can.width = 500
   can.height = 200
-
   let cans = can.getContext('2d')
   cans.rotate(-5 * Math.PI / 180)
   cans.font = '20px Vedana'
-  cans.fillStyle = 'rgba(200, 200, 200, 0.15)'
+  cans.fillStyle = 'rgba(200, 200, 200, 0.5)'
   cans.textAlign = 'left'
   cans.textBaseline = 'Middle'
-  cans.fillText(str, can.width / 3, can.height / 2)
-
+  cans.fillText(arr[0], can.width / 2, can.height / 2)
+  cans.fillText(arr[1], can.width / 2, can.height / 1)
   let div = document.createElement('div')
   div.id = id
   div.style.pointerEvents = 'none'

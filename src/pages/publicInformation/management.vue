@@ -110,7 +110,7 @@
       :before-close="handleClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="80px" class="demo-ruleForm">
         <el-form-item label="名称" prop="info_name">
-          <el-input v-model="ruleFormModule.info_name"></el-input>
+          <el-input v-model.trim="ruleFormModule.info_name"></el-input>
         </el-form-item>
         <el-form-item label="类型" prop="data_type">
           <el-select v-model="ruleFormModule.data_type" style="width: 100%" placeholder="请选择类型">
@@ -121,7 +121,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="ruleFormModule.describe_info"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModule.describe_info"></el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-rate v-model="ruleFormModule.weightiness" style="line-height: 2.6;"></el-rate>
@@ -158,13 +158,13 @@
       width="30%">
       <el-form :model="updateForm" :rules="rules" ref="updateForm" label-width="80px" class="demo-ruleForm">
         <el-form-item label="名称" prop="info_name">
-          <el-input v-model="updateForm.info_name"></el-input>
+          <el-input v-model.trim="updateForm.info_name"></el-input>
         </el-form-item>
         <el-form-item label="类型">
           <el-input v-model="updateForm.data_type" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" v-model="updateForm.describe_info"></el-input>
+          <el-input type="textarea" v-model.trim="updateForm.describe_info"></el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-rate v-model="updateForm.weightiness" style="line-height: 2.6;" @change="qz_change"></el-rate>
@@ -224,7 +224,7 @@ export default{
         endDate: '',
         infoName: '',
         pageNum:1,
-        pageSize:5,
+        pageSize:10,
       },
       totalCount:0,
       ruleFormModule: {
@@ -236,10 +236,12 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         info_name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         data_type: [
           { required: true, message: '请选择类型', trigger: 'change' }

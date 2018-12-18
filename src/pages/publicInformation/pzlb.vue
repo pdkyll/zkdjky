@@ -32,7 +32,7 @@
               size="small"
               placeholder="输入公司名称"
               style="width: 150px"
-              v-model="ruleForm.childCpcc">
+              v-model.trim="ruleForm.childCpcc">
             </el-input>
           </el-form-item>
         <el-form-item>
@@ -153,7 +153,7 @@ export default{
         childCpcc: '',
         belnr: '',
         pageNum:1,
-        pageSize:5
+        pageSize:10
       },
       totalcount:0,
       ruleFormModule: {
@@ -164,7 +164,8 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         region: [
           { required: true, message: '请选择类型', trigger: 'change' }

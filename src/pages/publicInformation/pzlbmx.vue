@@ -242,7 +242,7 @@ export default{
       upperCase: '',
       loading: null,
       pageNum:1,
-      pageSize:5,
+      pageSize:10,
       totalCount:0,
     }
   },
@@ -266,8 +266,8 @@ export default{
       let belnr = vm.$route.query.belnr
       let param = {
         belnr: belnr,
-        pageNum:1,
-        pageSize:5
+        pageNum:vm.pageNum,
+        pageSize:vm.pageSize
       }
       let header = {
         accountId: sessionStorage.getItem('accountId'),

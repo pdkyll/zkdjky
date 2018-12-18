@@ -61,13 +61,13 @@
       :before-close="gsClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
         <el-form-item label="公司名称" prop="name">
-          <el-input v-model="ruleFormModule.name"></el-input>
+          <el-input v-model.trim="ruleFormModule.name"></el-input>
         </el-form-item>
         <el-form-item label="数据代码" prop="cpcc">
-          <el-input v-model="ruleFormModule.cpcc"></el-input>
+          <el-input v-model.trim="ruleFormModule.cpcc"></el-input>
         </el-form-item>
         <el-form-item label="公司备注">
-          <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -95,10 +95,10 @@
       :before-close="xgClose">
       <el-form ref="ruleFormUpdate" :rules="rules" :model="ruleFormUpdate" label-width="100px">
         <el-form-item label="公司名称" prop="name">
-          <el-input v-model="ruleFormUpdate.name"></el-input>
+          <el-input v-model.trim="ruleFormUpdate.name"></el-input>
         </el-form-item>
         <el-form-item label="公司描述">
-          <el-input v-model="ruleFormUpdate.description"></el-input>
+          <el-input v-model.trim="ruleFormUpdate.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -140,7 +140,7 @@ export default{
         description: ''
       },
       pageNum:1,
-      pageSize:5,
+      pageSize:10,
       totalCount:0,
       tableData: [],
       xg_gsmc:'',

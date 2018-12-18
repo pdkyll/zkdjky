@@ -9,12 +9,10 @@
             style="width: 100%"
             @change="searchName"
             v-model="ruleForm.input">
-            <i
-              class="el-icon-search"
-              slot="suffix"
-              @click="search">
-            </i>
           </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
         <el-form-item class="pull-right no-mb">
           <el-button class="join-btn" size="small" @click="onSubmit">
@@ -74,10 +72,10 @@
       :before-close="handleClose">
       <el-form :model="ruleFormModule" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="ruleFormModule.name"></el-input>
+          <el-input v-model.trim="ruleFormModule.name"></el-input>
         </el-form-item>
         <el-form-item label="角色备注" prop="desc">
-          <el-input type="textarea" v-model="ruleFormModule.desc"></el-input>
+          <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
         <el-form-item label="权限选择">
           <el-tree
@@ -116,10 +114,10 @@
       :before-close="xgClose">
       <el-form ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称">
-          <el-input v-model="xg_jsmc"></el-input>
+          <el-input v-model.trim="xg_jsmc"></el-input>
         </el-form-item>
         <el-form-item label="角色描述">
-          <el-input type="textarea" v-model="xg_jsms"></el-input>
+          <el-input type="textarea" v-model.trim="xg_jsms"></el-input>
         </el-form-item>
         <el-form-item label="权限选择">
           <el-tree
@@ -162,15 +160,17 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' }
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         desc: [
-          { required: true, message: '请输入角色备注', trigger: 'blur' }
+          { required: true, message: '请输入角色备注', trigger: 'blur' },
+          { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
         ]
       },
       pageNum:1,
-      pageSize: 5,
-      totalCount: 25,
+      pageSize: 10,
+      totalCount: 0,
       tableData: [],
       treeData: [],
       checkIdList:[],

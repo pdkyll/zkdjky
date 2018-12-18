@@ -97,7 +97,7 @@ export default{
           for(let i=0;i<res.data.data.length;i++){
             _this.companyList.push({
               name:res.data.data[i].companyName,
-              value:res.data.data[i].code,
+              value:res.data.data[i].cPCC,
             })
           }
         }

@@ -109,6 +109,7 @@
         </li>
       </ul>
     </el-main>
+
     <div class="frameBox" v-show="frameShow" id="frameBox">
         <div class="frameTit">
           <div class="iBox clearFix">
@@ -236,7 +237,6 @@ export default{
       }
     },
     /*获取权限*/
-
     getJurisdiction(){
       //GET_JURISDICTION
       let _this = this

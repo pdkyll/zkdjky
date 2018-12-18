@@ -20,7 +20,7 @@
             placeholder="输入名称"
             style="width: 100%"
             @change="infoChange"
-            v-model="ruleForm.infoName">
+            v-model.trim="ruleForm.infoName">
           </el-input>
         </el-form-item>
         <el-form-item class="pull-right no-mb">
@@ -111,12 +111,12 @@
       <el-form :model="formData1" :rules="rules" ref="formData1" label-width="120px" class="demo-ruleForm">
         <el-form-item label="统计表名称" prop="statisticalName">
           <el-col :span="20">
-            <el-input v-model="formData1.statisticalName"></el-input>
+            <el-input v-model.trim="formData1.statisticalName"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="统计目的" prop="remarks">
           <el-col :span="20">
-            <el-input type="textarea" v-model="formData1.remarks"></el-input>
+            <el-input type="textarea" v-model.trim="formData1.remarks"></el-input>
           </el-col>
         </el-form-item>
       </el-form>
@@ -314,7 +314,7 @@
         deleteNormDialog:false,
         rowId:'',
         loading:true,
-        pageSize:5,
+        pageSize:10,
         pageNum:1,
         totalCount:0,
         deleteId: '',
@@ -475,7 +475,8 @@
         },
         rules: {
           statisticalName: [
-            { required: true, message: '请输入统计表名称', trigger: 'blur' }
+            { required: true, message: '请输入统计表名称', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ],
           remarks: [
             { min: 10, max: 200, message: '统计目的长度应在10到200个字符内', trigger: 'blur' }
