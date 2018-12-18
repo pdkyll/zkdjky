@@ -73,41 +73,81 @@
         <li>
           <!--:to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}"-->
           <div  @click="frameLink('LayoutNoLeft')" class="menu-item">
-            <img src="@/assets/monitor.png" alt="">
+            <!--<img src="@/assets/monitor.png" alt="">-->
+            <img src="@/assets/home/home_public.png" alt="">
           </div>
           <p>公示信息</p>
         </li>
         <li>
           <div @click="frameLink('LayoutNoLeft/attention')" class="menu-item">
-            <img src="@/assets/rss.png" alt="">
+            <!--<img src="@/assets/rss.png" alt="">-->
+            <img src="@/assets/home/home_attention.png" alt="">
           </div>
           <p>关注信息</p>
         </li>
-        <li>
+        <!--<li>
           <div @click="frameData" class="menu-item">
             <img src="@/assets/custom_reports.png" alt="">
           </div>
           <p>数据管理</p>
-        </li>
+        </li>-->
         <li>
           <div @click="frameLink('historyData')" class="menu-item">
-            <img src="@/assets/bar_chart.png" alt="">
+            <!--<img src="@/assets/bar_chart.png" alt="">-->
+            <img src="@/assets/home/home_data.png" alt="">
           </div>
           <p>数据统计</p>
         </li>
-        <li>
+        <!--<li>
           <div @click="frameLink('management')" class="menu-item">
             <img src="@/assets/file_cabinet.png" alt="">
           </div>
           <p>公示管理</p>
-        </li>
-        <li>
+        </li>-->
+        <!--<li>
           <div @click="frameLink('company')"  class="menu-item">
             <img src="@/assets/document_console.png" alt="">
           </div>
           <p>权限管理</p>
-        </li>
+        </li>-->
       </ul>
+      <div class="management_wrap">
+      	<div class="management">
+	      	<ul>
+	      		<li>
+	          		<div @click="frameData" class="menu-item">
+		            	<img src="@/assets/home/desk_data.png" alt="">
+		          	</div>
+		          	<p>数据管理</p>
+	        	</li>
+		        <li>
+		            <div @click="frameLink('management')" class="menu-item">
+		              <img src="@/assets/home/desk_public.png" alt="">
+		            </div>
+		            <p>公示管理</p>
+		        </li>
+		        <li>
+			        <div @click="frameLink('company')"  class="menu-item">
+			          <img src="@/assets/home/desk_power.png" alt="">
+			        </div>
+			        <p>权限管理</p>
+		        </li>
+		        <li>
+			        <div @click=""  class="menu-item">
+			          <img src="@/assets/home/desk_use.png" alt="">
+			        </div>
+			        <p>应用管理</p>
+		        </li>
+		        <li>
+			        <div @click=""  class="menu-item">
+			          <img src="@/assets/home/desk_person.png" alt="">
+			        </div>
+			        <p>个人中心</p>
+		        </li>
+	      	</ul>
+	      </div>
+      </div>
+      
     </el-main>
     <!--弹框修改密码-->
     <el-dialog
@@ -424,9 +464,39 @@ export default{
 .el-main{
   position: relative;
 }
+.management_wrap{
+	width:100%;
+	position: absolute;
+	bottom: 0;
+}
+.management{
+	width: 859px;
+	height:auto;
+	background: url("../../assets/home/home_desk.png") no-repeat 0 70px;
+	margin:0 auto
+}
+.management ul{
+	display: flex;
+	justify-content: space-around;
+	position: relative;
+	width:780px;
+	margin:0 auto
+}
+.management ul li{
+	text-align: center;
+	color:#fff;
+	font-size: 14px;
+	padding-bottom: 40px;
+}
+.management ul li img{
+	width:83px;
+	height:83px;
+	
+}
 .home{
   height: 100%;
-  background-image: url("../../assets/home_bg.jpg");
+  /*background-image: url("../../assets/home_bg.jpg");*/
+  background-image:url("../../assets/home/home_bg.png");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center center;
@@ -460,38 +530,45 @@ export default{
   bottom: 0;
   left: 0;
   margin: auto;
-  display: flex;
+  padding:0 20px;
+  /*display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: center;
+  flex-wrap: wrap;*/
+  /*align-items: center;
+  align-content: center;*/
   li{
-    flex: 0 0 16.6%;
-    margin-bottom: 20px;
+    /*flex: 0 0 16.6%;*/
+    /*margin-bottom: 20px;*/
+   	width:170px;
     text-align: center;
+    margin-bottom: 20px;
     .menu-item{
       display: inline-block;
-      padding: 20px;
-      margin-bottom: 15px;
+      /*padding: 20px;*/
+      /*margin-bottom: 15px;*/
       width: 140px;
-      height: 140px;
-      background: rgba(49,49,49,0.24);
-      box-shadow: 0 0 36px rgba(#999, .24) ;
-      border-radius: 32px;
+      /*height: 140px;*/
+      height: 90px;
+      /*background: rgba(49,49,49,0.24);*/
+      /*box-shadow: 0 0 36px rgba(#999, .24) ;*/
+      /*border-radius: 32px;*/
       img{
         display: inline-block;
-        width: 100%;
+        /*width: 100%;*/
+       width:83px;
+       height:83px;
       }
       +p{
         color: #fff;
         text-align: center;
-        font-size: 24px;
+        /*font-size: 24px;*/
+       font-size: 14px;
       }
     }
   };
   li:hover .menu-item{
-    background: rgba(46,46,46,0.5);
-    box-shadow: 0 0 36px rgba(#bfd046, .9) ;
+    /*background: rgba(46,46,46,0.5);
+    box-shadow: 0 0 36px rgba(#bfd046, .9) ;*/
   }
 }
 .frameBox{
