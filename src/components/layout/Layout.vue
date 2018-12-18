@@ -162,7 +162,8 @@ export default{
     let userType = sessionStorage.getItem('userType')
     let company = sessionStorage.getItem('company')
     let department = sessionStorage.getItem('department')
-    let massage = userName + '-' + userType + '-' + company + '-' + department
+    //let massage = userName + '-' + userType + '-' + company + '-' + department
+    let massage = userName + '-' + '正大健康云平台'
     Watermark.set(massage)
     /*根据不同模块显示不同左侧菜单栏*/
     vm.menuTitle = sessionStorage.getItem('publicName')

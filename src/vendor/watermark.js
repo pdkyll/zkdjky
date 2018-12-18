@@ -11,17 +11,17 @@ let setWatermark = (str) => {
   console.log(arr)
   let can = document.createElement('canvas')
   can.width = 400
-  can.height = 300
+  can.height = 200
   let cans = can.getContext('2d')
-  cans.rotate(-5 * Math.PI / 180)
+  cans.rotate(-10 * Math.PI / 180)
   cans.font = '20px Vedana'
   cans.fillStyle = 'rgba(200, 200, 200, 0.5)'
   cans.textAlign = 'left'
   cans.textBaseline = 'Middle'
   cans.fillText(arr[0], can.width/2, can.height -40)
   cans.fillText(arr[1], can.width/2, can.height -80)
-  cans.fillText(arr[2], can.width/2, can.height -120)
-  cans.fillText(arr[3], can.width/2, can.height -160)
+  //cans.fillText(arr[2], can.width/2, can.height -120)
+  //cans.fillText(arr[3], can.width/2, can.height -160)
   let div = document.createElement('div')
   div.id = id
   div.style.pointerEvents = 'none'
