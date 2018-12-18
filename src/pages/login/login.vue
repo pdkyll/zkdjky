@@ -2,22 +2,51 @@
  * Created by zhangxin on 2018/11/18.
  */
 <template>
- <div class="login">
-  <div class="login-info">
-    <h3 class="login-title"><span>正大健康云平台</span></h3>
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0" class="demo-ruleForm">
-      <el-form-item label="" prop="userName">
-        <el-input v-model="ruleForm.userName" class="underline-input" placeholder="用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="" prop="password" >
-        <el-input type="password" v-model="ruleForm.password" autocomplete="off" class="underline-input" placeholder="密码"></el-input>
-      </el-form-item>
-      <el-form-item class="mt-50">
-        <el-button type="login" @click="submitForm('ruleForm')">立即登录</el-button>
-      </el-form-item>
-    </el-form>
+ <!--<div class="login">-->
+  <!--<div class="login-info">-->
+    <!--<h3 class="login-title"><span>正大健康云平台</span></h3>-->
+    <!--<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0" class="demo-ruleForm">-->
+      <!--<el-form-item label="" prop="userName">-->
+        <!--<el-input v-model="ruleForm.userName" class="underline-input" placeholder="用户名"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="" prop="password" >-->
+        <!--<el-input type="password" v-model="ruleForm.password" autocomplete="off" class="underline-input" placeholder="密码"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item class="mt-50">-->
+        <!--<el-button type="login" @click="submitForm('ruleForm')">立即登录</el-button>-->
+      <!--</el-form-item>-->
+    <!--</el-form>-->
+  <!--</div>-->
+ <!--</div>-->
+<!--2018/12/18 GXB start-->
+  <div class="box loginWrap">
+    <div class="loginContent">
+      <div class="logoBox">
+        <div class="logoIcon"></div>
+        <h3 class="platformName">正大健康云平台</h3>
+      </div>
+      <div class="formBox">
+	  	<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0" class="formBody demo-ruleForm">
+	      <el-form-item class="fromField" label="" prop="userName">
+	        <el-input v-model="ruleForm.userName" class="inpIcon userInput underline-input" placeholder="账号"></el-input>
+	      </el-form-item>
+	      <el-form-item class="fromField topBor" label="" prop="password" >
+	        <el-input type="password" v-model="ruleForm.password" autocomplete="off" class="inpIcon userPsw underline-input" placeholder="密码"></el-input>
+	      	<span class="signIn" @click="submitForm('ruleForm')"></span>
+	      </el-form-item>
+		</el-form>
+        <div class="formTip">
+          <!--<div class="saveLogin">
+              <em></em><span class="labelText">保持我的登录状态</span>
+          </div>-->
+          <div class="borderLinear"></div>
+          <p class="subTip">温馨提示：如果忘记密码请联系管理员为您重置密码。</p>
+        </div>
+      </div>
+    </div>
+  	<div class="zdbq">@&nbsp;&nbsp;2017正大制药集团&nbsp; 版权所有</div>
   </div>
- </div>
+<!--2018/12/18 GXB end-->
 </template>
 <script>
 /**
@@ -140,28 +169,189 @@ export default{
       }
     }
   }
+
+
+/*2018/12/18 GXB start*/
+  .box{
+    width: 100%;
+    height: 100%;
+    background: url("../../assets/login/healthycloud_bg.png") no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    overflow: hidden;
+  }
+  .loginWrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .logoIcon{
+    width:112px;
+    height:112px;
+    background: url('../../assets/login/zd_logo.png') no-repeat;
+    background-size: 100% 100%;
+    margin: 0 auto;
+  }
+  .platformName{
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .formBody{
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #c8c8c8;
+    border-radius: 10px;
+    padding: 0 1px;
+  }
+  .fromField{
+    position: relative;
+    margin-bottom: 0;
+  }
+  .loginWarningBox{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .loginWarningBox .arrow-top{
+    position: absolute;
+    left: 50%;
+    top: -1px;
+    margin-left: -5px;
+    background-color: #83a1d4;
+  }
+  .loginWarningText{
+    display: inline-block;
+    background-color: #83a1d4;
+    border: 1px solid #385ba5;
+    color: #fff;
+    border-radius: 10px;
+  }
+  .loginWarningText span{
+    display: inline-block;
+    background: url('/appIcon/mark_icon.png') no-repeat left center;
+    margin: 0 50px;
+  }
+  .inpIcon{
+    background-repeat: no-repeat;
+    background-position: 9px center;
+    color: #666;
+    height: 100%;
+    border: 0;
+    border-radius: 10px;
+  }
+  .signIn{
+    position: absolute;
+    right: 15px;
+    width: 25px;
+    height: 25px;
+    top: 50%;
+    margin-top: -14px;
+    background: url('../../assets/login/login_land.png') no-repeat center center;
+    cursor: pointer;
+  }
+  .topBor{
+    border-top: 1px solid #b9b8b8;
+  }
+  .userInput{
+    font-size: 16px;
+    width: 378px;
+    height:49px;
+    padding: 0 50px 0 50px;
+    background: url('../../assets/login/login_username.png') no-repeat 10px 4px;
+  }
+  .underline-input>input{
+  	border: none;
+  }
+  .userPsw{
+    font-size: 16px;
+    width: 378px;
+    height:49px;
+    padding: 0 0 0 50px;
+    background: url('../../assets/login/login_password.png') no-repeat 10px 4px;
+  }
+  .formTip{
+    margin-top: 83px;
+    color: #fff;
+    text-align: center;
+    font-size:12px
+  }
+  .saveLogin em{
+	display: inline-block;
+	width:16px;
+	height: 16px;
+	background: url(../../assets/login/login_nochecked.png) no-repeat;
+	background-size: 100% 100%;
+	vertical-align: middle;	
+	margin-right: 8px;
+  }
+  .saveLogin span{
+  	display: inline-block;
+  	vertical-align: middle;
+  	font-size: 14px;
+  }
+  .zdbq{
+  	position: absolute;
+  	bottom: 20px;
+	font-size: 12px;
+	color:#fff;
+   }  
+  .borderLinear{
+     margin: 10px 0 14px 0;
+     height: 1px;
+     background: linear-gradient(to right, transparent, #fff, transparent);
+   }
+  .uiCheckbox{
+    position: relative;
+  }
+  .uiCheckbox input{
+    position: relative;
+  }
+  .uiCheckbox input:before{
+    content: "";
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #c9c9c9;
+    cursor: pointer;
+    position: absolute;
+
+  }
+  .uiCheckbox input:checked:after{
+    content: "";
+    display: inline-block;
+    border: 1px solid #2d489a;
+    background: url('/appIcon/checked_icon.png') no-repeat center center;
+    background-color: #355fc6;
+    background-size: 100% 100%;
+    position: absolute;
+    cursor: pointer;
+  }
+/*2018/12/18 GXB end*/
 </style>
 <style lang="scss">
   .underline-input{
     >input{
-      color: #fff;
+      color: #666;
+      height:100%;
       padding-left: 0;
       border: none;
-      border-bottom: 1px solid #dadde3;
+      /*border-bottom: 1px solid #dadde3;*/
       box-shadow: none;
       border-radius: 0;
       background-color: transparent !important;
-      &::-webkit-input-placeholder {color: #fff;}
-      &:-moz-placeholder {color:#fff;}
-      &::-moz-placeholder {color:#fff;}
-      &:-ms-input-placeholder {color:#fff;}
+      &::-webkit-input-placeholder {color: #666;}
+      &:-moz-placeholder {color:#666;}
+      &::-moz-placeholder {color:#666;}
+      &:-ms-input-placeholder {color:#666;}
       &:hover,
       &:focus{
         border-bottom-color: #bfd046;
-        &::-webkit-input-placeholder {color: #bfd046;}
-        &:-moz-placeholder {color:#bfd046;}
-        &::-moz-placeholder {color:#bfd046;}
-        &:-ms-input-placeholder {color:#bfd046;}
+        &::-webkit-input-placeholder {color: #666;}
+        &:-moz-placeholder {color:#666;}
+        &::-moz-placeholder {color:#666;}
+        &:-ms-input-placeholder {color:#666;}
       }
     }
   }
