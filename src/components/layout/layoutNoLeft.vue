@@ -42,7 +42,7 @@ export default{
     let userType = sessionStorage.getItem('userType')
     let company = sessionStorage.getItem('company')
     let department = sessionStorage.getItem('department')
-    let massage = userName + '-' + userType + company + '-' + department
+    let massage = userName + '-' + userType + '-' + company + '-' + department
     Watermark.set(massage)
     this.title = window.sessionStorage.getItem('publicName')
   }
