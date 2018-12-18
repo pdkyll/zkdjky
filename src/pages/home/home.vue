@@ -56,7 +56,7 @@
             </span>
             {{departmentName}}
           </p>
-          <el-button type="primary">修改密码</el-button>
+          <el-button type="primary" @click="dialog=true">修改密码</el-button>
           <el-button type="primary" @click="logout">退出登陆</el-button>
         </div>
         <div class="head-img-box" slot="reference">
@@ -109,7 +109,28 @@
         </li>
       </ul>
     </el-main>
-
+    <!--弹框修改密码-->
+    <el-dialog
+      title="新建部门"
+      :visible.sync="dialog"
+      width="30%"
+      :before-close="closeDialog">
+      <el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="原密码" prop="oldPass">
+          <el-input v-model.trim="ruleFormModule.oldPass"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="pass">
+          <el-input v-model.trim="ruleFormModule.pass"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="againPass">
+          <el-input v-model.trim="ruleFormModule.againPass"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelUpdatePass('ruleFormModule')">取 消</el-button>
+        <el-button type="primary" @click="updatePass('ruleFormModule')">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="frameBox" v-show="frameShow" id="frameBox">
         <div class="frameTit">
           <div class="iBox clearFix">
@@ -130,6 +151,25 @@
  */
 export default{
   data () {
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.ruleFormModule.againPass !== '') {
+          this.$refs.ruleFormModule.validateField('againPass');
+        }
+        callback();
+      }
+    };
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.ruleFormModule.pass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       msg: '首页',
       rouPath:'',
@@ -143,7 +183,29 @@ export default{
       userEmail:'',
       departmentName:'',
       companyName:'',
-      wrapper:''
+      wrapper:'',
+      /*修改密码弹框*/
+      dialog: false,
+      ruleFormModule:{
+        oldPass:'',
+        pass:'',
+        againPass:''
+      },
+      rules: {
+        oldPass: [
+          { required: true, message: '请输入原密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        pass: [
+          { validator: validatePass, trigger: 'blur' },
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        againPass: [
+          { validator: validatePass2, trigger: 'blur' },
+          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+        ],
+      },
     }
   },
   components: {},
@@ -246,11 +308,12 @@ export default{
       }
       let param = {}
       this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
-        console.log(res)
+        sessionStorage.setItem('userPermissions',res.data.data)
       }).catch((error) => {
         console.error(error)
       })
     },
+
     /*退出登陆*/
     logout(){
       let _this = this
@@ -268,7 +331,70 @@ export default{
       }).catch((error) => {
         console.error(error)
       })
-    }
+    },
+
+    /*修改密码相关*/
+    closeDialog () {
+      this.dialog_bm = false
+      this.$refs['ruleFormModule'].resetFields()
+    },
+    updatePass(formName){
+      let _this = this
+      _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          _this.dialog = false
+          /*let optionSelected = _this.optionData.filter(function (item,index) {
+            return item.id === _this.ruleFormModule.companyName
+          })
+          let param = {
+            "type": 1,
+            "address":"",
+            "contact":"test",
+            "create_by":"sjm",
+            "description": _this.ruleFormModule.desc,
+            "cPCC":_this.ruleFormModule.cpcc,
+            "level":2,
+            "id": _this.ruleFormModule.companyName,  //父及Id
+            //"name":"tttt",   //name不可重复
+            "depNames": _this.ruleFormModule.departmentName,   //数组
+            "code": optionSelected[0].code,   //父及code
+            "pcode":"1",  //固定参数
+            "pid":1, //固定参数
+            "paramType":1,
+            "postcode":"",
+            "telephone":"13011455214"
+          }
+          let header = {
+            accountId: sessionStorage.getItem('accountId'),
+            accessToken: sessionStorage.getItem('accessToken'),
+            projectId :sessionStorage.getItem('projectId'),
+          }
+          this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
+            if(res.code === 16000003){
+              _this.search_list()
+              _this.ruleFormModule.desc= ''
+              _this.ruleFormModule.departmentName= []
+              _this.ruleFormModule.companyName= ''
+              _this.$refs[formName].resetFields()
+            }
+            _this.$notify({
+              title: '提示信息',
+              message: res.msg,
+              type: res.code === 16000003 ? 'success' : 'error',
+              duration: '2000'
+            })
+          }).catch((error) => {
+            console.error(error)
+          })*/
+        } else {
+          return false;
+        }
+      });
+    },
+    cancelUpdatePass(formName){
+      this.dialog = false
+      this.$refs[formName].resetFields()
+    },
   },
   created (){
     this.userName = this.$store.state.userName
@@ -277,7 +403,7 @@ export default{
     this.userEmail = this.$store.state.userEmail
     this.departmentName= this.$store.state.departmentName
     this.companyName = this.$store.state.companyName
-    //this.getJurisdiction()
+    this.getJurisdiction()
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')

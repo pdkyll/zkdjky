@@ -791,6 +791,16 @@ export default {
       return res
     })
   },
+
+  /**
+   * 获取权限列表
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
   GET_JURISDICTION: ({commit, state}, {param, header}) => {
   return getJurisdiction(param, header).then((res, req) => {
     return res
