@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1" class="no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1" class="no-mb" label="用户名称">
           <el-input
             size="small"
             placeholder="输入用户名称"
@@ -66,11 +66,11 @@
         <el-table-column
           :resizable=false
           label="操作"
-          width="100">
+          width="150">
           <template slot-scope="scope">
+            <el-button type="text" size="small" @click="usering(scope.row)">{{scope.row.useType}}</el-button>
             <el-button @click="updateClick(scope.row)" type="text" size="small" v-if="$store.getters.getPermissions.indexOf('editUserManagement')>-1">修改</el-button>
             <el-button type="text" size="small" @click="removeClick(scope.row)" v-if="$store.getters.getPermissions.indexOf('delUserManagement')>-1">删除</el-button>
-            <!--<el-button type="text" size="small">停用</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -79,6 +79,7 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
+          :current-page.sync="pageNum"
           :page-size=pageSize
           layout="total, prev, pager, next"
           :total=totalCount>
@@ -177,6 +178,18 @@
         <el-button type="primary" @click="yh_xg('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
+    <!--弹框显示是否停用-->
+    <el-dialog
+      title="提示信息"
+      :visible.sync="dialogUse"
+      width="30%"
+      :before-close="useClose">
+      <p>是否停用此账户？</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogUse = false">取 消</el-button>
+        <el-button type="primary" @click="updateUse">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -247,12 +260,15 @@ export default{
       tableData: [],
       /*删除相关的参数*/
       dialogDelete:false,
-      del_id:'',
+      use_id:'',
       /*修改的相关参数*/
       dialog_xg:false,
       xg_id:'',
       /*新建用户*/
       dialogVisible: false,
+      /*停用启用*/
+      dialogUse:false,
+      useCode:'',
     }
   },
   methods: {
@@ -273,7 +289,6 @@ export default{
       this.users()
     },
     region_change (val) {
-      console.log(val)
       this.ruleFormModule.region = val
     },
     /*用户列表展示*/
@@ -283,16 +298,17 @@ export default{
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
+        accountNames:this.ruleForm.input,
         filter:'status=1'
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
-        console.log(res)
         this.tableData = []
         if(res !== null && res.data.code == 16000003 ){
           this.totalCount = res.data.data.totalNum
+          this.pageNum = res.data.data.pageNum
           let tableList = res.data.data.datas
           for(let i =0 ;i<tableList.length;i++){
             let str = res.data.data.datas[i].extendedProperties
@@ -307,6 +323,8 @@ export default{
               zhmc:tableList[i].tenantName,
               time:tableList[i].updateTime,
               id:tableList[i].accountId,
+              useType:tableList[i].status == 1?'停用':'启用',
+              useCode:tableList[i].status,
               desc:tableList[i].description==null?'':tableList[i].description,
             })
           }
@@ -323,6 +341,10 @@ export default{
       this.ruleForm.input = val
     },
     search(){
+      this.pageNum = 1
+      console.log(this.pageNum)
+      this.users()
+      /*this.loading = true
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
@@ -342,8 +364,8 @@ export default{
             let obj = JSON.parse(str) || ''
             this.tableData.push({
               name:tableList[i].accountName,
-              /*tel:res.data.result.datas[i].telephone,
-              email:res.data.result.datas[i].email,*/
+              /!*tel:res.data.result.datas[i].telephone,
+              email:res.data.result.datas[i].email,*!/
               gs:obj.company == undefined?'':obj.company,
               bm:obj.department== undefined?'':obj.department,
               region:obj.region== undefined?'':obj.region,
@@ -354,14 +376,14 @@ export default{
             })
           }
         }
-
+        this.loading = false
       }).catch((error) => {
         console.error(error)
-      })
+      })*/
     },
     /*删除用户*/
     removeClick(val){
-      this.del_id = val.id
+      this.use_id = val.id
       this.dialogDelete = true
     },
     deleteClose(){
@@ -373,7 +395,7 @@ export default{
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
-      let urlData =  this.del_id
+      let urlData =  this.use_id
       this.$store.dispatch('DEL_USER_FOR_USERS', { header, urlData}).then(res => {
         console.log(res)
         if(res !== null && res.code == 16000003){
@@ -507,7 +529,7 @@ export default{
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
-      let urlData =  this.del_id
+      let urlData =  this.use_id
       this.$store.dispatch('INSERT_USER_FOR_USERS', { param, header}).then(res => {
         if(res !== null && res.code == 16000003){
           _this.users()
@@ -661,8 +683,45 @@ export default{
       }).catch((error) => {
         console.error(error)
       })
+    },
+    /*用户停用启用*/
+    useClose(){
+      this.dialogUse = false
+    },
+    usering(row){
+      this.dialogUse = true
+      this.use_id = row.id
+      if(row.useCode == 1){
+        this.useCode = row.useCode
+      }else{
+        this.useCode = 2
+      }
+    },
+    updateUse(){
+      let _this = this
+      let param = {
+        status:this.useCode
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken')
+      }
+      let urlData =  this.use_id
+      this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
+        if(res !== null && res.code == 16000003){
+          _this.users()
+          this.dialogUse = false
+        }
+        _this.$notify({
+          title: '提示信息',
+          message: res.msg,
+          type: res.code === 16000003 ? 'success' : 'error',
+          duration: '1000'
+        })
+      }).catch(error=>{
+        console.error(error);
+      })
+      this.dialogUse = false
     }
-
   },
   mounted () {
     this.users()

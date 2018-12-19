@@ -17,7 +17,7 @@
         <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="no-mb" label="名称">
           <el-input
             size="small"
-            placeholder="输入名称"
+            placeholder="输入指标名称"
             style="width: 100%"
             @change="infoChange"
             v-model.trim="ruleForm.infoName">
@@ -62,11 +62,11 @@
         </el-table-column>
         <el-table-column
           prop="likeCount"
-          label="点赞统计">
+          label="指标关注度">
           <template slot-scope="scope">
-            <span class="iconfont icon-chakanyanjingshishifenxi icon-green"></span>
+            <span class="iconfont icon-chakanyanjingshishifenxi icon-green" :title="'订阅'+scope.row.likeCount+'人'"></span>
             <span class="mr-10">{{scope.row.likeCount}}</span>
-            <span class="iconfont icon-shoucang3 icon-red"></span>
+            <span class="iconfont icon-shoucang3 icon-red" :title="'点赞'+scope.row.subscibeCount+'人'"></span>
             <span class="mr-10">{{scope.row.subscibeCount}}</span>
           </template>
         </el-table-column>
@@ -584,12 +584,21 @@
       },
       handleClose () {
         this.dialogVisible = false
+        this.$refs['formData1'].resetFields()
+        this.$refs['formData2'].resetFields()
+        this.$refs['formData3'].resetFields()
       },
       handleClose2 () {
         this.dialogVisible2 = false
+        this.$refs['formData1'].resetFields()
+        this.$refs['formData2'].resetFields()
+        this.$refs['formData3'].resetFields()
       },
       handleClose3 () {
         this.dialogVisible3 = false
+        this.$refs['formData1'].resetFields()
+        this.$refs['formData2'].resetFields()
+        this.$refs['formData3'].resetFields()
       },
       /*预览图标的隐藏展示*/
       barShow () {
@@ -847,7 +856,6 @@
             accessId: sessionStorage.getItem('accessId')
           }
           _this.$store.dispatch('PROVIDER_MANAGE', {param, header}).then(res=>{
-            console.log(res.data.data.viewResult)
             let companyArr = _this.generateData(res.data.data.viewResult)
             _this.$store.dispatch('SET_COMPANY_STATE',{companyArr})
             _this.formData2T.companyTransfer = companyArr
@@ -951,6 +959,7 @@
       },
       searchList(){
         let vm = this
+        this.pageNum = 1
         setTimeout(function () {
           vm.getNormTable()
         },100)

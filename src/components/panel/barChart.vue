@@ -23,7 +23,7 @@
         let allCompanyDepartment = new Set()
         let allYear = new Set()
         for (let item in data) {
-          let arr = item.split('^')
+          let arr = item.split('H')
           let product = arr[0]
           let year = arr[1]
           let company = arr[2]

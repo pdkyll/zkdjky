@@ -202,21 +202,21 @@ export default{
             },
             {
               name:'销售指标',
-              pathUrl:'publicInformation',
+              pathUrl:'newNorm',
               iClass:'icon-qiye',
               child:false,
               flag:this.$store.getters.getPermissions.indexOf('salesIndex')>-1?true:false
             },
             {
               name:'产品指标',
-              pathUrl:'publicInformation',
+              pathUrl:'newNorm',
               child:false,
               iClass:'icon-shumogongjuiconshichangfenxi-',
               flag:this.$store.getters.getPermissions.indexOf('productIndex')>-1?true:false
             },
             {
               name:'人事指标',
-              pathUrl:'publicInformation',
+              pathUrl:'newNorm',
               iClass:'icon-yezhukaifashang',
               child:false,
               flag:this.$store.getters.getPermissions.indexOf('personnelIndex')>-1?true:false

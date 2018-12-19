@@ -96,6 +96,7 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
+          :current-page.sync="ruleForm.pageNum"
           :page-size=ruleForm.pageSize
           layout="total, prev, pager, next"
           :total=totalCount>
@@ -317,6 +318,7 @@ export default{
       }
     },
     search(){
+      this.ruleForm.pageNum = 1
       this.publicInformationList()
     },
     /**

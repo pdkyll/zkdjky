@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="no-mb">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="no-mb" label="角色名称">
           <el-input
             size="small"
             placeholder="输入角色名称"
@@ -58,6 +58,7 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
+          :current-page.sync="pageNum"
           :page-size=pageSize
           layout="total, prev, pager, next"
           :total=totalCount>
@@ -219,7 +220,7 @@ export default{
       let param = {
         type: '1',
         pageNumber:this.pageNum,
-        pageSize:this.pageSize
+        pageSize:this.pageSize,
       }
       this.loading = true
       let header = {
@@ -479,6 +480,8 @@ export default{
       this.filter = 'rolename=_'+ val +'_'
     },
     search(val){
+      this.loading = true
+      this.pageNum = 1
       if(this.filter == undefined){
         this.filter = 'rolename=__'
       }
@@ -511,7 +514,7 @@ export default{
             _this.loading = false
           })
         }
-
+        this.loading = false
       }).catch((error) => {
         console.error(error)
       })

@@ -361,6 +361,7 @@ export default{
         accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LOGOUT', { header }).then((res, req) => {
+        sessionStorage.clear()
         this.$router.push('/login')
         _this.$notify({
           title: '提示信息',
@@ -425,14 +426,15 @@ export default{
     this.departmentName= this.$store.state.departmentName
     this.companyName = this.$store.state.companyName
     this.getJurisdiction()
-    let userPermissionsStr = sessionStorage.getItem('userPermissions')
-    let permissions = userPermissionsStr.split(',')
-    this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   mounted () {
+    let _this = this
     this.frameDom = document.getElementById('frameBox')
     this.frame = document.getElementById('frame')
     this.removeKey()
+    let userPermissionsStr = sessionStorage.getItem('userPermissions')
+    let permissions = userPermissionsStr.split(',')
+    _this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   }
 }
 </script>

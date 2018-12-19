@@ -126,6 +126,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :page-size=ruleForm.pageSize
+          :current-page.sync="ruleForm.pageNum"
           layout="total, prev, pager, next"
           :total=totalcount>
         </el-pagination>
@@ -193,6 +194,7 @@ export default{
       }
     },
     searchList(){
+      this.ruleForm.pageNum = 1
       this.getTableList()
     },
     /**

@@ -47,6 +47,7 @@
               background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
+              :current-page.sync="ruleForm.pageNum"
               :page-size=pageSize
               layout="total, prev, pager, next"
               :total=totalCount>
@@ -380,6 +381,7 @@ export default{
     },
     /*下拉菜单选择以后查询数据*/
     selectChange(){
+      this.pageNum = 1
       this.getHistoryTableContent()
     },
     /*分页点击查询*/
