@@ -27,7 +27,7 @@
         let allCompanyDepartment = new Set()
         let allYear = new Set()
         for (let item in data) {
-          let arr = item.split('H')
+          let arr = item.split('^')
           let product = arr[0]
           let year = arr[1]
           let company = arr[2]
@@ -192,7 +192,9 @@
       },
       resizeChart(){
         let vm = this
-        document.getElementById(this.elId).style.width = '100%'
+        if(document.getElementById(this.elId).style !== null){
+          document.getElementById(this.elId).style.width = '100%'
+        }
         setTimeout(function () {
           vm.chartInstance.resize()
         },100)

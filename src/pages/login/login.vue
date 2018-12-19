@@ -83,6 +83,24 @@ export default{
         }
       });
     },
+    /*获取权限*/
+    getJurisdiction(){
+      let _this = this
+      //GET_JURISDICTION
+      let header = {
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      let param = {}
+      this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
+        sessionStorage.setItem('userPermissions',res.data.data)
+        _this.$nextTick(() => {
+          _this.$router.push('/home')
+        })
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
     login (user, pass) {
       let _this = this
       var password = sha1(pass)
@@ -111,8 +129,7 @@ export default{
           sessionStorage.setItem('userType', data.tenantName)
           sessionStorage.setItem('company', res.data.companyName)
           sessionStorage.setItem('department', res.data.departmentName)
-
-          this.$router.push('/home')
+          this.getJurisdiction()
         }
         _this.$notify({
           title: '提示信息',

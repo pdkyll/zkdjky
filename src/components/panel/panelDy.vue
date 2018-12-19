@@ -3,7 +3,11 @@
 */
 <template>
   <div>
-    <el-row :gutter="20">
+    <el-row :gutter="20"
+            v-loading="loadingData"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(0, 0, 0, 0.8)">
       <el-col :span="24">
         <el-button class="pull-right qx" size="small" v-if="tjList.length > 0 && $store.getters.getPermissions.indexOf('unsubscribeAllInformationAttention')>-1" @click="openDialog">取消全部订阅</el-button>
       </el-col>
@@ -91,6 +95,7 @@ export default{
     return {
       dialogDelete:false,
       tjList: [],
+      loadingData:true,
     }
   },
   components: {
@@ -161,6 +166,7 @@ export default{
      */
     getAttention(){
       let _this = this
+      _this.loadingData = true
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
@@ -199,6 +205,7 @@ export default{
 
             _this.tjList.push(obj)
           }
+          _this.loadingData = false
         }
       }).catch(error => {
         console.log(error)

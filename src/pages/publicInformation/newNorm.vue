@@ -690,7 +690,7 @@
           departments: '',
           products: ''
         }
-        searchCondition.dateRange = _this.formData2.date1 + '&' + _this.formData2.date2
+        searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
         searchCondition.companys = _this.formData2.companys.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''
@@ -794,7 +794,7 @@
           departments: '',
           products: ''
         }
-        searchCondition.dateRange = _this.formData2.date1 + '&' + _this.formData2.date2
+        searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
         searchCondition.companys = _this.formData2.companys.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''

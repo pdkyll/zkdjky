@@ -299,7 +299,7 @@ export default{
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
         accountNames:this.ruleForm.input,
-        filter:'status=1'
+        filter:'status!=2'
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
@@ -324,7 +324,7 @@ export default{
               time:tableList[i].updateTime,
               id:tableList[i].accountId,
               useType:tableList[i].status == 1?'停用':'启用',
-              useCode:tableList[i].status,
+              useCode:tableList[i].status + '',
               desc:tableList[i].description==null?'':tableList[i].description,
             })
           }
@@ -397,7 +397,6 @@ export default{
       }
       let urlData =  this.use_id
       this.$store.dispatch('DEL_USER_FOR_USERS', { header, urlData}).then(res => {
-        console.log(res)
         if(res !== null && res.code == 16000003){
           _this.users()
         }
@@ -691,16 +690,17 @@ export default{
     usering(row){
       this.dialogUse = true
       this.use_id = row.id
-      if(row.useCode == 1){
-        this.useCode = row.useCode
+      if(row.useCode == '0'){
+        this.useCode = '1'
       }else{
-        this.useCode = 2
+        this.useCode = '0'
       }
     },
     updateUse(){
+      this.loading = true
       let _this = this
       let param = {
-        status:this.useCode
+        "status":this.useCode
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')

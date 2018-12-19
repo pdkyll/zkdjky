@@ -246,6 +246,7 @@ export default{
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
         ],
       },
+      aaa: false,
     }
   },
   components: {},
@@ -338,21 +339,6 @@ export default{
         this.wrapper = ''
       }
     },
-    /*获取权限*/
-    getJurisdiction(){
-      //GET_JURISDICTION
-      let _this = this
-      let header = {
-        accessToken:  sessionStorage.getItem('accessToken'),
-        projectId: sessionStorage.getItem('projectId')
-      }
-      let param = {}
-      this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
-        sessionStorage.setItem('userPermissions',res.data.data)
-      }).catch((error) => {
-        console.error(error)
-      })
-    },
 
     /*退出登陆*/
     logout(){
@@ -361,8 +347,10 @@ export default{
         accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LOGOUT', { header }).then((res, req) => {
-        sessionStorage.clear()
-        this.$router.push('/login')
+        if(res.code == 16000003){
+          sessionStorage.clear()
+          this.$router.push('/login')
+        }
         _this.$notify({
           title: '提示信息',
           message: res.msg,
@@ -425,7 +413,6 @@ export default{
     this.userEmail = this.$store.state.userEmail
     this.departmentName= this.$store.state.departmentName
     this.companyName = this.$store.state.companyName
-    this.getJurisdiction()
   },
   mounted () {
     let _this = this
