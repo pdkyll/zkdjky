@@ -28,9 +28,9 @@
         <div class="downBox">
           <div class="downBoxImg">
             <span class="circleImage">
-              <img src="../../assets/headimg.png" alt="head-img">
+              <img src="../../assets/login/headimg.png" alt="head-img">
             </span>
-           <p class="userText">{{userType}}</p>
+           <p class="userText">{{userName}}</p>
           </div>
           <p class="userLab">
             <span class="mr-20">
@@ -61,9 +61,8 @@
         </div>
         <div class="head-img-box" slot="reference">
           <span class="circle-bg">
-            <img src="../../assets/headimg.png" alt="head-img">
+            <img src="../../assets/login/headimg.png" alt="head-img">
           </span>
-          <span style="cursor: pointer">{{userName}}</span>
           <i class="el-icon-caret-bottom"></i>
         </div>
       </el-popover>
