@@ -138,7 +138,7 @@
 			        <p>应用管理</p>
 		        </li>
 		        <li>
-			        <div @click=""  class="menu-item">
+			        <div @click="frameLink('personCenter')"  class="menu-item">
 			          <img src="@/assets/home/desk_person.png" alt="">
 			        </div>
 			        <p>个人中心</p>
@@ -173,9 +173,13 @@
     <div class="frameBox" v-show="frameShow" id="frameBox">
         <div class="frameTit">
           <div class="iBox clearFix">
-            <i class="iconfont icon-cross pull-right titBtn ml-10" @click="closeFrame"></i>
+            <!--<i class="iconfont icon-cross pull-right titBtn ml-10" @click="closeFrame"></i>
             <i class="iconfont icon--quanbubiankuang pull-right titBtn ml-10" @click="bigFrame"></i>
-            <i class="iconfont icon-jianhao pull-right titBtn ml-10" @click="smallFrame"></i>
+            <i class="iconfont icon-jianhao pull-right titBtn ml-10" @click="smallFrame"></i>-->
+            <span>{{partName}}</span>
+            <i class="iconfont icon-cross1 pull-right titBtn ml-10" @click="closeFrame"></i>
+            <i class="iconfont icon--quanbubiankuang1 pull-right titBtn ml-10" @click="bigFrame"></i>
+            <i class="iconfont icon-jianhao1 pull-right titBtn ml-10" @click="smallFrame"></i>
           </div>
         </div>
         <iframe src="/LayoutNoLeft" class="frame" id="frame" frameborder="0"></iframe>
@@ -211,6 +215,7 @@ export default{
       }
     };
     return {
+      partName:'',
       msg: '首页',
       rouPath:'',
       frameShow:false,
@@ -269,6 +274,9 @@ export default{
         name = '公示管理'
       }else if(urlPath == 'company'){
         name = '公司管理'
+      }else if(urlPath == 'personCenter'){
+      	this.partName = '个人中心';
+      	name = '个人中心';
       }
       this.frame.src= urlPath
       window.sessionStorage.setItem('publicName', name)
@@ -413,6 +421,15 @@ export default{
     this.userEmail = this.$store.state.userEmail
     this.departmentName= this.$store.state.departmentName
     this.companyName = this.$store.state.companyName
+    let personCenter = {
+    	userName:this.$store.state.userName,
+    	userPhone:this.$store.state.userPhone,
+    	userEmail:this.$store.state.userEmail,
+    	departmentName:this.$store.state.departmentName,
+    	companyName:this.$store.state.companyName
+    }
+    personCenter = JSON.stringify(personCenter);
+    sessionStorage.setItem('personCenter',personCenter)
   },
   mounted () {
     let _this = this
@@ -563,7 +580,7 @@ export default{
     box-shadow: 0 0 36px rgba(#bfd046, .9) ;*/
   }
 }
-.frameBox{
+/*.frameBox{
   background: #f5f5f5;
   width: 90%;
   height: 80%;
@@ -594,6 +611,68 @@ export default{
       }
       i:hover{
         color: #999;
+      }
+    }
+  }
+  .frame{
+    width: 100%;
+    height: 94.5%;
+  }
+
+}*/
+/*  2018/12/19  gxb change*/
+.frameBox{
+  width: 90%;
+  height: 80%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom: 0;
+  margin:auto;
+  .frameTit{
+    width: 100%;
+    height: 60px;
+    background: url(../../assets/iframeIcon/ifram_header.png) no-repeat;
+    background-size: 100% 100%;
+    padding: .1% 0;
+    position: relative;
+    .iBox{
+      height: 20px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right:0;
+      bottom: 0;
+      margin:auto;
+      padding-right: 5px;
+      text-align: center;
+      color:#fff;
+      span{
+      	display: inline-block;
+      	width: 100%;
+      	text-align: center;
+      	font-size: 18px;
+      	font-weight: bold;
+      }
+      i{
+      	display: inline-block;
+      	position: absolute;
+      	width:20px;
+      	height:20px;
+      	right: 16px;
+      	top:0
+      }
+      .icon-cross1 {
+      	background: url(../../assets/iframeIcon/ifram_close.png) no-repeat;
+      }
+      .icon--quanbubiankuang1{
+      	background: url(../../assets/iframeIcon/ifram_changeBig.png) no-repeat;
+      	right: 56px;
+      }
+      .icon-jianhao1 {
+      	background: url(../../assets/iframeIcon/ifram_changeSmall.png) no-repeat;
+      	right: 96px;
       }
     }
   }

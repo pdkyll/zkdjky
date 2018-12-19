@@ -19,6 +19,7 @@ const role = () => import('@/pages/jurisdiction/role')
 const user = () => import('@/pages/jurisdiction/user')
 const company = () => import('@/pages/jurisdiction/company')
 const department = () => import('@/pages/jurisdiction/department')
+const personCenter = () => import('@/pages/publicInformation/personCenter')       //  个人中心 12、19 gxb
 Vue.use(Router)
 
 export default new Router({
@@ -134,6 +135,11 @@ export default new Router({
           component: attention
         }
       ]
+    },
+    {
+    	path:'/personCenter',
+    	name:'personCenter',
+    	component:personCenter
     }
   ]
 })
