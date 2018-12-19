@@ -70,7 +70,7 @@
     </el-header>
     <el-main>
       <ul class="menu">
-        <li>
+        <li v-if="$store.getters.getPermissions.indexOf('formulaSetting')>-1">
           <!--:to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}"-->
           <div  @click="frameLink('LayoutNoLeft')" class="menu-item">
             <!--<img src="@/assets/monitor.png" alt="">-->
@@ -78,8 +78,8 @@
           </div>
           <p>公示信息</p>
         </li>
-        <li>
-          <div @click="frameLink('LayoutNoLeft/attention')" class="menu-item">
+        <li v-if="$store.getters.getPermissions.indexOf('informationAttention')>-1">
+          <div @click="frameLink('LayoutNoLeft/attention')"  class="menu-item">
             <!--<img src="@/assets/rss.png" alt="">-->
             <img src="@/assets/home/home_attention.png" alt="">
           </div>
@@ -91,7 +91,7 @@
           </div>
           <p>数据管理</p>
         </li>-->
-        <li>
+        <li v-if="$store.getters.getPermissions.indexOf('dataStatistics')>-1">
           <div @click="frameLink('historyData')" class="menu-item">
             <!--<img src="@/assets/bar_chart.png" alt="">-->
             <img src="@/assets/home/home_data.png" alt="">
@@ -114,19 +114,19 @@
       <div class="management_wrap">
       	<div class="management">
 	      	<ul>
-	      		<li>
+	      		<li v-if="$store.getters.getPermissions.indexOf('dataManagement')>-1">
 	          		<div @click="frameData" class="menu-item">
 		            	<img src="@/assets/home/desk_data.png" alt="">
 		          	</div>
 		          	<p>数据管理</p>
 	        	</li>
-		        <li>
+		        <li v-if="$store.getters.getPermissions.indexOf('formulaManagement')>-1">
 		            <div @click="frameLink('management')" class="menu-item">
 		              <img src="@/assets/home/desk_public.png" alt="">
 		            </div>
 		            <p>公示管理</p>
 		        </li>
-		        <li>
+		        <li v-if="$store.getters.getPermissions.indexOf('authorityManagement')>-1">
 			        <div @click="frameLink('company')"  class="menu-item">
 			          <img src="@/assets/home/desk_power.png" alt="">
 			        </div>
@@ -147,7 +147,7 @@
 	      	</ul>
 	      </div>
       </div>
-      
+
     </el-main>
     <!--弹框修改密码-->
     <el-dialog
@@ -463,6 +463,7 @@ export default{
 }
 .el-main{
   position: relative;
+  padding: 0;
 }
 .management_wrap{
 	width:100%;
@@ -491,7 +492,7 @@ export default{
 .management ul li img{
 	width:83px;
 	height:83px;
-	
+
 }
 .home{
   height: 100%;

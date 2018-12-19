@@ -95,7 +95,7 @@
         <el-form-item label="用户名" prop="name">
           <el-input v-model.trim="ruleFormModule.name"></el-input>
         </el-form-item>
-        <el-form-item label="登陆密码" prop="pass">
+        <el-form-item label="登录密码" prop="pass">
           <el-input v-model.trim="ruleFormModule.pass"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="pass2">
@@ -147,7 +147,7 @@
         <el-form-item label="用户名">
           <el-input v-model="ruleFormModuleUpdate.name" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="登陆密码">
+        <el-form-item label="登录密码">
           <el-input v-model="ruleFormModuleUpdate.pass" :disabled="true" placeholder="******"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" >
