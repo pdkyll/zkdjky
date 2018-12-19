@@ -804,7 +804,7 @@
          * @type {{accessToken}}
          */
         let header = {
-          accessToken: sessionStorage.getItem('accessToken')
+          accessToken: sessionStorage.getItem('accessToken'),
         }
         /**
          * 请求传递的参数整理
@@ -919,22 +919,39 @@
             let obj = res.data.data
             /*1是创建者，1是发布*/
             for(let i=0;i<obj.length;i++){
-              _this.tableData.push({
-                indicator_name: obj[i].STATISTICAL_NAME,
-                creation_time: obj[i].creation_time,
-                date_range: obj[i].dateRange,
-                remarks: obj[i].remarks,
-                creator: obj[i].creatorName,
-                likeCount: obj[i].likeCount,
-                subscibeCount: obj[i].subscibeCount,
-                fb:obj[i].creatorResult == 1 && obj[i].if_publish == 0? true : false,
-                qxfb:obj[i].creatorResult == 1 && obj[i].if_publish == 1? true : false,
-                dy:obj[i].typeResult == 1 ? false : true,
-                qxdy:obj[i].typeResult == 1 ? true : false,
-                sc:obj[i].creatorResult == 1?true:false,
-                id:obj[i].id,
-                type:obj[i].type
-              })
+              if(obj[i].if_publish == 1){
+                _this.tableData.push({
+                  indicator_name: obj[i].STATISTICAL_NAME,
+                  creation_time: obj[i].creation_time,
+                  date_range: obj[i].dateRange,
+                  remarks: obj[i].remarks,
+                  creator: obj[i].creatorName,
+                  likeCount: obj[i].likeCount,
+                  subscibeCount: obj[i].subscibeCount,
+                  fb:obj[i].creatorResult == 1 && obj[i].if_publish == 0? true : false,
+                  qxfb:obj[i].creatorResult == 1 && obj[i].if_publish == 1? true : false,
+                  dy:obj[i].typeResult == 1 ? false : true,
+                  qxdy:obj[i].typeResult == 1 ? true : false,
+                  sc:obj[i].creatorResult == 1?true:false,
+                  id:obj[i].id,
+                  type:obj[i].type
+                })
+              }else{
+                _this.tableData.push({
+                  indicator_name: obj[i].STATISTICAL_NAME,
+                  creation_time: obj[i].creation_time,
+                  date_range: obj[i].dateRange,
+                  remarks: obj[i].remarks,
+                  creator: obj[i].creatorName,
+                  likeCount: obj[i].likeCount,
+                  subscibeCount: obj[i].subscibeCount,
+                  fb:obj[i].creatorResult == 1 && obj[i].if_publish == 0? true : false,
+                  qxfb:obj[i].creatorResult == 1 && obj[i].if_publish == 1? true : false,
+                  sc:obj[i].creatorResult == 1?true:false,
+                  id:obj[i].id,
+                  type:obj[i].type
+                })
+              }
             }
           }else{
             console.log('接口错误')
