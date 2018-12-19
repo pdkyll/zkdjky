@@ -1,59 +1,64 @@
 <template>
   <div>
+    <router-link to="pzlb">
+      <el-button type="primary" size="small" class="onlyBtn">
+       返回
+      </el-button>
+    </router-link>
     <div class="shadow-box">
       <el-form :inline="true" :model="details">
-        <el-form-item class="no-mb ml-10" label="凭证日期:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="凭证日期:" :title="details.bldat">
           {{details.bldat}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="凭证编号:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="凭证编号:" :title="details.belnr">
           {{details.belnr}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="平台公司名称:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="平台公司名称:" :title="details.cpccName">
           {{details.cpccName}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="公司名称:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="公司名称:" :title="details.butxt">
           {{details.butxt}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="财年:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="财年:" :title="details.gjahr">
           {{details.gjahr}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="会计期间:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="会计期间:" :title="details.monat">
           {{details.monat}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="最后修改日期:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="最后修改日期:" :title="details.upddt">
           {{details.upddt}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="用户:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="用户:" :title="details.usnam">
           {{details.usnam}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="凭证类型:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="凭证类型:" :title="details.blart">
           {{details.blart}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="凭证状态:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="凭证状态:" :title="details.bstat">
           {{details.bstat}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="冲销标识:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="冲销标识:" :title="details.xreversal">
           {{details.xreversal}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="汇率:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="汇率:" :title="details.kursf">
           {{details.kursf}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="业务编码:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="业务编码:" :title="details.xblnr">
           {{details.xblnr}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="货币:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="货币:" :title="details.waers">
           {{details.waers}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="汇率类型:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="汇率类型:" :title="details.kurst">
           {{details.kurst}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="反记账凭证:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="反记账凭证:" :title="details.stblg">
           {{details.stblg}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="参考交易:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="参考交易:" :title="details.awtyp">
           {{details.awtyp}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="冲销原因:">
+        <el-form-item class="no-mb ml-10 noWrapBox" label="冲销原因:" :title="details.stgrd">
           {{details.stgrd}}
         </el-form-item>
       </el-form>
@@ -294,6 +299,14 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+  .el-form--inline .el-form-item{
+    width: 14%;
+  }
+  .onlyBtn{
+    position: absolute;
+    top: 20px;
+    right:20px;
+  }
   .join-btn{
     width: 150px;
     color: white;

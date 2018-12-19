@@ -39,6 +39,7 @@ export function createAPI () {
           sessionStorage.clear()
           history.go(0)
           parent.location.href="http://localhost:8080";
+          //正式环境跳转  http://10.220.1.6:30940
         },2000)
         return false
       }

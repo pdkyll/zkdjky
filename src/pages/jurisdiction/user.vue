@@ -578,7 +578,7 @@ export default{
     },
     getCompany(){
       let param = {
-        type:'0',
+        type:'0,2',
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')

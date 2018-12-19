@@ -425,6 +425,9 @@ export default{
     this.departmentName= this.$store.state.departmentName
     this.companyName = this.$store.state.companyName
     this.getJurisdiction()
+    let userPermissionsStr = sessionStorage.getItem('userPermissions')
+    let permissions = userPermissionsStr.split(',')
+    this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   mounted () {
     this.frameDom = document.getElementById('frameBox')

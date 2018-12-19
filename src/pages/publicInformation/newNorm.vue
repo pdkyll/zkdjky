@@ -114,7 +114,7 @@
             <el-input v-model.trim="formData1.statisticalName"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="统计目的" prop="remarks">
+        <el-form-item label="统计目的">
           <el-col :span="20">
             <el-input type="textarea" v-model.trim="formData1.remarks"></el-input>
           </el-col>

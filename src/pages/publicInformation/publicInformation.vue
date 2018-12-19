@@ -84,7 +84,7 @@ export default{
     getCompanyList () {
       let _this = this
       let param = {
-        type: '0',
+        type:'0,2',
         pagenum: "1",
         pagesize:"10000"
       }

@@ -191,5 +191,11 @@ input:-webkit-autofill:focus {
 .el-dialog__headerbtn:focus .el-dialog__close, .el-dialog__headerbtn:hover .el-dialog__close{
   color: #b7cc41;
 }
-
+.noWrapBox .el-form-item__content {
+  line-height: 40px;
+  width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

@@ -159,7 +159,7 @@ export default{
       let _this = this
       _this.loading = true
       let param = {
-        type:'0',
+        type:'0,2',
         pagenum: _this.pageNum,
         pagesize:_this.pageSize
       }
