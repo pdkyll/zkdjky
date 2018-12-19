@@ -25,7 +25,7 @@
         <h3 class="platformName">正大健康云平台</h3>
       </div>
       <div class="formBox">
-	  	<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0" class="formBody demo-ruleForm">
+	  	<!--<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="0" class="formBody demo-ruleForm">
 	      <el-form-item class="fromField" label="" prop="userName">
 	        <el-input v-model="ruleForm.userName" class="inpIcon userInput underline-input" placeholder="账号"></el-input>
 	      </el-form-item>
@@ -33,7 +33,22 @@
 	        <el-input type="password" v-model="ruleForm.password" autocomplete="off" class="inpIcon userPsw underline-input" placeholder="密码"></el-input>
 	      	<span class="signIn" @click="submitForm('ruleForm')"></span>
 	      </el-form-item>
-		</el-form>
+		</el-form>-->
+		<div class="formBody demo-ruleForm">
+	      <div class="fromField" label="">
+	      	<i></i>
+	        <input v-model="ruleForm.userName" class="inpIcon userInput underline-input" placeholder="账号" @blur="useName">
+	      </div>
+	      <div class="fromField topBor">
+	      	<i></i>
+	        <input type="password" v-model="ruleForm.password" autocomplete="off" @blur="password" class="inpIcon userPsw underline-input" placeholder="密码">
+	      	<span class="signIn" @click="submitLogin"></span>
+	      </div>
+		</div>
+		<div class="tips">
+	      	<i v-show="tipsShow"></i>
+	      	<span v-show="tipsShow">{{tips}}</span>
+	      </div>
         <div class="formTip">
           <!--<div class="saveLogin">
               <em></em><span class="labelText">保持我的登录状态</span>
@@ -56,6 +71,8 @@ import {sha1} from '@/assets/js/HashEncrypt.min'
 export default{
   data () {
     return {
+      tipsShow:false,
+      tips:'',
       ruleForm: {
         userName: '',
         password: ''
@@ -82,6 +99,38 @@ export default{
           return false;
         }
       });
+    },
+    useName(){
+    	if(!this.ruleForm.userName){
+    		this.tipsShow = true,
+      		this.tips = '请输入你的账户'
+    	}else{
+    		this.tipsShow = false,
+      		this.tips = ''
+    	}
+    },
+    password(){
+    	if(!this.ruleForm.password){
+    		this.tipsShow = true,
+      		this.tips = '请输入你的密码'
+    	}else{
+    		this.tipsShow = false,
+      		this.tips = ''
+    	}
+    },
+    submitLogin(){
+    	if(!this.ruleForm.userName){
+    		this.tipsShow = true,
+      		this.tips = '请输入你的账户'
+    	}else if(!this.ruleForm.password){
+    		this.tipsShow = true,
+      		this.tips = '请输入你的密码'
+    	}else{
+    		this.tipsShow = false,
+      		this.tips = '',
+    		this.login(this.ruleForm.userName, this.ruleForm.password)
+    	}
+    	
     },
     /*获取权限*/
     getJurisdiction(){
@@ -225,6 +274,17 @@ export default{
     position: relative;
     margin-bottom: 0;
   }
+  .fromField i{
+  	position: absolute;
+  	top:2px;
+  	left: 4px;
+  	width:34px;
+  	height:35px;
+  	background: url('../../assets/login/login_username.png') no-repeat;
+  }
+  .topBor i{
+  	background: url('../../assets/login/login_password.png') no-repeat;
+  }
   .loginWarningBox{
     position: absolute;
     left: 0;
@@ -276,7 +336,7 @@ export default{
     width: 378px;
     height:49px;
     padding: 0 50px 0 50px;
-    background: url('../../assets/login/login_username.png') no-repeat 10px 4px;
+    outline: none;
   }
   .underline-input>input{
   	border: none;
@@ -286,7 +346,26 @@ export default{
     width: 378px;
     height:49px;
     padding: 0 0 0 50px;
-    background: url('../../assets/login/login_password.png') no-repeat 10px 4px;
+    outline: none;
+  }
+  .tips{
+  	color:#fff;
+  	height:30px;
+  	font-size: 14px;
+  	padding-top: 6px;
+  	box-sizing: border-box;
+  }
+  .tips i{
+  	display: inline-block;
+  	width:22px;
+  	height:24px;
+  	background: url('../../assets/login/login_warning.png');
+  	vertical-align: middle;
+  }
+  .tips span{
+  	display: inline-block;
+  	vertical-align: middle;
+  	margin-left: 4px;
   }
   .formTip{
     margin-top: 83px;

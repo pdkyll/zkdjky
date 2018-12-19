@@ -171,8 +171,10 @@ body .el-table th.gutter{
 }
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0px 1000px rgb(15,95,112) inset !important;
-  -webkit-text-fill-color: #fff !important;
+  /*-webkit-box-shadow: 0 0 0px 1000px rgba(15,95,112,0) inset !important;*/
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  outline: 0 !important;
+  /*-webkit-text-fill-color: #fff !important;*/
 }
 .el-menu-jky{
   border-right: none;

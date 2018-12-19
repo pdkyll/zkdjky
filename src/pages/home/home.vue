@@ -265,14 +265,19 @@ export default{
       this.wrapper = 'wrapper'
       let name = ''
       if(urlPath == 'LayoutNoLeft'){
+      	this.partName = '公示信息';
         name = '公示信息'
       }else if(urlPath == 'LayoutNoLeft/attention'){
+      	this.partName = '关注信息';
         name = '关注信息'
       }else if(urlPath == 'historyData'){
+      	this.partName = '历史数据';
         name = '历史数据'
       }else if(urlPath == 'management'){
+      	this.partName = '公示管理';
         name = '公示管理'
       }else if(urlPath == 'company'){
+      	this.partName = '公司管理';
         name = '公司管理'
       }else if(urlPath == 'personCenter'){
       	this.partName = '个人中心';
