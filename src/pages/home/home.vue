@@ -69,7 +69,7 @@
     </el-header>
     <el-main>
       <ul class="menu">
-        <li v-if="$store.getters.getPermissions.indexOf('formulaSetting')>-1">
+        <li v-if="gsxx">
           <!--:to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}"-->
           <div  @click="frameLink('LayoutNoLeft')" class="menu-item">
             <!--<img src="@/assets/monitor.png" alt="">-->
@@ -77,7 +77,7 @@
           </div>
           <p>公示信息</p>
         </li>
-        <li v-if="$store.getters.getPermissions.indexOf('informationAttention')>-1">
+        <li v-if="gzxx">
           <div @click="frameLink('LayoutNoLeft/attention')"  class="menu-item">
             <!--<img src="@/assets/rss.png" alt="">-->
             <img src="@/assets/home/home_attention.png" alt="">
@@ -90,7 +90,7 @@
           </div>
           <p>数据管理</p>
         </li>-->
-        <li v-if="$store.getters.getPermissions.indexOf('dataStatistics')>-1">
+        <li v-if="sjtj">
           <div @click="frameLink('historyData')" class="menu-item">
             <!--<img src="@/assets/bar_chart.png" alt="">-->
             <img src="@/assets/home/home_data.png" alt="">
@@ -113,19 +113,19 @@
       <div class="management_wrap">
       	<div class="management">
 	      	<ul>
-	      		<li v-if="$store.getters.getPermissions.indexOf('dataManagement')>-1">
+	      		<li v-if="sjgl">
 	          		<div @click="frameData" class="menu-item">
 		            	<img src="@/assets/home/desk_data.png" alt="">
 		          	</div>
 		          	<p>数据管理</p>
 	        	</li>
-		        <li v-if="$store.getters.getPermissions.indexOf('formulaManagement')>-1">
+		        <li v-if="gsgl">
 		            <div @click="frameLink('management')" class="menu-item">
 		              <img src="@/assets/home/desk_public.png" alt="">
 		            </div>
 		            <p>公示管理</p>
 		        </li>
-		        <li v-if="$store.getters.getPermissions.indexOf('authorityManagement')>-1">
+		        <li v-if="qxgl">
 			        <div @click="frameLink('company')"  class="menu-item">
 			          <img src="@/assets/home/desk_power.png" alt="">
 			        </div>
@@ -251,7 +251,12 @@ export default{
           { required: true, message: '请再次输入新密码', trigger: 'blur' },
         ],
       },
-      aaa: false,
+      gsxx:false,
+      gzxx:false,
+      sjtj:false,
+      sjgl:false,
+      gsgl:false,
+      qxgl:false,
     }
   },
   components: {},
@@ -419,22 +424,72 @@ export default{
       this.$refs[formName].resetFields()
     },
   },
+  beforeCreate(){
+    let msg = sessionStorage.getItem('userMsg')
+    msg = JSON.parse(msg);
+    this.userName = msg.userName
+    this.userType = msg.userType
+    this.userPhone = msg.userPhone
+    this.userEmail = msg.userEmail
+    this.departmentName= msg.departmentName
+    this.companyName = msg.companyName
+  },
   created (){
-    this.userName = this.$store.state.userName
-    this.userType = this.$store.state.userType
-    this.userPhone = this.$store.state.userPhone
-    this.userEmail = this.$store.state.userEmail
-    this.departmentName= this.$store.state.departmentName
-    this.companyName = this.$store.state.companyName
-    let personCenter = {
-    	userName:this.$store.state.userName,
-    	userPhone:this.$store.state.userPhone,
-    	userEmail:this.$store.state.userEmail,
-    	departmentName:this.$store.state.departmentName,
-    	companyName:this.$store.state.companyName
+    let vm =this
+    /*公示信息权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('formulaSetting')>-1 ||
+      this.$store.getters.getPermissions.indexOf('queryFormulaSetting')>-1 ||
+      this.$store.getters.getPermissions.indexOf('downloFormulaSetting')>-1
+    ){
+      vm.gsxx = true
     }
-    personCenter = JSON.stringify(personCenter);
-    sessionStorage.setItem('personCenter',personCenter)
+    /*关注信息权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('informationAttention')>-1 ||
+      this.$store.getters.getPermissions.indexOf('unsubscribeAllInformationAttention')>-1 ||
+      this.$store.getters.getPermissions.indexOf('unsubscribeInformationAttention')>-1 ||
+      this.$store.getters.getPermissions.indexOf('viewAllInformationAttention')>-1
+    ){
+      vm.gzxx = true
+    }
+    /*数据统计权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('dataStatistics')>-1 ||
+      this.$store.getters.getPermissions.indexOf('historicalData')>-1 ||
+      this.$store.getters.getPermissions.indexOf('financialCertificate')>-1 ||
+      this.$store.getters.getPermissions.indexOf('indexStatistics')>-1
+    ){
+      vm.sjtj = true
+    }
+    /*数据管理权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('dataManagement')>-1
+    ){
+      vm.sjgl = true
+    }
+    /*公式管理权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('formulaManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('addFormulaManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('editFormulaManagement')>-1||
+      this.$store.getters.getPermissions.indexOf('delFormulaManagement')>-1
+    ){
+      vm.gsgl = true
+    }
+    /*权限管理权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('authorityManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('companyManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('divisionalManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('roleManagement')>-1 ||
+      this.$store.getters.getPermissions.indexOf('userManagement')>-1
+    ){
+      vm.qxgl = true
+    }
+
+
   },
   mounted () {
     let _this = this

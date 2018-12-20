@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix" @submit.native.prevent>
         <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="no-mb" label="角色名称">
           <el-input
             size="small"
@@ -378,6 +378,7 @@ export default{
         ],
         permissionList:_this.checkIdListForUpdate
       }
+      console.log(param)
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }

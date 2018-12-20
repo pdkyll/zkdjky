@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix" @submit.native.prevent>
         <el-form-item v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1" class="no-mb" label="用户名称">
           <el-input
             size="small"
@@ -165,7 +165,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="部门选择">
-          <el-select v-model="ruleFormModuleUpdate.bm" style="width: 100%" placeholder="请选择部门">
+          <el-select v-model="ruleFormModuleUpdate.bm" style="width: 100%" placeholder="请选择部门" @change="bmChange_upData">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModuleUpdate.bmList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
@@ -224,8 +224,10 @@ export default{
         type: '',
         desc: '',
         gs: '',
+        gsCode:'',
         gsList:[],
         bm: '',
+        bmCode:'',
         bmList:[],
         region: '',
         regionList: [],
@@ -305,6 +307,7 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
+        console.log(res)
         this.tableData = []
         if(res !== null && res.data.code == 16000003 ){
           this.totalCount = res.data.data.totalNum
@@ -320,6 +323,8 @@ export default{
               gs:obj.company == undefined?'':obj.companyName,
               bm:obj.department== undefined?'':obj.departmentName,
               region:obj.region== undefined?'':obj.region,
+              gsCode:obj.company == undefined?'':obj.company,
+              bmCode:obj.company == undefined?'':obj.department,
               zhmc:tableList[i].tenantName,
               time:tableList[i].updateTime,
               id:tableList[i].accountId,
@@ -414,6 +419,8 @@ export default{
     /*修改角色*/
     updateClick (row) {
       this.xg_id = row.id
+      this.ruleFormModuleUpdate.gsCode = row.gsCode
+      this.ruleFormModuleUpdate.bmCode = row.bmCode
       this.ruleFormModuleUpdate.name = row.name
       this.ruleFormModuleUpdate.region = row.region
       this.ruleFormModuleUpdate.desc = row.desc
@@ -422,15 +429,10 @@ export default{
       this.dialog_xg = true
       /*获取当前公司的部门信息*/
       let vm = this
-      let code = ''
-      for(let i = 0;i<vm.ruleFormModuleUpdate.gsList.length;i++){
-        if(vm.ruleFormModuleUpdate.gsList[i].code == row.gs){
-          code = vm.ruleFormModuleUpdate.gsList[i].code
-        }
-      }
+
       let param = {
         type:'',
-        code:code
+        code:row.gsCode
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
@@ -444,6 +446,7 @@ export default{
               code:res.data.data[i].code
             })
           }
+          console.log( this.ruleFormModuleUpdate.bmList)
         }
       }).catch((error) => {
         console.error(error)
@@ -463,8 +466,8 @@ export default{
             }
           }
           let extendedProperties = {
-            "company" : this.ruleFormModuleUpdate.gs,
-            "department" : this.ruleFormModuleUpdate.bm,
+            "company" : this.ruleFormModuleUpdate.gsCode,
+            "department" : this.ruleFormModuleUpdate.bmCode,
             "region" : this.ruleFormModuleUpdate.region,
             "roleId" : roleId,
             "projectId":sessionStorage.getItem('projectId')
@@ -498,7 +501,6 @@ export default{
           return false;
         }
       });
-
     },
     /*新建用户*/
     insertUserForUsers(){
@@ -516,6 +518,7 @@ export default{
         "roleId" : roleId,
         "projectId":sessionStorage.getItem('projectId')
       }
+      console.log(extendedProperties)
       extendedProperties = JSON.stringify(extendedProperties)
       let pass = this.ruleFormModule.pass
       pass = sha1(pass)
@@ -655,16 +658,11 @@ export default{
       })
     },
     gsChange_upData(val){
-      let vm = this
-      let code = ''
-      for(let i = 0;i<vm.ruleFormModuleUpdate.gsList.length;i++){
-        if(vm.ruleFormModuleUpdate.gsList[i].code == val){
-          code = vm.ruleFormModuleUpdate.gsList[i].code
-        }
-      }
+      console.log(val)
+      this.ruleFormModuleUpdate.gsCode = val
       let param = {
         type:'',
-        code:code
+        code: this.ruleFormModuleUpdate.gsCode
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
@@ -682,6 +680,10 @@ export default{
       }).catch((error) => {
         console.error(error)
       })
+    },
+    bmChange_upData(val){
+      this.ruleFormModuleUpdate.bmCode = val
+      console.log(val)
     },
     /*用户停用启用*/
     useClose(){

@@ -12,26 +12,26 @@
             <span class="mr-20">
               用户电话：
             </span>
-            {{personCenter.userPhone}}
+            {{userMsg.phone}}
           </p>-->
           <p class="userLab">
             <!--<span class="mr-20">
               用户邮箱：
             </span>-->
-            {{personCenter.userEmail}}
+            {{userMsg.email}}
           </p>
-          <p class="userText">{{personCenter.userName}}</p>
+          <p class="userText">{{userMsg.name}}</p>
           <!--<p class="userLab">
             <span class="mr-20">
               所属公司：
             </span>
-            {{personCenter.companyName}}
+            {{userMsg.companyName}}
           </p>
           <p class="userLab">
             <span class="mr-20">
               所属部门：
             </span>
-             {{personCenter.departmentName}}
+             {{userMsg.departmentName}}
           </p>-->
           <div class="changePassword">
           	<p @click="changePassword">修改密码</p>
@@ -61,7 +61,7 @@
          	</div>
          </div>
       </el-main>
-      
+
     </el-container>
   </el-container>
 </template>
@@ -90,7 +90,7 @@ export default {
       }
     };
     return {
-    	personCenter:{},
+    	userMsg:{},
     	showUser:true,
     	ruleFormModule:{
         oldPass:'',
@@ -129,7 +129,7 @@ export default {
           duration: '2000'
         })
         let loginOut = 'layout';
-		window.parent.postMessage(loginOut,'*');
+		    window.parent.postMessage(loginOut,'*');
       }).catch((error) => {
         console.error(error)
       })
@@ -172,8 +172,11 @@ export default {
       });
     }
   },
+  beforeCreate(){
+  },
   mounted(){
-  	this.personCenter = JSON.parse(sessionStorage.getItem('personCenter'));
+    this.userMsg = JSON.parse(sessionStorage.getItem('userMsg'));
+    console.log(this.userMsg)
   }
 }
 </script>
@@ -219,7 +222,7 @@ export default {
   	border-radius: 6px;
   	text-indent: 18px;
   }
-  
+
   .el-main .layout{
   	width:481px;
   	height:auto;

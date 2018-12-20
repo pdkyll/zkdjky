@@ -130,7 +130,7 @@ export default{
       		this.tips = '',
     		this.login(this.ruleForm.userName, this.ruleForm.password)
     	}
-    	
+
     },
     /*获取权限*/
     getJurisdiction(){
@@ -143,6 +143,8 @@ export default{
       let param = {}
       this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
         sessionStorage.setItem('userPermissions',res.data.data)
+
+        console.log(res.data.data)
         _this.$nextTick(() => {
           _this.$router.push('/home')
         })
@@ -178,6 +180,8 @@ export default{
           sessionStorage.setItem('userType', data.tenantName)
           sessionStorage.setItem('company', res.data.companyName)
           sessionStorage.setItem('department', res.data.departmentName)
+          let userMsg = JSON.stringify(name);
+          sessionStorage.setItem('userMsg', userMsg)
           this.getJurisdiction()
         }
         _this.$notify({
