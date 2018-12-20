@@ -790,12 +790,12 @@
          */
         let searchCondition = {
           dateRange: '',
-          cpccs: '',
+          companys: '',
           departments: '',
           products: ''
         }
         searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
-        searchCondition.cpccs = _this.formData2.cpccs.join(',') || ''
+        searchCondition.companys = _this.formData2.cpccs.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''
         searchCondition = JSON.stringify(searchCondition)
@@ -938,7 +938,7 @@
                 })
               }else{
                 _this.tableData.push({
-                  indicator_name: obj[i].STATISTICAL_NAME,
+                  indicator_name: obj[i].statistical_name,
                   creation_time: obj[i].creation_time,
                   date_range: obj[i].dateRange,
                   remarks: obj[i].remarks,

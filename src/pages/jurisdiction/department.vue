@@ -400,7 +400,7 @@
               "contact":"test",
               "create_by":"sjm",
               "description": _this.ruleFormModule.desc,
-              "cPCC":_this.ruleFormModule.cpcc,
+              "cPCCs":_this.ruleFormModule.cpcc,
               "level":2,
               "id": _this.ruleFormModule.companyName,  //父及Id
               //"name":"tttt",   //name不可重复

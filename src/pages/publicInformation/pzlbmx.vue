@@ -135,6 +135,11 @@
         </el-table-column>
         <el-table-column
           :resizable=false
+          prop="sgtxt"
+          label="摘要">
+        </el-table-column>
+        <el-table-column
+          :resizable=false
           prop="xnegp"
           label="反记账">
         </el-table-column>
@@ -225,7 +230,7 @@
       <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff">
         {{lowerCase}}
       </el-form-item>
-      <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff">
+      <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff;width: 30%">
         {{upperCase}}
       </el-form-item>
     </el-form>
@@ -279,12 +284,15 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       vm.$store.dispatch('GET_FINANCE_DETAILS', {param, header}).then((res, req) => {
-        console.log(res)
-        vm.totalCount = res.data.data.totalNum
-        vm.details = res.data.data.listbkpf
-        vm.tableData = res.data.data.listdseg
-        vm.lowerCase = res.data.data.lowerCase
-        vm.upperCase = res.data.data.upperCase
+        if(res.data.code == 16000003){
+          vm.totalCount = res.data.data.totalNum
+          vm.details = res.data.data.listbkpf
+          vm.tableData = res.data.data.listdseg
+          vm.lowerCase = res.data.data.lowerCase
+          vm.upperCase = res.data.data.upperCase
+        }else{
+          console.log(res.data.code)
+        }
         vm.loading.close()
       }).catch(error => {
         console.error(error);

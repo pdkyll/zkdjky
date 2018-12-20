@@ -22,9 +22,9 @@
               v-model="ruleForm.belnr">
             </el-input>
           </el-form-item>
-          <el-form-item class="no-mb" label="平台公司">
-            <el-select size="small" v-model="ruleForm.cpcc" style="width: 150px" placeholder="请选择平台公司" @change="getTableList">
-              <el-option v-for="item in ptCompany" :key="item.code" :label="item.companyName" :value="item.code"></el-option>
+          <el-form-item class="no-mb" label="成员企业">
+            <el-select size="small" v-model="ruleForm.cpcc" style="width: 150px" placeholder="请选择成员企业" @change="companyChange">
+              <el-option v-for="item in ptCompany" :key="item.code" :label="item.companyName" :value="item.cPCC"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item class="no-mb" label="业务公司">
@@ -212,12 +212,21 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
-        if(res.data.code === 200){
+        if(res.data.code === 16000003){
+          console.log(res.data)
           _this.ptCompany = res.data.data
+          _this.ptCompany.unshift({
+            cPCC: "",
+            code: "",
+            companyName: "全部"
+          })
         }
       }).catch(error => {
         console.error(error)
       })
+    },
+    companyChange(val){
+
     },
     getTableList () {
       let vm = this

@@ -367,8 +367,8 @@ export default{
             }
             _this.$notify({
               title: '提示信息',
-              message: res.data ? '修改公示信息成功' : '修改公示信息失败',
-              type: res.data ? 'success' : 'error',
+              message: res.data.code ? '修改公示信息成功' : '修改公示信息失败',
+              type: res.data.code ? 'success' : 'error',
               duration: '2000'
             })
           }).catch(error => {

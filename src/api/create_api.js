@@ -38,9 +38,9 @@ export function createAPI () {
         setTimeout(function () {
           sessionStorage.clear()
           history.go(0)
-          parent.location.href="http://localhost:8080";
+          //parent.location.href="http://localhost:8080";
           //正式环境跳转  http://10.220.1.6:30940
-          //parent.location.href="http://10.220.1.6:30940";
+          parent.location.href="http://10.220.1.6:30940";
           //测试环境跳转 http://healthcloudweb.tpaas.youedata.com/login
           //parent.location.href="http://healthcloudweb.tpaas.youedata.com/login";
         },2000)

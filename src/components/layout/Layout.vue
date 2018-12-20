@@ -299,7 +299,7 @@ export default{
       /*border-left: 5px solid transparent;*/
       i{
      	display: inline-block;
-     	vertical-align: middle;	
+     	vertical-align: middle;
      	margin:0 16px 0 13px
       }
       span{

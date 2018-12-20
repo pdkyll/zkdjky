@@ -146,7 +146,7 @@
 	      	</ul>
 	      </div>
       </div>
-	  <div class="logo_position">
+<div class="logo_position">
       	<div class="logo_contain"></div>
       </div>
     </el-main>
@@ -284,8 +284,8 @@ export default{
       	this.partName = '公示管理';
         name = '公示管理'
       }else if(urlPath == 'company'){
-      	this.partName = '公司管理';
-        name = '权限管理'
+      	this.partName = '权限管理';
+        name = '公司管理'
       }else if(urlPath == 'personCenter'){
       	this.partName = '个人中心';
       	name = '个人中心';
@@ -305,7 +305,7 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://daas-website.tpaas.youedata.com'
+      this.frame.src= 'http://10.220.1.6:31246'
       /**测试地址
        * http://daas-website.tpaas.youedata.com
        */
@@ -313,7 +313,7 @@ export default{
        * http://10.220.1.6:31246
        */
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
+        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
         vm.loading = false
         vm.frameShow = true
       },1000)
@@ -787,7 +787,7 @@ export default{
   }
   .frame{
     width: 100%;
-    height: 94.5%;
+    height: calc(99.5% - 60px);
   }
 
 }
