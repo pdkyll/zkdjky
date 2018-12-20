@@ -176,7 +176,6 @@ export default {
   },
   mounted(){
     this.userMsg = JSON.parse(sessionStorage.getItem('userMsg'));
-    console.log(this.userMsg)
   }
 }
 </script>
@@ -200,7 +199,7 @@ export default {
   .el-main .changePassword{
   	width:481px;
   	height:auto;
-  	margin:115px auto 120px;
+  	margin:95px auto 80px;
   	position: relative;
   }
   .el-main .changePassword i{
@@ -226,7 +225,7 @@ export default {
   .el-main .layout{
   	width:481px;
   	height:auto;
-  	margin:115px auto 120px
+  	margin:0 auto 100px
   }
   .el-main .layout p{
   	width:100%;
@@ -242,11 +241,11 @@ export default {
   .downBoxImg img{
   	width:68px;
   	height:68px;
-  	margin: 140px auto 10px
+  	margin: 120px auto 10px
   }
 /*修改密码页面*/
  .el-main>div ul{
- 	margin-top: 140px;
+ 	margin-top: 120px;
  }
  .el-main>div ul .el-form-item{
  	width: 540px;
@@ -273,8 +272,8 @@ export default {
  .el-main>div .btn{
  	border-top: 1px solid #dadeea;
  	width:800px;
- 	margin: 140px auto;
- 	padding-top: 100px;
+ 	margin: 100px auto 20px;
+ 	padding-top: 80px;
  }
  .el-main>div .btn p{
  	width:481px;

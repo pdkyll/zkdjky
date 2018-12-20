@@ -146,7 +146,9 @@
 	      	</ul>
 	      </div>
       </div>
-
+	  <div class="logo_position">
+      	<div class="logo_contain"></div>
+      </div>
     </el-main>
     <!--弹框修改密码-->
     <el-dialog
@@ -283,7 +285,7 @@ export default{
         name = '公示管理'
       }else if(urlPath == 'company'){
       	this.partName = '公司管理';
-        name = '公司管理'
+        name = '权限管理'
       }else if(urlPath == 'personCenter'){
       	this.partName = '个人中心';
       	name = '个人中心';
@@ -567,6 +569,7 @@ export default{
 	width:100%;
 	position: absolute;
 	bottom: 0;
+	z-index: 2;
 }
 .management{
 	width: 859px;
@@ -590,7 +593,20 @@ export default{
 .management ul li img{
 	width:83px;
 	height:83px;
-
+	cursor: pointer;
+}
+.logo_position{
+	width:100%;
+	height:100%;
+	position: absolute;
+	z-index: 0;
+}
+.logo_position .logo_contain{
+	width:428px;
+	height:426px;
+	background: url("../../assets/home/home_zdhealthy_logo.png") no-repeat;
+	background-size:100% 100%;
+	margin: 100px auto 0;
 }
 .home{
   height: 100%;
@@ -635,12 +651,13 @@ export default{
   flex-wrap: wrap;*/
   /*align-items: center;
   align-content: center;*/
+  z-index: 1;
   li{
     /*flex: 0 0 16.6%;*/
     /*margin-bottom: 20px;*/
    	width:170px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 36px;
     .menu-item{
       display: inline-block;
       /*padding: 20px;*/
@@ -651,6 +668,7 @@ export default{
       /*background: rgba(49,49,49,0.24);*/
       /*box-shadow: 0 0 36px rgba(#999, .24) ;*/
       /*border-radius: 32px;*/
+     cursor: pointer;
       img{
         display: inline-block;
         /*width: 100%;*/
@@ -720,6 +738,7 @@ export default{
   right:0;
   bottom: 0;
   margin:auto;
+  z-index: 3;
   .frameTit{
     width: 100%;
     height: 60px;

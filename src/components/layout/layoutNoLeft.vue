@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-container>
-      <el-header style="height: auto">
+      <!--<el-header style="height: auto">
         <div>
             <div class="left-logo">
               <img src="@/assets/green-logo.png" alt="">
@@ -10,7 +10,7 @@
         <div class="nav-menu-title">
           <span class="menu-title">{{title}}</span>
         </div>
-      </el-header>
+      </el-header>-->
       <el-main>
         <router-view></router-view>
       </el-main>

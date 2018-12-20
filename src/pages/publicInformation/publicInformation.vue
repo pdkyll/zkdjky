@@ -115,13 +115,24 @@ export default{
 </script>
 <style scoped lang="scss">
 .table-header{
-  margin-top: -20px;
-  position: fixed;
-  z-index: 1;
-  background-color: #fafafa;
+  /*margin-top: -20px;*/
+  /*position: fixed;*/
+  /*z-index: 1;*/
+  /*background-color: #fafafa;*/
   width: 100%;
+  height:56px;
+  line-height: 56px;
+  margin-left: 0;
+  background: #EBECEF;
+  border-bottom: 1px solid #CBCDD1;
+  .el-select,.el-col{
+  	margin-top: 8px;
+  }
+  .el-button{
+  	margin-top: 14px;
+  }
 }
 .table-list{
-  padding-top: 60px;
+  padding-top: 20px;
 }
 </style>

@@ -3,20 +3,20 @@
  */
 <template>
   <el-container>
-    <el-aside width="200px" style="background-color: #222e26;">
-      <a class="logo" href="javascript:void(0);">
+    <el-aside width="200px" style="background-color: #fff;">
+      <!--<a class="logo" href="javascript:void(0);">
         <img src="../../assets/logo.png" width="142" height="25" alt="LOGO" />
-      </a>
+      </a>-->
       <el-menu class="el-menu-jky"
-         background-color="#222e26"
-         text-color="#999"
-         active-text-color="#fff"
+         background-color="#fff"
+         text-color="#323341"
+         active-text-color="#65af0d"
         :default-active="activeIndex"
         @select="handleSelect">
         <router-link v-if="!item.child && item.flag" v-for="(item, index) in menu_list" :to="item.pathUrl">
           <el-menu-item :index="index+''">
             <i class="iconfont" :class="item.iClass"></i>
-            {{item.name}}
+            <span>{{item.name}}</span>
           </el-menu-item>
         </router-link>
         <el-submenu v-if="item.child && item.flag" v-for="(item, index) in menu_list" index="">
@@ -28,7 +28,7 @@
             <router-link :to="child.pathUrl" v-for="(child, ind) in item.childrenList">
               <el-menu-item :index="index+ ind +''">
                 <i :class="child.iClass" class="iconfont"></i>
-                {{child.name}}
+                <span>{{child.name}}</span>
               </el-menu-item>
             </router-link>
           </el-menu-item-group>
@@ -285,12 +285,26 @@ export default{
     display: block;
     text-align: center;
   }
+  .el-aside{
+  	border-right: 1px solid #cbcdd1;
+  }
   .el-menu-jky {
     background-color: transparent;
+    padding-top: 10px;
     .el-menu-item,
     .el-submenu__title{
       color: #fff;
-      border-left: 5px solid transparent;
+      height:40px;
+      line-height: 40px;
+      /*border-left: 5px solid transparent;*/
+      i{
+     	display: inline-block;
+     	vertical-align: middle;	
+     	margin:0 16px 0 13px
+      }
+      span{
+      	font-size: 16px;
+      }
     }
     .el-menu-item:focus,
     .el-menu-item:hover,
@@ -299,7 +313,8 @@ export default{
     .el-submenu__title:focus,
     .el-menu-item.is-active{
       border-left-color: #bfd046;
-      background-color: rgba(#bfd046, .1);
+      /*background-color: rgba(#bfd046, .1);*/
+      background-color: #e9f4c7 !important;
     }
   }
   .head-img-box {

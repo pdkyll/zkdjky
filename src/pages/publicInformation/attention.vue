@@ -40,12 +40,12 @@ export default {
 <style lang="scss">
   .el-tabs__header {
     padding: 0;
-    position: fixed;
+    /*position: fixed;*/
     background: #fafafa;
-    z-index: 1;
+    /*z-index: 1;*/
     width: 100%;
     margin-bottom:15px;
-    margin-top: -20px;
+    /*margin-top: -20px;*/
   }
   .el-tabs__content{
     padding-top: 30px;

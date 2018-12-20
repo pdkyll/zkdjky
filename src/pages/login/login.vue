@@ -37,11 +37,11 @@
 		<div class="formBody demo-ruleForm">
 	      <div class="fromField" label="">
 	      	<i></i>
-	        <input v-model="ruleForm.userName" class="inpIcon userInput underline-input" placeholder="账号" @blur="useName">
+	        <input v-model="ruleForm.userName" class="inpIcon userInput underline-input" placeholder="账号" @blur="useName" @keyup.enter="submitLogin">
 	      </div>
 	      <div class="fromField topBor">
 	      	<i></i>
-	        <input type="password" v-model="ruleForm.password" autocomplete="off" @blur="password" class="inpIcon userPsw underline-input" placeholder="密码">
+	        <input type="password" v-model="ruleForm.password" autocomplete="off" @blur="password" class="inpIcon userPsw underline-input" placeholder="密码" @keyup.enter="submitLogin">
 	      	<span class="signIn" @click="submitLogin"></span>
 	      </div>
 		</div>
@@ -325,8 +325,7 @@ export default{
     right: 15px;
     width: 25px;
     height: 25px;
-    top: 50%;
-    margin-top: -14px;
+    top:12px;
     background: url('../../assets/login/login_land.png') no-repeat center center;
     cursor: pointer;
   }
