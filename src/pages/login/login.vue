@@ -143,8 +143,6 @@ export default{
       let param = {}
       this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
         sessionStorage.setItem('userPermissions',res.data.data)
-
-        console.log(res.data.data)
         _this.$nextTick(() => {
           _this.$router.push('/home')
         })

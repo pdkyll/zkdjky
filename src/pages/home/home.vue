@@ -433,10 +433,13 @@ export default{
     this.userEmail = msg.userEmail
     this.departmentName= msg.departmentName
     this.companyName = msg.companyName
+    let userPermissionsStr = sessionStorage.getItem('userPermissions')
+    let permissions = userPermissionsStr.split(',')
+    this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
   },
   created (){
     let vm =this
-    /*公示信息权限控制*/
+    /*/!*公示信息权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('formulaSetting')>-1 ||
       this.$store.getters.getPermissions.indexOf('queryFormulaSetting')>-1 ||
@@ -444,7 +447,7 @@ export default{
     ){
       vm.gsxx = true
     }
-    /*关注信息权限控制*/
+    /!*关注信息权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('informationAttention')>-1 ||
       this.$store.getters.getPermissions.indexOf('unsubscribeAllInformationAttention')>-1 ||
@@ -453,7 +456,7 @@ export default{
     ){
       vm.gzxx = true
     }
-    /*数据统计权限控制*/
+    /!*数据统计权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('dataStatistics')>-1 ||
       this.$store.getters.getPermissions.indexOf('historicalData')>-1 ||
@@ -462,13 +465,13 @@ export default{
     ){
       vm.sjtj = true
     }
-    /*数据管理权限控制*/
+    /!*数据管理权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('dataManagement')>-1
     ){
       vm.sjgl = true
     }
-    /*公式管理权限控制*/
+    /!*公式管理权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('formulaManagement')>-1 ||
       this.$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1 ||
@@ -478,7 +481,7 @@ export default{
     ){
       vm.gsgl = true
     }
-    /*权限管理权限控制*/
+    /!*权限管理权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('authorityManagement')>-1 ||
       this.$store.getters.getPermissions.indexOf('companyManagement')>-1 ||
@@ -487,20 +490,42 @@ export default{
       this.$store.getters.getPermissions.indexOf('userManagement')>-1
     ){
       vm.qxgl = true
+    }*/
+    /*公示信息权限控制*/
+    if(this.$store.getters.getPermissions.indexOf('formulaSetting')>-1 ){
+      vm.gsxx = true
     }
-
-
+    /*关注信息权限控制*/
+    if(this.$store.getters.getPermissions.indexOf('informationAttention')>-1){
+      vm.gzxx = true
+    }
+    /*数据统计权限控制*/
+    if(this.$store.getters.getPermissions.indexOf('dataStatistics')>-1){
+      vm.sjtj = true
+    }
+    /*数据管理权限控制*/
+    if(
+      this.$store.getters.getPermissions.indexOf('dataManagement')>-1
+    ){
+      vm.sjgl = true
+    }
+    /*公式管理权限控制*/
+    if(this.$store.getters.getPermissions.indexOf('formulaManagement')>-1){
+      vm.gsgl = true
+    }
+    /*权限管理权限控制*/
+    if(this.$store.getters.getPermissions.indexOf('authorityManagement')>-1){
+      vm.qxgl = true
+    }
   },
   mounted () {
     let _this = this
     this.frameDom = document.getElementById('frameBox')
     this.frame = document.getElementById('frame')
     this.removeKey()
-    let userPermissionsStr = sessionStorage.getItem('userPermissions')
-    let permissions = userPermissionsStr.split(',')
-    _this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
     window.addEventListener('message',function(e){
     	if(e.data == 'layout'){
+        sessionStorage.clear()
     		_this.$router.push('/login')
     	}
     },false)
