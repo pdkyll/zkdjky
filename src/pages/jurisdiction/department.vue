@@ -94,8 +94,23 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="数据代码" prop="cpcc">
-          <el-input v-model.trim="ruleFormModule.cpcc"></el-input>
+        <el-form-item label="数据代码">
+          <el-select
+            size="small"
+            style="width: 100%"
+            v-model="ruleFormModule.cpcc"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请输入回车添加一个部门，可输入多个">
+            <el-option
+              v-for="item in cpccList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="部门备注">
           <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
@@ -161,8 +176,10 @@
         },
         departmentList: [],
         companyList:[],
+        cpccList:[],
         ruleFormModule: {
           desc: '',
+          cpcc:[],
           departmentName: [],
           companyName: ''
         },
@@ -182,7 +199,6 @@
           ],
           cpcc: [
             { required: true, message: '请输入数据代码', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
           ],
           name: [
             { required: true, message: '部门名字不能为空', trigger: 'blur' },
@@ -227,7 +243,6 @@
           projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_CMP_AND_DEP', { param, header }).then((res, req) => {
-          console.log(res.data)
           if(res.data.code === 16000003){
             _this.tableData = []
             _this.totalCount = res.data.data.totalNum

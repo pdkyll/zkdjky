@@ -175,9 +175,9 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="选择公司" prop="companys">
+        <el-form-item label="选择公司" prop="cpccs">
           <el-transfer
-            v-model="formData2.companys"
+            v-model="formData2.cpccs"
             :titles="['全部','全部']"
             :data="formData2T.companyTransfer"></el-transfer>
         </el-form-item>
@@ -325,7 +325,7 @@
         formData2: {
           date1: '',
           date2: '',
-          companys: [],
+          cpccs: [],
           departments: [],
           products: [],
           dateType: '1'
@@ -487,7 +487,7 @@
           date2: [
             { required: true, message: '请选择结束日期', trigger: 'change' }
           ],
-          companys: [
+          cpccs: [
             { type: 'array', required: true, message: '请选择公司', trigger: 'change' }
           ],
           products: [
@@ -521,7 +521,7 @@
         if( companyArr && companyArr.length>0){
           for (let item in companyArr) {
             data.push({
-              key: `${companyArr[item].code}`,
+              key: `${companyArr[item].cPCC}`,
               label: `${companyArr[item].companyName}`
             })
           }
@@ -686,12 +686,12 @@
          */
         let searchCondition = {
           dateRange: '',
-          companys: '',
+          cpccs: '',
           departments: '',
           products: ''
         }
         searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
-        searchCondition.companys = _this.formData2.companys.join(',') || ''
+        searchCondition.cpccs = _this.formData2.cpccs.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''
         searchCondition = JSON.stringify(searchCondition)
@@ -704,7 +704,7 @@
         }
         /**
          * 请求传递的参数整理
-         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, companys: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
          */
         let param = {
           //private Integer id  				//主键
@@ -740,7 +740,7 @@
             _this.formData2= {
               date1: '',
               date2: '',
-              companys: [],
+              cpccs: [],
               departments: [],
               products: [],
               dateType: '1'
@@ -790,12 +790,12 @@
          */
         let searchCondition = {
           dateRange: '',
-          companys: '',
+          cpccs: '',
           departments: '',
           products: ''
         }
         searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
-        searchCondition.companys = _this.formData2.companys.join(',') || ''
+        searchCondition.cpccs = _this.formData2.cpccs.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''
         searchCondition = JSON.stringify(searchCondition)
@@ -808,7 +808,7 @@
         }
         /**
          * 请求传递的参数整理
-         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, companys: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
          */
         let param = {
           //private Integer id  				//主键
@@ -921,7 +921,7 @@
             for(let i=0;i<obj.length;i++){
               if(obj[i].if_publish == 1){
                 _this.tableData.push({
-                  indicator_name: obj[i].STATISTICAL_NAME,
+                  indicator_name: obj[i].statistical_name,
                   creation_time: obj[i].creation_time,
                   date_range: obj[i].dateRange,
                   remarks: obj[i].remarks,
