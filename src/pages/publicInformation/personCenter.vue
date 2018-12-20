@@ -45,13 +45,13 @@
          	<ul>
          		<el-form :model="ruleFormModule" :rules="rules" ref="ruleFormModule" label-width="100px" class="demo-ruleForm">
         			<el-form-item label="原密码" prop="oldPass">
-          				<el-input v-model.trim="ruleFormModule.oldPass" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"></el-input>
+          				<el-input v-model.trim="ruleFormModule.oldPass"></el-input>
 			        </el-form-item>
 			        <el-form-item label="新密码" prop="pass">
-			            <el-input v-model.trim="ruleFormModule.pass" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"></el-input>
+			            <el-input v-model.trim="ruleFormModule.pass"></el-input>
 			        </el-form-item>
 			        <el-form-item label="确认密码" prop="againPass">
-			            <el-input v-model.trim="ruleFormModule.againPass" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"></el-input>
+			            <el-input v-model.trim="ruleFormModule.againPass"></el-input>
 			        </el-form-item>
 			     </el-form>
          	</ul>
@@ -121,13 +121,15 @@ export default {
         accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LOGOUT', { header }).then((res, req) => {
-        this.$router.push('/login')
+//      this.$router.push('/login')
         _this.$notify({
           title: '提示信息',
           message: res.msg,
           type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
+        let loginOut = true;
+		window.parent.postMessage(loginOut,'*');
       }).catch((error) => {
         console.error(error)
       })

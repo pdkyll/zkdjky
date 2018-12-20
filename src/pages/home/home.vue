@@ -59,12 +59,12 @@
           <el-button type="primary" @click="dialog=true">修改密码</el-button>
           <el-button type="primary" @click="logout">退出登陆</el-button>
         </div>
-        <div class="head-img-box" slot="reference">
+        <!--<div class="head-img-box" slot="reference">
           <span class="circle-bg">
             <img src="../../assets/login/headimg.png" alt="head-img">
           </span>
           <i class="el-icon-caret-bottom"></i>
-        </div>
+        </div>-->
       </el-popover>
     </el-header>
     <el-main>
@@ -444,6 +444,9 @@ export default{
     let userPermissionsStr = sessionStorage.getItem('userPermissions')
     let permissions = userPermissionsStr.split(',')
     _this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
+    window.addEventListener('message',function(e){
+    	_this.$router.push('/login')
+    },false)
   }
 }
 </script>
