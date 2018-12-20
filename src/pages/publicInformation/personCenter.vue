@@ -128,7 +128,7 @@ export default {
           type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
-        let loginOut = true;
+        let loginOut = 'layout';
 		window.parent.postMessage(loginOut,'*');
       }).catch((error) => {
         console.error(error)

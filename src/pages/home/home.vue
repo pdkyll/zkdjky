@@ -445,7 +445,9 @@ export default{
     let permissions = userPermissionsStr.split(',')
     _this.$store.dispatch('SET_USER_PERMISSIONS', {permissions})
     window.addEventListener('message',function(e){
-    	_this.$router.push('/login')
+    	if(e.data == 'layout'){
+    		_this.$router.push('/login')
+    	}
     },false)
   }
 }
