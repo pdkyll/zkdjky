@@ -260,6 +260,8 @@ export default{
     cancelAll(){
       let _this = this
       let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let param = {
         account_id: sessionStorage.getItem('accountId'),

@@ -152,7 +152,8 @@ export default{
         id:val,
       }
       let header = {
-        accessToken:sessionStorage.getItem('accessToken')
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId :sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('LINK_DOWNLOAD', { param, header }).then((res, req) => {
         if(res.status == 200){
@@ -177,7 +178,8 @@ export default{
         cpcc:company
       }
       let header = {
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId :sessionStorage.getItem('projectId')
       }
       this.$store.dispatch('PUBLIC_MSG', { param, header }).then((res, req) => {
         let data = res.data.data
