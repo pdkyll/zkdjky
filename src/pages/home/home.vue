@@ -82,7 +82,7 @@
             <!--<img src="@/assets/rss.png" alt="">-->
             <img src="@/assets/home/home_attention.png" alt="">
           </div>
-          <p>关注信息</p>
+          <p>订阅信息</p>
         </li>
         <!--<li>
           <div @click="frameData" class="menu-item">
@@ -132,7 +132,7 @@
 			        <p>权限管理</p>
 		        </li>
 		        <li>
-			        <div @click=""  class="menu-item">
+			        <div @click="frameLink('developing')"  class="menu-item">
 			          <img src="@/assets/home/desk_use.png" alt="">
 			        </div>
 			        <p>应用管理</p>
@@ -275,10 +275,10 @@ export default{
       	this.partName = '公示信息';
         name = '公示信息'
       }else if(urlPath == 'LayoutNoLeft/attention'){
-      	this.partName = '关注信息';
-        name = '关注信息'
+      	this.partName = '订阅信息';
+        name = '订阅信息'
       }else if(urlPath == 'historyData'){
-      	this.partName = '历史数据';
+      	this.partName = '数据统计';
         name = '历史数据'
       }else if(urlPath == 'management'){
       	this.partName = '公示管理';
@@ -289,7 +289,11 @@ export default{
       }else if(urlPath == 'personCenter'){
       	this.partName = '个人中心';
       	name = '个人中心';
+      }else if(urlPath == 'developing'){
+        this.partName = '应用管理';
+        name = '应用管理';
       }
+
       this.frame.src= urlPath
       window.sessionStorage.setItem('publicName', name)
       /*this.$store.dispatch('PUBLIC_HEADER_TYPE', { name })*/
@@ -301,6 +305,7 @@ export default{
     frameData(){
       let vm = this
       this.loading = true
+      this.partName = '数据管理';
       let data = {
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
@@ -449,7 +454,7 @@ export default{
     ){
       vm.gsxx = true
     }
-    /!*关注信息权限控制*!/
+    /!*订阅信息权限控制*!/
     if(
       this.$store.getters.getPermissions.indexOf('informationAttention')>-1 ||
       this.$store.getters.getPermissions.indexOf('unsubscribeAllInformationAttention')>-1 ||
@@ -497,7 +502,7 @@ export default{
     if(this.$store.getters.getPermissions.indexOf('formulaSetting')>-1 ){
       vm.gsxx = true
     }
-    /*关注信息权限控制*/
+    /*订阅信息权限控制*/
     if(this.$store.getters.getPermissions.indexOf('informationAttention')>-1){
       vm.gzxx = true
     }

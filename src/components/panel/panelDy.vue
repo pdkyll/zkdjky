@@ -168,7 +168,8 @@ export default{
       let _this = this
       _this.loadingData = true
       let header = {
-        accessToken: sessionStorage.getItem('accessToken')
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let param = {
         creator: sessionStorage.getItem('accountId'),
@@ -178,8 +179,6 @@ export default{
           _this.tjList = []
           let data = res.data.data
           for(let i=0;i<data.length;i++){
-            let time = data[i].dateRange.split('&')
-            time = time[0]+'至'+time[1]
             let atlasArr = data[i].atlas.split(',')
             let obj = {
               isShow: false,
@@ -191,7 +190,7 @@ export default{
               data_id: data[i].id,
               type: data[i].type,
               name: data[i].statisticalName,
-              sj: time,
+              sj: data[i].dateRange,
               gs: data[i].companyName,
               cp: data[i].productName,
               bm: data[i].departmentName,
@@ -202,11 +201,10 @@ export default{
               tableHeader: data[i].totalTableData.headerMap,
               tableData: data[i].totalTableData.transformData
             }
-
             _this.tjList.push(obj)
           }
-          _this.loadingData = false
         }
+        _this.loadingData = false
       }).catch(error => {
         console.log(error)
       })
@@ -215,6 +213,8 @@ export default{
     like(dataId,type){
       let _this = this
       let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let param = {
         account_id: sessionStorage.getItem('accountId'),
@@ -222,11 +222,12 @@ export default{
         type:type
       }
       _this.$store.dispatch('ATTENTION_LIKE', {param, header}).then(res => {
+        console.log(res)
         _this.$notify({
           title: '提示信息',
           message: '点赞成功',
-          type: res.status === 200 ? 'success' : 'error',
-          duration: '1000'
+          type: res.data.code === 16000003 ? 'success' : 'error',
+          duration: '2000'
         })
       }).catch(error => {
         console.log(error)
@@ -236,6 +237,8 @@ export default{
     notLike(dataId,type){
       let _this = this
       let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
       }
       let param = {
         account_id: sessionStorage.getItem('accountId'),
@@ -246,7 +249,7 @@ export default{
         _this.$notify({
           title: '提示信息',
           message: '取消点赞成功',
-          type: res.status === 200 ? 'success' : 'error',
+          type: res.data.code === 16000003 ? 'success' : 'error',
           duration: '1000'
         })
       }).catch(error => {

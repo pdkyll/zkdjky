@@ -143,7 +143,7 @@
             yAxis: [
               {
                 type: 'value',
-                name: '销售额（万元）'
+                name: '销售额（元）'
               }
             ],
             series: function () {

@@ -163,10 +163,10 @@ export default{
           let name = {
             name:data.accountName,
             type:data.tenantName,
-            phone:data.telephone==null?'暂无':data.telephone,
-            email: data.email==null?'暂无':data.email,
-            companyName:res.data.companyName==null?'暂无':res.data.companyName,
-            departmentName: res.data.departmentName==null?'暂无':res.data.departmentName,
+            phone:data.telephone==null?'':data.telephone,
+            email: data.email==null?'':data.email,
+            companyName:res.data.companyName==null?'':res.data.companyName,
+            departmentName: res.data.departmentName==null?'':res.data.departmentName,
           }
           this.$store.dispatch('USER_MASSAGE', { name })
           sessionStorage.setItem('isOk', res.code)

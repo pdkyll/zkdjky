@@ -3,7 +3,7 @@
  */
 <template>
   <el-container>
-    <el-aside width="200px" style="background-color: #fff;">
+    <el-aside width="220px" style="background-color: #fff;">
       <!--<a class="logo" href="javascript:void(0);">
         <img src="../../assets/logo.png" width="142" height="25" alt="LOGO" />
       </a>-->
@@ -26,7 +26,7 @@
           </template>
           <el-menu-item-group>
             <router-link :to="child.pathUrl" v-for="(child, ind) in item.childrenList">
-              <el-menu-item :index="index+ ind +''">
+              <el-menu-item :index="index+ ind +''" v-if="child.flag">
                 <i :class="child.iClass" class="iconfont"></i>
                 <span>{{child.name}}</span>
               </el-menu-item>
@@ -202,21 +202,21 @@ export default{
             },
             {
               name:'销售指标',
-              pathUrl:'newNorm',
+              pathUrl:'developing',
               iClass:'icon-qiye',
               child:false,
               flag:this.$store.getters.getPermissions.indexOf('salesIndex')>-1?true:false
             },
             {
               name:'产品指标',
-              pathUrl:'newNorm',
+              pathUrl:'developing',
               child:false,
               iClass:'icon-shumogongjuiconshichangfenxi-',
               flag:this.$store.getters.getPermissions.indexOf('productIndex')>-1?true:false
             },
             {
               name:'人事指标',
-              pathUrl:'newNorm',
+              pathUrl:'developing',
               iClass:'icon-yezhukaifashang',
               child:false,
               flag:this.$store.getters.getPermissions.indexOf('personnelIndex')>-1?true:false

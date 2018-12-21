@@ -76,7 +76,7 @@
             <el-option v-for="items in optionData" :key="'opt' + items.id" :label="items.companyName" :value="items.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门名称">
+        <el-form-item label="部门名称" prop="departmentName">
           <el-select
             size="small"
             style="width: 100%"
@@ -94,7 +94,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="数据代码">
+        <el-form-item label="数据代码" prop="cpcc">
           <el-select
             size="small"
             style="width: 100%"
@@ -179,9 +179,9 @@
         cpccList:[],
         ruleFormModule: {
           desc: '',
+          companyName: '',
           cpcc:[],
-          departmentName: [],
-          companyName: ''
+          departmentName: []
         },
         updateCompanyName: '',
         updateForm: {
@@ -194,7 +194,7 @@
           companyName: [
             { required: true, message: '请选择公司', trigger: 'change' }
           ],
-          departName: [
+          departmentName: [
             { required: true, message: '请选择部门', trigger: 'blur' }
           ],
           cpcc: [
@@ -390,50 +390,58 @@
         let _this = this
         _this.$refs[formName].validate((valid) => {
           if (valid) {
-            _this.dialog_bm = false
-            let optionSelected = _this.optionData.filter(function (item,index) {
-              return item.id === _this.ruleFormModule.companyName
-            })
-            let param = {
-              "type": 1,
-              "address":"",
-              "contact":"test",
-              "create_by":"sjm",
-              "description": _this.ruleFormModule.desc,
-              "cPCCs":_this.ruleFormModule.cpcc,
-              "level":2,
-              "id": _this.ruleFormModule.companyName,  //父及Id
-              //"name":"tttt",   //name不可重复
-              "depNames": _this.ruleFormModule.departmentName,   //数组
-              "code": optionSelected[0].code,   //父及code
-              "pcode":"1",  //固定参数
-              "pid":1, //固定参数
-              "paramType":1,
-              "postcode":"",
-              "telephone":"13011455214"
-            }
-            let header = {
-              accountId: sessionStorage.getItem('accountId'),
-              accessToken: sessionStorage.getItem('accessToken'),
-              projectId :sessionStorage.getItem('projectId'),
-            }
-            this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
-              if(res.code === 16000003){
-                _this.search_list()
-                _this.ruleFormModule.desc= ''
-                _this.ruleFormModule.departmentName= []
-                _this.ruleFormModule.companyName= ''
-                _this.$refs[formName].resetFields()
-              }
-              _this.$notify({
-                title: '提示信息',
-                message: res.msg,
-                type: res.code === 16000003 ? 'success' : 'error',
-                duration: '2000'
+            if(_this.ruleFormModule.cpcc.length !== _this.ruleFormModule.departmentName.length){
+              _this.$message({
+                message: '输入的部门需要于输入的数据代码对用',
+                type: 'warning'
+              });
+            }else{
+              _this.dialog_bm = false
+              let optionSelected = _this.optionData.filter(function (item,index) {
+                return item.id === _this.ruleFormModule.companyName
               })
-            }).catch((error) => {
-              console.error(error)
-            })
+              let param = {
+                "type": 1,
+                "address":"",
+                "contact":"test",
+                "create_by":"sjm",
+                "description": _this.ruleFormModule.desc,
+                "cPCCs":_this.ruleFormModule.cpcc,
+                "level":2,
+                "id": _this.ruleFormModule.companyName,  //父及Id
+                //"name":"tttt",   //name不可重复
+                "depNames": _this.ruleFormModule.departmentName,   //数组
+                "code": optionSelected[0].code,   //父及code
+                "pcode":"1",  //固定参数
+                "pid":1, //固定参数
+                "paramType":1,
+                "postcode":"",
+                "telephone":"13011455214"
+              }
+              let header = {
+                accountId: sessionStorage.getItem('accountId'),
+                accessToken: sessionStorage.getItem('accessToken'),
+                projectId :sessionStorage.getItem('projectId'),
+              }
+              this.$store.dispatch('INSERT_DEPARTMENT', { param, header }).then((res, req) => {
+                if(res.code === 16000003){
+                  _this.search_list()
+                  _this.ruleFormModule.desc= ''
+                  _this.ruleFormModule.departmentName= []
+                  _this.ruleFormModule.cpcc= []
+                  _this.ruleFormModule.companyName= ''
+                  _this.$refs[formName].resetFields()
+                }
+                _this.$notify({
+                  title: '提示信息',
+                  message: res.msg,
+                  type: res.code === 16000003 ? 'success' : 'error',
+                  duration: '2000'
+                })
+              }).catch((error) => {
+                console.error(error)
+              })
+            }
           } else {
             return false;
           }

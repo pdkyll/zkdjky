@@ -75,10 +75,10 @@
         <el-form-item label="角色名称" prop="name">
           <el-input v-model.trim="ruleFormModule.name"></el-input>
         </el-form-item>
-        <el-form-item label="角色备注" prop="desc">
+        <el-form-item label="角色备注">
           <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
-        <el-form-item label="权限选择">
+        <el-form-item label="权限选择" prop="check">
           <el-tree
             :data="treeData"
             accordion
@@ -141,6 +141,8 @@
   </div>
 </template>
 <script>
+  import {backLook} from '../../assets/js/backLook'
+  import {creatLook} from '../../assets/js/creatLook'
 export default{
   data () {
     return {
@@ -167,12 +169,16 @@ export default{
         desc: [
           { required: true, message: '请输入角色备注', trigger: 'blur' },
           { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+        ],
+        check: [
+          { required: false, message: '请至少选择一个权限', trigger: 'blur' }
         ]
       },
       pageNum:1,
       pageSize: 10,
       totalCount: 0,
       tableData: [],
+      originalTree:[],
       treeData: [],
       checkIdList:[],
       defaultProps: {
@@ -196,7 +202,6 @@ export default{
       xg_jsmc:'',
       xg_jsms:'',
       xg_id:''
-
     }
   },
   methods: {
@@ -219,6 +224,8 @@ export default{
       let _this = this
       let param = {
         type: '1',
+        sortby:'updatetime',
+        order:'desc',
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
       }
@@ -343,6 +350,7 @@ export default{
               menuid:idList[i]
             })
           }
+          this.checkIdList = creatLook(this.checkIdList,this.originalTree)
           _this.insertUserForRoles()
         } else {
           return false;
@@ -367,6 +375,7 @@ export default{
           menuid:idList[i]
         })
       }
+      this.checkIdListForUpdate = creatLook(this.checkIdListForUpdate,this.originalTree)
       let _this = this
       let param = {
         roles:[
@@ -421,6 +430,7 @@ export default{
             _this.echoList.push(res.data.data[i]*1)
           }
         }
+        _this.echoList = backLook(_this.echoList,_this.originalTree)
         _this.$refs.treeForUpdate.setCheckedKeys(_this.echoList)
       }).catch(error=>{
         console.error(error);
@@ -438,6 +448,7 @@ export default{
       }
       this.$store.dispatch('MAKE_COMPANY_SELECT', { param, header}).then(res => {
         let data = res.data.data.datas
+        this.originalTree = data
         this.treeData = []
         this.arrayToJson(data)
       }).catch(error=>{
@@ -476,6 +487,7 @@ export default{
         }
       }
     },
+
     /*查询*/
     searchName(val){
       this.filter = 'rolename=_'+ val +'_'

@@ -64,10 +64,10 @@
           prop="likeCount"
           label="指标关注度">
           <template slot-scope="scope">
-            <span class="iconfont icon-chakanyanjingshishifenxi icon-green" :title="'订阅'+scope.row.likeCount+'人'"></span>
-            <span class="mr-10">{{scope.row.likeCount}}</span>
-            <span class="iconfont icon-shoucang3 icon-red" :title="'点赞'+scope.row.subscibeCount+'人'"></span>
+            <span class="iconfont icon-chakanyanjingshishifenxi icon-green" :title="'订阅'+scope.row.subscibeCount+'人'"></span>
             <span class="mr-10">{{scope.row.subscibeCount}}</span>
+            <span class="iconfont icon-shoucang3 icon-red" :title="'点赞'+scope.row.likeCount +'人'"></span>
+            <span class="mr-10">{{scope.row.likeCount}}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -561,6 +561,7 @@
         _this.$refs['formData3'].validate((valid) => {
           if (valid) {
             _this.createNorm()
+            this.formData1.remarks = ''
           } else {
             console.log('error submit!')
           }
@@ -587,18 +588,21 @@
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
+        this.formData1.remarks = ''
       },
       handleClose2 () {
         this.dialogVisible2 = false
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
+        this.formData1.remarks = ''
       },
       handleClose3 () {
         this.dialogVisible3 = false
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
+        this.formData1.remarks = ''
       },
       /*预览图标的隐藏展示*/
       barShow () {
@@ -686,12 +690,13 @@
          */
         let searchCondition = {
           dateRange: '',
-          cpccs: '',
+          companys: '',
           departments: '',
           products: ''
         }
+        console.log(_this.formData2)
         searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
-        searchCondition.cpccs = _this.formData2.cpccs.join(',') || ''
+        searchCondition.companys = _this.formData2.cpccs.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
         searchCondition.products = _this.formData2.products.join(',') || ''
         searchCondition = JSON.stringify(searchCondition)

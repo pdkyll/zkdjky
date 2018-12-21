@@ -20,6 +20,8 @@ const user = () => import('@/pages/jurisdiction/user')
 const company = () => import('@/pages/jurisdiction/company')
 const department = () => import('@/pages/jurisdiction/department')
 const personCenter = () => import('@/pages/publicInformation/personCenter')       //  个人中心 12、19 gxb
+// 正在建设中
+const developing = () => import('@/components/public/developing')
 Vue.use(Router)
 
 export default new Router({
@@ -115,6 +117,11 @@ export default new Router({
           path: 'pzlbmx',
           name: 'pzlbmx',
           component: pzlbmx
+        },
+        {
+          path: 'developing',
+          name: 'developing',
+          component: developing
         }
       ]
     },

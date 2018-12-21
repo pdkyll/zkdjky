@@ -213,7 +213,6 @@ export default{
       }
       _this.$store.dispatch('PROVIDER_MANAGE_FIND_NAME_ID', {param, header}).then(res => {
         if(res.data.code === 16000003){
-          console.log(res.data)
           _this.ptCompany = res.data.data
           _this.ptCompany.unshift({
             cPCC: "",
@@ -221,6 +220,7 @@ export default{
             companyName: "全部"
           })
         }
+        _this.loading = false
       }).catch(error => {
         console.error(error)
       })

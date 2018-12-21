@@ -102,17 +102,17 @@
         <el-form-item label="确认密码" prop="pass2">
           <el-input v-model.trim="ruleFormModule.pass2"></el-input>
         </el-form-item>
-        <el-form-item label="角色选择">
+        <el-form-item label="角色选择" prop="region">
           <el-select v-model="ruleFormModule.region" style="width: 100%" placeholder="请选择类型" @change="region_change">
             <el-option :label="item.name" :value="item.name"  v-for="item in ruleFormModule.regionList" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="公司选择">
+        <el-form-item label="公司选择" prop="gs">
           <el-select v-model="ruleFormModule.gs" style="width: 100%" placeholder="请选择类型" @change="gsChange">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModule.gsList" :key="item.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门选择">
+        <el-form-item label="部门选择" prop="bm">
           <el-select v-model="ruleFormModule.bm" style="width: 100%" placeholder="请选择类型">
             <el-option :label="item.name" :value="item.code" v-for="item in ruleFormModule.bmList" :key="item.code"></el-option>
           </el-select>
@@ -603,6 +603,7 @@ export default{
     getCompany(){
       let param = {
         type:'0,2',
+        pageSize:100000,
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken')

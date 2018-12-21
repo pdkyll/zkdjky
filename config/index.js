@@ -10,16 +10,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        target: 'http://192.168.15.56:8086/yyqxzx',
-        //target: 'http://192.168.15.64:8090/yyqxzx',
-        //target: 'http://172.168.17.84:8086/yyqxzx',          //目标接口域名
+        //target: 'http://192.168.15.56:8090/yyqxzx',
+        target: 'http://192.168.15.82:8090/yyqxzx',          //目标接口域名
         changeOrigin: true,  //重写接口
         pathRewrite: {
           '^/apis': '/api'  //重写接口
         }
       }
     },
-
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined

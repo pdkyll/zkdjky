@@ -21,18 +21,12 @@
             {{userMsg.email}}
           </p>
           <p class="userText">{{userMsg.name}}</p>
-          <!--<p class="userLab">
-            <span class="mr-20">
-              所属公司：
-            </span>
+          <p class="userLab">
             {{userMsg.companyName}}
           </p>
           <p class="userLab">
-            <span class="mr-20">
-              所属部门：
-            </span>
              {{userMsg.departmentName}}
-          </p>-->
+          </p>
           <div class="changePassword">
           	<p @click="changePassword">修改密码</p>
           	<i @click="changePassword"></i>

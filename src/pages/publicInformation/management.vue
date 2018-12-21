@@ -141,9 +141,6 @@
             :on-error="uploadError"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div style="overflow-wrap: break-word">
-              允许 jpg, jpeg, png, txt, gif, docx, pdf 类型的文件
-            </div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -428,12 +425,12 @@ export default{
         }
       }
     },
-    uploadSuccess () {
+    uploadSuccess (res) {
       this.cancelFun('ruleFormModule')
       this.$notify({
         title: '提示信息',
-        message: '添加公示信息成功',
-        type: 'success',
+        message: res.code == 16000003 ? '添加公示信息成功' : '添加公示信息失败',
+        type: res.code == 16000003 ? 'success' : 'error',
         duration: '2000'
       })
       this.ruleFormModule= {
