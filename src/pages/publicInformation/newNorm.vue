@@ -38,30 +38,35 @@
       <el-table
         :data="tableData"
         v-loading="loading"
-        border
         style="width: 100%">
         <el-table-column
           prop="indicator_name"
+          align="center"
           label="指标名称">
         </el-table-column>
         <el-table-column
           prop="creation_time"
+          align="center"
           label="创建日期">
         </el-table-column>
         <el-table-column
           prop="date_range"
+          align="center"
           label="统计日期">
         </el-table-column>
         <el-table-column
           prop="remarks"
+          align="center"
           label="统计目的">
         </el-table-column>
         <el-table-column
           prop="creator"
+          align="center"
           label="创建人员">
         </el-table-column>
         <el-table-column
           prop="likeCount"
+          align="center"
           label="指标关注度">
           <template slot-scope="scope">
             <span class="iconfont icon-chakanyanjingshishifenxi icon-green" :title="'订阅'+scope.row.subscibeCount+'人'"></span>
@@ -73,7 +78,7 @@
         <el-table-column
           :resizable=false
           label="操作"
-          align
+          align="center"
           width="200">
           <template slot-scope="scope">
                <el-button type="text" v-show="scope.row.fb" @click="publishNorm(scope.row)" size="small" v-if="$store.getters.getPermissions.indexOf('publishFinancialIndex')>-1">发布</el-button><!--

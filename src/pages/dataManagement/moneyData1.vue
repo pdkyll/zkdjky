@@ -65,20 +65,22 @@
           <div class="e-table">
             <el-table
               :data="tableData"
-              border
               style="width: 100%">
               <el-table-column
                 prop="date"
                 label="日期"
+                align="center"
                 width="180">
               </el-table-column>
               <el-table-column
                 prop="name"
                 label="姓名"
+                align="center"
                 width="180">
               </el-table-column>
               <el-table-column
                 prop="address"
+                align="center"
                 label="地址">
               </el-table-column>
             </el-table>

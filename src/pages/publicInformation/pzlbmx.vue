@@ -66,151 +66,179 @@
     <div class="mt-20">
       <el-table
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
           prop="matnr"
+          align="center"
           label="物料">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="menge"
+          align="center"
           label="数量">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="meins"
+          align="center"
           label="计量单位">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="gjahr"
+          align="center"
           label="财年">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="shkzg"
+          align="center"
           label="借贷标识">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="koart"
+          align="center"
           label="科目类型">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="hkont"
+          align="center"
           label="总账科目">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="kokrs"
+          align="center"
           label="成本中心">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="kunnr"
+          align="center"
           label="客户">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="lifnr"
+          align="center"
           label="供应商">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="pswbt"
+          align="center"
           label="总账金额">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="pswsl"
+          align="center"
           label="总账货币">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="mwskz"
+          align="center"
           label="税码">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="sgtxt"
+          align="center"
           label="摘要">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="xnegp"
+          align="center"
           label="反记账">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zlsch"
+          align="center"
           label="付款方式">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zfbdt"
+          align="center"
           label="付款基准日期">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="umskz"
+          align="center"
           label="特别总账标志">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="xumsw"
+          align="center"
           label="销售相关">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="xopvw"
+          align="center"
           label="未清项目管理">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zbilk"
+          align="center"
           label="资产负债表科目">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="gvtyp"
+          align="center"
           label="损益表科目类型">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="fkber"
+          align="center"
           label="费用类型">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zzbkitem"
+          align="center"
           label="拨款项目">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zzxjll"
+          align="center"
           label="现金流量项">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="zztzitem"
+          align="center"
           label="投资项目">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="bschl"
+          align="center"
           label="记账代码">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="augbl"
+          align="center"
           label="清帐凭证">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="augdt"
+          align="center"
           label="清帐日期"
           width="140">
         </el-table-column>
