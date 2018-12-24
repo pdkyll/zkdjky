@@ -307,6 +307,9 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+	.el-form-item{
+		margin-bottom: 0;
+	}
   .el-form--inline .el-form-item{
     width: 14%;
   }

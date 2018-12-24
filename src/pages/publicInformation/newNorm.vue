@@ -1149,6 +1149,9 @@
   }
 </script>
 <style scoped lang="scss">
+	.el-form-item{
+		margin-bottom: 0;
+	}
   .join-btn{
     width: 150px;
     color: white;

@@ -29,41 +29,49 @@
         style="width: 100%">
         <el-table-column
           :resizable=false
+          align="center"
           prop="name"
           label="用户名称">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="region"
           label="用户角色">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="gs"
           label="公司">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="bm"
           label="部门">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="zhmc"
           label="租户名称">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="time"
           label="创建时间">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="desc"
           label="用户备注">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="操作"
           width="150">
           <template slot-scope="scope">

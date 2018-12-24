@@ -38,26 +38,29 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
           prop="INFO_NAME"
+          align="center"
           label="名称">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="CREATOR"
+          align="center"
           label="录入人">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="CREATION_TIME"
+          align="center"
           label="日期">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="DATA_TYPE"
+          align="center"
           label="类型">
           <template slot-scope="scope">
             <span v-if="scope.row.DATA_TYPE == 1">文本</span>
@@ -68,11 +71,13 @@
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="DESCRIBE_INFO"
           label="备注">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="公示权重"
           width="100">
           <template slot-scope="scope">
@@ -81,8 +86,8 @@
         </el-table-column>
         <el-table-column
           :resizable=false
-          label="操作"
           align="center"
+          label="操作"
           width="140">
           <template slot-scope="scope">
             <!--<el-button @click="handleClick(scope.row)" type="text" size="small">发布</el-button>-->
