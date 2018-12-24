@@ -6,7 +6,7 @@
     <div class="box-wrapper" v-for="item in tjList" :key="item.index">
       <div class="left-msg">
         <p class="msg-list">
-          <span class="msg-name">统计表名称 : </span>
+          <span class="msg-name">2统计表名称 : </span>
           <span class="color-green">{{item.name}}</span>
         </p>
         <p class="msg-list">

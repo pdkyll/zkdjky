@@ -205,6 +205,7 @@
 <style scoped>
   .chart{
     float: left;
-    height: 350px;
+    height: 440px;
+    padding:8px 20px 0
   }
 </style>

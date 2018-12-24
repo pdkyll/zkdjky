@@ -48,7 +48,8 @@ export default {
     /*margin-top: -20px;*/
   }
   .el-tabs__content{
-    padding-top: 30px;
+    /*padding-top: 30px;*/
+   padding-top: 5px;
   }
   .el-tabs__item.is-active{
     color: #bfd046;
@@ -72,6 +73,6 @@ export default {
    }
   }
   .el-row{
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 </style>
