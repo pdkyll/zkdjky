@@ -20,30 +20,34 @@
       <el-table
         :data="tableData"
         v-loading="loading"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
+          align="center"
           prop="name"
           label="公司名称">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="departmentName"
           label="部门名称">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="createTime"
           label="创建时间">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="description"
           label="备注">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="操作"
           width="100">
           <template slot-scope="scope">

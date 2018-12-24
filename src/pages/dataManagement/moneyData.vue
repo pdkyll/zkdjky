@@ -44,37 +44,42 @@
           <div class="mt-20">
             <el-table
               :data="tableData"
-              border
               style="width: 100%">
               <el-table-column
                 :resizable=false
                 prop="date"
+                align="center"
                 label="日期">
               </el-table-column>
               <el-table-column
                 :resizable=false
                 prop="name"
+                align="center"
                 label="姓名">
               </el-table-column>
               <el-table-column
                 :resizable=false
                 prop="province"
+                align="center"
                 label="省份">
               </el-table-column>
               <el-table-column
                 :resizable=false
                 prop="city"
+                align="center"
                 label="市区">
               </el-table-column>
               <el-table-column
                 :resizable=false
                 prop="address"
+                align="center"
                 label="地址">
               </el-table-column>
               <el-table-column
                 :resizable=false
                 prop="zip"
                 label="邮编"
+                align="center"
                 width="100">
               </el-table-column>
             </el-table>

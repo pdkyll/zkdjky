@@ -44,15 +44,16 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
           prop="bldat"
+          align="center"
           label="凭证日期">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="凭证编号">
           <template slot-scope="scope">
             <el-button type="text" @click="getListDetails(scope.row.belnr)">{{scope.row.belnr}}</el-button>
@@ -61,62 +62,74 @@
         <el-table-column
           :resizable=false
           prop="blart"
+          align="center"
           label="凭证类型">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="cpccName"
+          align="center"
           label="子公司">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="butxt"
+          align="center"
           label="公司">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="budat"
+          align="center"
           label="过账日期"
           width="100">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="usnam"
+          align="center"
           label="用户名">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="hwaer"
+          align="center"
           label="本位币">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="waers"
+          align="center"
           label="货币">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="kursf"
+          align="center"
           label="汇率">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="kurst"
+          align="center"
           label="汇率类型">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="bstat"
+          align="center"
           label="凭证状态">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="awtyp"
+          align="center"
           label="参考交易">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="xreversal"
+          align="center"
           label="冲销标识">
         </el-table-column>
       </el-table>
@@ -273,6 +286,9 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+	.el-form-item{
+		margin-bottom: 0;
+	}
   .join-btn{
     width: 150px;
     color: white;

@@ -125,7 +125,7 @@ export default{
   width: 100%;
   height:56px;
   line-height: 56px;
-  margin-left: 0;
+  margin-left: 0 !important;
   background: #EBECEF;
   border-bottom: 1px solid #CBCDD1;
   .el-select,.el-col{

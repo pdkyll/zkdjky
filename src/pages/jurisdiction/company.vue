@@ -13,26 +13,31 @@
         style="width: 100%">
         <el-table-column
           :resizable=false
+          align="center"
           prop="name"
           label="公司名称">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="cpcc"
           label="数据代码">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="description"
           label="备注">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="create_time"
           label="创建时间">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="操作"
           width="100">
           <template slot-scope="scope">

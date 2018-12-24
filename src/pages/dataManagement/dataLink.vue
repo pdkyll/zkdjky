@@ -50,41 +50,47 @@
     <div class="mt-20">
       <el-table
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
+          align="center"
           prop="date"
           label="日期">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="name"
           label="姓名">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="province"
           label="省份">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="city"
           label="市区">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="address"
           label="地址">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           prop="zip"
           label="邮编"
           width="100">
         </el-table-column>
         <el-table-column
           :resizable=false
+          align="center"
           label="操作"
           width="100">
           <template slot-scope="scope">

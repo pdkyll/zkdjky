@@ -57,13 +57,13 @@
           <div class="e-table">
             <el-table
               :data="item.tableData"
-              border
               style="width: 100%">
               <el-table-column
                 v-for="(header, index) in item.tableHeader"
                 :key="'cols' + index + item.index"
                 :prop="index"
                 :label="header"
+                align="center"
                 width="180">
               </el-table-column>
             </el-table>
@@ -336,7 +336,7 @@ export default{
   }
   .hideBox{
     overflow: hidden;
-    height:350px;
+    height:440px;
   }
   .like{
     color: #CC0F1B;
@@ -360,34 +360,52 @@ export default{
     overflow: hidden;
     height: auto;
     box-shadow: 0 0 25px #DEDFE0;
-    padding: 20px;
+    /*padding: 20px;*/
+    padding:40px 40px 20px;
     .left-msg{
-      width: 32%;
-      height:350px;
+      width: 516px;
+      /*height:350px;*/
+      height:440px;
       float: left;
       font-size: 12px;
       .msg-list{
-        margin: 7px 0;
+        margin: 10px 0;
       }
       .msg-name{
         display: inline-block;
-        width: 70px;
+        /*width: 70px;*/
+        width:86px;
         text-align: right;
         font-weight: bold;
+        color:#969ba6;
+        font-size: 14px;
+        margin-right: 20px;
+      }
+      .color-green{
+      	font-size: 16px;
+      	font-weight: bold;
       }
       .msg-name2{
         display: inline-block;
         width: 100px;
         text-align: right;
         font-weight: bold;
+        color:#969ba6;
+        font-size: 14px;
         margin: 7px 0;
+        margin-right: 20px;
+      }
+      .color-999{
+      	color:#323341;
+      	font-size: 14px;
       }
     }
     .right-chart{
-      width: 67%;
+      /*width: 67%;*/
       border-left:1px solid #ccc;
-      height:auto;
-      float: left;
+      height:440px;
+      /*float: left;*/
+      overflow: auto;
     }
     .footer-btn{
       width: 31%;
@@ -417,7 +435,7 @@ export default{
   .ll{
     float: right;
     padding: 5px;
-    margin-right: 1%;
+    margin-right: 20px;
     display: inline-block;
     height: 30px;
     line-height: 5px;
@@ -431,7 +449,9 @@ export default{
       background-image: linear-gradient(to right, #b7cc41,#d5d655);
     }
   }
-
+	.mr-10{
+		margin-right: 20px !important;
+	}
   .e-table{
     float: left;
     width: 96%;

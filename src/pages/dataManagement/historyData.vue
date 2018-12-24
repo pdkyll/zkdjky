@@ -32,13 +32,13 @@
           <el-table
             v-loading="loading"
             :data="tableData"
-            border
             style="width: 100%">
             <el-table-column
               v-for="cols in historyTableColumnHeader"
               :resizable=false
               :key="'col' + cols.column_name"
               :prop="cols.column_name"
+              align="center"
               :label="cols.column_comment">
             </el-table-column>
           </el-table>
@@ -436,6 +436,11 @@ export default{
   .f-box{
     width: 100%;
     height:600px;
+    h5{
+    	font-size: 14px;
+    	margin: 10px 0;
+    	text-indent: 14px;
+    }
     .shadow{
       height:100%;
       box-shadow: 0 0 10px rgba(#b1c4d0, .48);
