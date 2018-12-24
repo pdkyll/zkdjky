@@ -18,7 +18,7 @@
     </el-form>
   </div>
  </div>-->
- <div class="box loginWrap">
+ <div class="box loginWrap" v-loading="loading">
     <div class="loginContent">
       <div class="logoBox">
         <div class="logoIcon"></div>
@@ -71,6 +71,7 @@ import {sha1} from '@/assets/js/HashEncrypt.min'
 export default{
   data () {
     return {
+      loading:false,
       tipsShow:false,
       tips:'',
       ruleForm: {
@@ -144,6 +145,7 @@ export default{
       this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
         sessionStorage.setItem('userPermissions',res.data.data)
         _this.$nextTick(() => {
+          _this.loading = false
           _this.$router.push('/home')
         })
       }).catch((error) => {
@@ -152,6 +154,7 @@ export default{
     },
     login (user, pass) {
       let _this = this
+      _this.loading = true
       var password = sha1(pass)
       let param = {
         accountName: user,
@@ -182,6 +185,7 @@ export default{
           sessionStorage.setItem('userMsg', userMsg)
           this.getJurisdiction()
         }
+        _this.loading = false
         _this.$notify({
           title: '提示信息',
           message: res.msg,
