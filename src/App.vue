@@ -200,4 +200,7 @@ input:-webkit-autofill:focus {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+	background-color: #f9fbe9 !important;
+}
 </style>
