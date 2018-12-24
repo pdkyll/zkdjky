@@ -114,6 +114,9 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+.el-form-item{
+	margin-bottom: 0;
+}
 .table-header{
   /*margin-top: -20px;*/
   /*position: fixed;*/

@@ -4,7 +4,7 @@
 <template>
   <div>
     <el-row class="table-list" :gutter="20" v-loading="dialogVisible">
-      <el-col :span="8" v-for="(i, index) in panel" :key="index">
+      <el-col :span="6" v-for="(i, index) in panel" :key="index">
         <div class="panel-publicInformation">
           <div class="panel-heading">
             <div class="panel-title">{{i.title}}</div>
@@ -49,7 +49,7 @@ export default{
       dom: '',
       dialogVisible: true,
       panel: [{
-        title:'123',
+        title:'',
         content:[
           /*{
             CPCC: "108",
@@ -229,12 +229,13 @@ export default{
     height:500px;
   }
 .panel-publicInformation{
-  height:450px;
-  padding: 20px 20px;
+  /*height:450px;*/
+ height:auto;
+  /*padding: 20px 20px;*/
   margin-bottom: 20px;
   background-color: #fff;
   box-shadow: 0 0 29px rgba(#b1c4d0, .48);
-  .panel-heading{
+  /*.panel-heading{
     padding: 0 0 20px 0;
     border-bottom: 1px solid #eceff2;
     .panel-title{
@@ -243,12 +244,27 @@ export default{
       color: #bfd046;
       text-align: center;
     }
+  }*/
+ .panel-heading{
+    /*padding: 0 0 20px 0;*/
+    border-bottom: 1px solid #eceff2;
+    height:145px;
+    line-height:145px;
+    background:#bad115;
+    .panel-title{
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+    }
   }
   .panel-body{
-    height: 80%;
+    /*height: 80%;*/
+    height:400px;
     overflow-y: auto;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    /*padding-top: 20px;
+    padding-bottom: 20px;*/
+   padding:20px
   }
 }
 .list{

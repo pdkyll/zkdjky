@@ -26,7 +26,6 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false
@@ -734,6 +733,9 @@ export default{
 }
 </script>
 <style scoped lang="scss">
+	.el-form-item{
+		margin-bottom: 0;
+	}
   .join-btn{
     width: 150px;
     color: white;

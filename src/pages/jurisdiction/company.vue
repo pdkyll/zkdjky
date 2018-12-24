@@ -10,7 +10,6 @@
       <el-table
         v-loading="loading"
         :data="tableData"
-        border
         style="width: 100%">
         <el-table-column
           :resizable=false

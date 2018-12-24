@@ -279,6 +279,9 @@ export default{
   .el-main {
     background-color: #fafafa;
   }
+  .el-main {
+    padding-top:6px;
+  }
   .logo {
     padding-top: 80px;
     padding-bottom: 110px;
@@ -356,5 +359,8 @@ export default{
   }
   .nav-bar-right {
     float: right;
+  }
+  .el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+  	text-align: center;
   }
 </style>

@@ -131,12 +131,12 @@
 			        </div>
 			        <p>权限管理</p>
 		        </li>
-		        <li>
+		        <!--<li>
 			        <div @click="frameLink('developing')"  class="menu-item">
 			          <img src="@/assets/home/desk_use.png" alt="">
 			        </div>
 			        <p>应用管理</p>
-		        </li>
+		        </li>-->
 		        <li>
 			        <div @click="frameLink('personCenter')"  class="menu-item">
 			          <img src="@/assets/home/desk_person.png" alt="">
