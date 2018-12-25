@@ -26,6 +26,7 @@
       <el-table
         v-loading="loading"
         :data="tableData"
+        :header-cell-style="{background:'#f0f1f1'}"
         style="width: 100%">
         <el-table-column
           :resizable=false

@@ -51,6 +51,8 @@ body .el-table th.gutter{
 }
 .mt-20{
   margin-top: 20px;
+  height:512px;
+  overflow-y: scroll;
 }
 .ml-20{
   margin-left: 20px;
@@ -86,6 +88,7 @@ body .el-table th.gutter{
 }
 .fy-box{
   margin-top: 40px;
+  margin-bottom: 40px;
   width: 100%;
   text-align: center;
 }
