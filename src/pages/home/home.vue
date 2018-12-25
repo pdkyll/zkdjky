@@ -91,7 +91,7 @@
           <p>数据管理</p>
         </li>-->
         <li v-if="sjtj">
-          <div @click="frameLink('historyData')" class="menu-item">
+          <div @click="frameInfo" class="menu-item">
             <!--<img src="@/assets/bar_chart.png" alt="">-->
             <img src="@/assets/home/home_data.png" alt="">
           </div>
@@ -126,7 +126,7 @@
 		            <p>公示管理</p>
 		        </li>
 		        <li v-if="qxgl">
-			        <div @click="frameLink('company')"  class="menu-item">
+			        <div @click="framePower"  class="menu-item">
 			          <img src="@/assets/home/desk_power.png" alt="">
 			        </div>
 			        <p>权限管理</p>
@@ -272,26 +272,26 @@ export default{
       this.wrapper = 'wrapper'
       let name = ''
       if(urlPath == 'LayoutNoLeft'){
-      	this.partName = '公示信息';
+      	this.partName = '公示信息'
         name = '公示信息'
       }else if(urlPath == 'LayoutNoLeft/attention'){
-      	this.partName = '订阅信息';
+      	this.partName = '订阅信息'
         name = '订阅信息'
       }else if(urlPath == 'historyData'){
-      	this.partName = '数据统计';
+      	this.partName = '数据统计'
         name = '历史数据'
       }else if(urlPath == 'management'){
-      	this.partName = '公示管理';
+      	this.partName = '公示管理'
         name = '公示管理'
       }else if(urlPath == 'company'){
-      	this.partName = '权限管理';
+      	this.partName = '权限管理'
         name = '公司管理'
       }else if(urlPath == 'personCenter'){
-      	this.partName = '个人中心';
-      	name = '个人中心';
+      	this.partName = '个人中心'
+      	name = '个人中心'
       }else if(urlPath == 'developing'){
-        this.partName = '应用管理';
-        name = '应用管理';
+        this.partName = '应用管理'
+        name = '应用管理'
       }
 
       this.frame.src= urlPath
@@ -324,6 +324,145 @@ export default{
       },1000)
 
     },
+    framePower(){
+      let vm = this
+      this.loading = true
+      this.wrapper = 'wrapper'
+      let name = ''
+      let menu_list = [
+        {
+          name:'公司管理',
+          pathUrl:'company',
+          child:false,
+          iClass:'icon-swticonjiudian',
+          flag:this.$store.getters.getPermissions.indexOf('companyManagement')>-1?true:false
+        },
+        {
+          name:'部门管理',
+          pathUrl:'department',
+          child:false,
+          iClass:'icon-xingzheng',
+          flag:this.$store.getters.getPermissions.indexOf('divisionalManagement')>-1?true:false
+        },
+        {
+          name:'角色管理',
+          pathUrl:'role',
+          child:false,
+          iClass:'icon-jiaose',
+          flag:this.$store.getters.getPermissions.indexOf('roleManagement')>-1?true:false
+        },
+        {
+          name:'用户管理',
+          pathUrl:'user',
+          child:false,
+          iClass:'icon-men',
+          flag:this.$store.getters.getPermissions.indexOf('userManagement')>-1?true:false
+        }
+      ]
+      this.partName = '权限管理'
+      for(let i = 0 ;i<menu_list.length;i++){
+        if(menu_list[i].flag){
+          name = menu_list[i].name
+          vm.frame.src = menu_list[i].pathUrl
+          window.sessionStorage.setItem('publicName', name)
+          this.frameShow = true
+          setTimeout(function () {
+            vm.loading = false
+          },1000)
+          return
+        }
+      }
+    },
+    frameInfo(){
+      let vm = this
+      this.loading = true
+      this.wrapper = 'wrapper'
+      let name = ''
+      let menu_list = [
+        {
+          name:'历史数据',
+          pathUrl:'historyData',
+          iClass:'icon-shuju3',
+          child:false,
+          flag:this.$store.getters.getPermissions.indexOf('historicalData')>-1?true:false
+        },
+        {
+          name:'财务凭证',
+          pathUrl:'pzlb',
+          child:false,
+          iClass:'icon-yewushouliliebiao',
+          flag:this.$store.getters.getPermissions.indexOf('financialCertificate')>-1?true:false
+        },
+        {
+          name:'指标统计',
+          pathUrl:'newNorm',
+          child:true,
+          flag:this.$store.getters.getPermissions.indexOf('indexStatistics')>-1?true:false,
+          childrenList:[
+            {
+              name:'财务指标',
+              pathUrl:'newNorm',
+              child:false,
+              iClass:'icon-youxianzijin',
+              flag:this.$store.getters.getPermissions.indexOf('financialIndex')>-1?true:false
+            },
+            {
+              name:'销售指标',
+              pathUrl:'developing',
+              iClass:'icon-qiye',
+              child:false,
+              flag:this.$store.getters.getPermissions.indexOf('salesIndex')>-1?true:false
+            },
+            {
+              name:'产品指标',
+              pathUrl:'developing',
+              child:false,
+              iClass:'icon-shumogongjuiconshichangfenxi-',
+              flag:this.$store.getters.getPermissions.indexOf('productIndex')>-1?true:false
+            },
+            {
+              name:'人事指标',
+              pathUrl:'developing',
+              iClass:'icon-yezhukaifashang',
+              child:false,
+              flag:this.$store.getters.getPermissions.indexOf('personnelIndex')>-1?true:false
+            }
+          ],
+          iClass:'icon-zhishu'
+        },
+      ]
+      this.partName = '数据统计'
+      /*如果历史数据和财务数据有其中一个的权限就判断父级的显示*/
+      if(menu_list[0].flag || menu_list[1].flag){
+        for(let i = 0 ;i<menu_list.length;i++){
+          if(menu_list[i].flag){
+            name = menu_list[i].name
+            vm.frame.src = menu_list[i].pathUrl
+            window.sessionStorage.setItem('publicName', name)
+            this.frameShow = true
+            setTimeout(function () {
+              vm.loading = false
+            },1000)
+            return
+          }
+        }
+      }else{
+        /*如果历史数据和财务数据都没有权限就判断新建指标的子集的显示*/
+        for(let i = 0 ;i<menu_list[2].childrenList.length;i++){
+          if(menu_list[2].childrenList[i].flag){
+            name = menu_list[2].childrenList[i].name
+            vm.frame.src = menu_list[2].childrenList[i].pathUrl
+            window.sessionStorage.setItem('publicName', name)
+            this.frameShow = true
+            setTimeout(function () {
+              vm.loading = false
+            },1000)
+            return
+          }
+        }
+      }
+    },
+
     closeFrame(){
       this.frameDom.style.width = '90%'
       this.frameDom.style.height = '80%'

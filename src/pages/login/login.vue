@@ -185,13 +185,15 @@ export default{
           sessionStorage.setItem('userMsg', userMsg)
           this.getJurisdiction()
         }
-        _this.loading = false
         _this.$notify({
           title: '提示信息',
           message: res.msg,
           type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
+        setTimeout(function () {
+          _this.loading = false
+        },2000)
       }).catch((error) => {
         console.error(error)
       })

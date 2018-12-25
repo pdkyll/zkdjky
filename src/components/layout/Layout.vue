@@ -170,7 +170,7 @@ export default{
     Watermark.set(massage)
     /*根据不同模块显示不同左侧菜单栏*/
     vm.menuTitle = sessionStorage.getItem('publicName')
-    if(vm.menuTitle == '历史数据'){
+    if(vm.menuTitle == '历史数据'||vm.menuTitle == '财务凭证'||vm.menuTitle == '财务指标'||vm.menuTitle == '销售指标'||vm.menuTitle == '产品指标'||vm.menuTitle == '人事指标'){
       vm.title_list=['历史数据','财务凭证','财务指标','销售指标','产品指标','人事指标']
       vm.menu_list = [
         {
@@ -238,7 +238,7 @@ export default{
         }
       ]
     }
-    else if(vm.menuTitle == '公司管理'){
+    else if(vm.menuTitle == '公司管理'||vm.menuTitle == '部门管理'||vm.menuTitle == '角色管理'||vm.menuTitle == '用户管理'){
       vm.title_list=['公司管理','部门管理','角色管理','用户管理']
       vm.menu_list = [
         {
@@ -271,6 +271,15 @@ export default{
         }
       ]
     }
+    for(let i = 0 ;i<vm.menu_list.length;i++){
+      if(vm.menu_list[i].flag){
+        vm.menuTitle = vm.menu_list[i].name
+        vm.activeIndex = i + ''
+        console.log(vm.menuTitle)
+        return
+      }
+    }
+
   }
 }
 </script>
