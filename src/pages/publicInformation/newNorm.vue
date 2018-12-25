@@ -1160,11 +1160,7 @@
   }
 </script>
 <style scoped lang="scss">
-<<<<<<< HEAD
   .search{
-=======
-	.search{
->>>>>>> 8e731d6025e7285dd00971b6d6335f6f1a273067
 		margin-bottom: 0;
 	}
 	.el-transfer-panel{

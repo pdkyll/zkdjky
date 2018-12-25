@@ -374,6 +374,7 @@ export default{
       height:440px;
       float: left;
       font-size: 12px;
+      position:relative;
       .msg-list{
         margin: 10px 0;
       }
@@ -414,7 +415,7 @@ export default{
       overflow: auto;
     }
     .footer-btn{
-      width: 31%;
+      width: 100%;
       height: 30px;
       position: absolute;
       line-height: 30px;

@@ -1,4 +1,4 @@
-<template>
+mt<template>
   <div id="app">
     <router-view></router-view>
   </div>
@@ -51,8 +51,6 @@ body .el-table th.gutter{
 }
 .mt-20{
   margin-top: 20px;
-  height:512px;
-  overflow-y: auto;
 }
 .ml-20{
   margin-left: 20px;
@@ -211,5 +209,10 @@ input:-webkit-autofill:focus {
 }
 .el-rate__icon{
 	margin-right: 2px !important;
+}
+.el-table__body-wrapper{
+	height: 350px;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 </style>

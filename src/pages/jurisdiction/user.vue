@@ -96,7 +96,7 @@
     </div>
     <!--弹框-->
     <el-dialog
-      title="提示"
+      title="新建用户"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">

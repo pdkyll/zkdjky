@@ -453,6 +453,7 @@ export default{
       width: 20%;
       height:100%;
       background: white;
+      padding-top: 10px;
     }
     .right-table{
       padding: 10px;
