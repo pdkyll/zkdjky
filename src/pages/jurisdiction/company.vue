@@ -75,10 +75,10 @@
           <el-input type="textarea" v-model.trim="ruleFormModule.desc"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="cancelInsert('ruleFormModule')">取 消</el-button>
         <el-button type="primary" @click="insert_GS('ruleFormModule')">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!--弹框删除列表项-->
     <el-dialog

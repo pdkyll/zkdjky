@@ -35,7 +35,7 @@ body .el-table th.gutter{
   display: table-cell!important;
 }
 .el-tree-node__content{
-   height: 40px;
+   height: 30px;
 }
 .pull-left{
   float: left;
@@ -52,7 +52,7 @@ body .el-table th.gutter{
 .mt-20{
   margin-top: 20px;
   height:512px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .ml-20{
   margin-left: 20px;
@@ -205,5 +205,8 @@ input:-webkit-autofill:focus {
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td{
 	background-color: #f9fbe9 !important;
+}
+.dialog-footer{
+	text-align: center;
 }
 </style>

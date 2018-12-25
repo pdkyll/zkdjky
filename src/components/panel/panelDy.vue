@@ -57,6 +57,7 @@
           <div class="e-table">
             <el-table
               :data="item.tableData"
+              :header-cell-style="{background:'#f0f1f1'}"
               style="width: 100%">
               <el-table-column
                 v-for="(header, index) in item.tableHeader"

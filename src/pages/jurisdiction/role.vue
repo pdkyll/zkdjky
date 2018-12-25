@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm" class="demo-form-inline clearFix" @submit.native.prevent>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="no-mb" label="角色名称">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1" class="ml-10 no-mb" label="角色名称">
           <el-input
             size="small"
             placeholder="输入角色名称"
@@ -11,7 +11,7 @@
             v-model="ruleForm.input">
           </el-input>
         </el-form-item>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1">
+        <el-form-item class="search" v-if="$store.getters.getPermissions.indexOf('queryRoleManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
         <el-form-item v-if="$store.getters.getPermissions.indexOf('addRoleManagement')>-1" class="pull-right no-mb">
@@ -94,10 +94,10 @@
           </el-tree>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="cancelInsert('ruleForm')">取 消</el-button>
         <el-button type="primary" @click="insertRole('ruleForm')">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!--弹框删除列表项-->
     <el-dialog
@@ -547,8 +547,16 @@ export default{
 }
 </script>
 <style scoped lang="scss">
-	.el-form-item{
+	.search{
 		margin-bottom: 0;
+	}
+	.el-tree{
+		border:1px solid #dbdbdb;
+		height:150px;
+		overflow-y: auto;
+	}
+	.el-tree-node__content{
+   height: 30px;
 	}
   .join-btn{
     width: 150px;
