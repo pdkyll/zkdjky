@@ -72,6 +72,7 @@
         </div>
       </div>
     </div>
+    <el-button type="text" class="pull-right" v-if="showMore">点击打开加载更多</el-button>
     <el-dialog
       title="提示信息"
       :visible.sync="dialogDelete"
@@ -97,6 +98,7 @@ export default{
       dialogDelete:false,
       tjList: [],
       loadingData:true,
+      showMore:false,
     }
   },
   components: {
@@ -203,6 +205,9 @@ export default{
               tableData: data[i].totalTableData.transformData
             }
             _this.tjList.push(obj)
+          }
+          if(data.length>0){
+            _this.showMore = true
           }
         }
         _this.loadingData = false

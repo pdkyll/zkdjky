@@ -310,7 +310,7 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://10.220.1.6:31246'
+      this.frame.src= 'daas-website.tpaas.youedata.com'
       /**测试地址
        * http://daas-website.tpaas.youedata.com
        */
@@ -318,7 +318,7 @@ export default{
        * http://10.220.1.6:31246
        */
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
+        window.frames[0].postMessage(data, 'daas-website.tpaas.youedata.com');
         vm.loading = false
         vm.frameShow = true
       },1000)

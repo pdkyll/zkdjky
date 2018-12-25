@@ -334,7 +334,7 @@ export default{
               gsCode:obj.company == undefined?'':obj.company,
               bmCode:obj.company == undefined?'':obj.department,
               zhmc:tableList[i].tenantName,
-              time:tableList[i].updateTime,
+              time:tableList[i].createTime,
               id:tableList[i].accountId,
               useType:tableList[i].status == 1?'停用':'启用',
               useCode:tableList[i].status + '',

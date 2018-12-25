@@ -115,7 +115,7 @@
         </el-steps>
       </div>
       <el-form :model="formData1" :rules="rules" ref="formData1" label-width="120px" class="demo-ruleForm">
-        <el-form-item label="统计表名称" prop="statisticalName">
+        <el-form-item label="指标名称" prop="statisticalName">
           <el-col :span="20">
             <el-input v-model.trim="formData1.statisticalName"></el-input>
           </el-col>
@@ -1160,11 +1160,7 @@
   }
 </script>
 <style scoped lang="scss">
-<<<<<<< HEAD
-	.search{
-=======
-	.el-form-item {
->>>>>>> 98b00ac7a665fe17543f5504b488fe4a334eee30
+  .search{
 		margin-bottom: 0;
 	}
 	.el-transfer-panel{
