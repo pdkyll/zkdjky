@@ -49,12 +49,14 @@
         <el-table-column
           :resizable=false
           prop="bldat"
+          width="100"
           align="center"
           label="凭证日期">
         </el-table-column>
         <el-table-column
           :resizable=false
           align="center"
+          width="100"
           label="凭证编号">
           <template slot-scope="scope">
             <el-button type="text" @click="getListDetails(scope.row.belnr)">{{scope.row.belnr}}</el-button>
@@ -70,6 +72,7 @@
           :resizable=false
           prop="cpccName"
           align="center"
+          width="150"
           label="子公司">
         </el-table-column>
         <el-table-column

@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm">
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="no-mb ml-10" label="日期">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="ml-10" label="日期">
           <el-date-picker
             size="small"
             v-model="ruleForm.time"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="no-mb" label="名称">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" label="名称">
           <el-input
             size="small"
             placeholder="输入指标名称"
@@ -154,8 +154,12 @@
                 :format="formData2T.dateType[formData2.dateType-1].format"
                 :value-format="formData2T.dateType[formData2.dateType-1].value_format"
                 v-model="formData2.date1"
-                style="width: 100%;"></el-date-picker>
+                style="width: 100%;">
+              </el-date-picker>
+              <!--隐藏的季度选择-->
+              <div class="startQuarter" v-if="startQuarter"></div>
             </el-form-item>
+
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">至</el-col>
           <el-col :span="9">
@@ -313,6 +317,7 @@
   export default{
     data () {
       return {
+        startQuarter:false,
         dialogVisible: false,
         dialogVisible2: false,
         dialogVisible3: false,
@@ -591,24 +596,24 @@
       },
       handleClose () {
         this.dialogVisible = false
+        this.formData1.remarks = ''
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
-        this.formData1.remarks = ''
       },
       handleClose2 () {
         this.dialogVisible2 = false
+        this.formData1.remarks = ''
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
-        this.formData1.remarks = ''
       },
       handleClose3 () {
         this.dialogVisible3 = false
+        this.formData1.remarks = ''
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
-        this.formData1.remarks = ''
       },
       /*预览图标的隐藏展示*/
       barShow () {
@@ -1155,7 +1160,7 @@
   }
 </script>
 <style scoped lang="scss">
-	.el-form-item{
+	.el-form-item {
 		margin-bottom: 0;
 	}
   .join-btn{
@@ -1182,5 +1187,15 @@
   }
   .center-form{
     text-align: center;
+  }
+  .startQuarter{
+    width: 140%;
+    height: 200px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 50px;
+    z-index: 100;
+    background: white;
   }
 </style>

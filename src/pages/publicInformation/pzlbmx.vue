@@ -71,202 +71,202 @@
         <el-table-column
           :resizable=false
           prop="matnr"
-          width="200"
+          width="150"
           align="center"
           label="物料">
         </el-table-column>
         <el-table-column
           :resizable=false
           prop="menge"
-          width="200"
+          width="150"
           align="center"
           label="数量">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="meins"
           align="center"
           label="计量单位">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="gjahr"
           align="center"
           label="财年">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="shkzg"
           align="center"
           label="借贷标识">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="koart"
           align="center"
           label="科目类型">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="hkont"
           align="center"
           label="总账科目">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="kokrs"
           align="center"
           label="成本中心">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="kunnr"
           align="center"
           label="客户">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="lifnr"
           align="center"
           label="供应商">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="pswbt"
           align="center"
           label="总账金额">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="pswsl"
           align="center"
           label="总账货币">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="mwskz"
           align="center"
           label="税码">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="sgtxt"
           align="center"
           label="摘要">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="xnegp"
           align="center"
           label="反记账">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zlsch"
           align="center"
           label="付款方式">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zfbdt"
           align="center"
           label="付款基准日期">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="umskz"
           align="center"
           label="特别总账标志">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="xumsw"
           align="center"
           label="销售相关">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="xopvw"
           align="center"
           label="未清项目管理">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zbilk"
           align="center"
           label="资产负债表科目">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="gvtyp"
           align="center"
           label="损益表科目类型">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="fkber"
           align="center"
           label="费用类型">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zzbkitem"
           align="center"
           label="拨款项目">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zzxjll"
           align="center"
           label="现金流量项">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="zztzitem"
           align="center"
           label="投资项目">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="bschl"
           align="center"
           label="记账代码">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="augbl"
           align="center"
           label="清帐凭证">
         </el-table-column>
         <el-table-column
           :resizable=false
-          width="200"
+          width="150"
           prop="augdt"
           label="清帐日期">
           align="center"
@@ -275,10 +275,10 @@
         </el-table-column>
       </el-table>
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff;width: 20%">
+        <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff;width: 25%">
           {{lowerCase}}
         </el-form-item>
-        <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff;width: 20%">
+        <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff;width: 40%">
           {{upperCase}}
         </el-form-item>
       </el-form>
@@ -371,7 +371,7 @@ export default{
 		margin-bottom: 0;
 	}
   .el-form--inline .el-form-item{
-    width: 14%;
+    width: 18%;
   }
   .onlyBtn{
     position: absolute;
