@@ -2,7 +2,7 @@
   <div>
     <div class="shadow-box">
       <el-form :inline="true" :model="ruleForm">
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="ml-10" label="日期">
+        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" class="ml-10 search" label="日期">
           <el-date-picker
             size="small"
             v-model="ruleForm.time"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" label="名称">
+        <el-form-item class="search" v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1" label="名称">
           <el-input
             size="small"
             placeholder="输入指标名称"
@@ -1160,7 +1160,11 @@
   }
 </script>
 <style scoped lang="scss">
+<<<<<<< HEAD
   .search{
+=======
+	.search{
+>>>>>>> 8e731d6025e7285dd00971b6d6335f6f1a273067
 		margin-bottom: 0;
 	}
 	.el-transfer-panel{
