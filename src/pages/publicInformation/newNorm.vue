@@ -23,7 +23,7 @@
             v-model.trim="ruleForm.infoName">
           </el-input>
         </el-form-item>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1">
+        <el-form-item class="search" v-if="$store.getters.getPermissions.indexOf('queryFinancialIndex')>-1">
           <el-button type="primary" size="small" @click="searchList" class="green-btn">查询</el-button>
         </el-form-item>
         <el-form-item v-if="$store.getters.getPermissions.indexOf('addFinancialIndex')>-1" class="pull-right no-mb">
@@ -126,9 +126,9 @@
           </el-col>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="next">下一步</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!--弹框2-->
     <el-dialog
@@ -206,10 +206,10 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="last2">上一步</el-button>
         <el-button type="primary" @click="next2">下一步</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!--弹框3-->
     <el-dialog
@@ -226,7 +226,7 @@
       </div>
       <el-form :model="formData3" :rules="rules" ref="formData3" label-width="120px" class="demo-ruleForm">
         <el-form-item label="逻辑指标库" prop="indicatorIndex">
-          <el-select v-model="formData3.indicatorIndex" placeholder="请选择逻辑指标库">
+          <el-select style="width:83.3333%" v-model="formData3.indicatorIndex" placeholder="请选择逻辑指标库">
             <el-option-group
               v-for="group in formData3T.typeArr"
               :key="group.value"
@@ -269,10 +269,10 @@
           </el-col>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="last3">上一步</el-button>
         <el-button type="primary" @click="next3">确 定</el-button>
-      </span>
+      </div>
     </el-dialog>
     <!--取消发布提示-->
     <el-dialog
@@ -281,10 +281,10 @@
       width="30%"
       :before-close="cancelClose">
       <span>取消发布会同步取消订阅人对此条信息的订阅，是否确定取消发布？</span>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
     <el-button @click="cancelNormDialog = false">取 消</el-button>
     <el-button type="primary" @click="cancelNorm">确 定</el-button>
-  </span>
+  </div>
     </el-dialog>
     <!--删除发布提示-->
     <el-dialog
@@ -1155,8 +1155,11 @@
   }
 </script>
 <style scoped lang="scss">
-	.el-form-item{
+	.search{
 		margin-bottom: 0;
+	}
+	.el-transfer-panel{
+		width:240px
 	}
   .join-btn{
     width: 150px;

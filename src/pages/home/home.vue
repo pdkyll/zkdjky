@@ -569,6 +569,7 @@ export default{
 .el-main{
   position: relative;
   padding: 0;
+  overflow: hidden;
 }
 .management_wrap{
 	width:100%;

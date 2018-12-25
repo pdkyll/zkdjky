@@ -397,4 +397,8 @@ export default{
   .center-form{
     text-align: center;
   }
+  .ml-10{
+  	margin-left: 20px;
+  	margin-right: 0;
+  }
 </style>

@@ -4,7 +4,7 @@
 <template>
   <div>
     <el-row class="table-list" :gutter="20" v-loading="dialogVisible">
-      <el-col :span="6" v-for="(i, index) in panel" :key="index">
+      <el-col :span="8" v-for="(i, index) in panel" :key="index">
         <div class="panel-publicInformation">
           <div class="panel-heading">
             <div class="panel-title">{{i.title}}</div>
@@ -15,7 +15,7 @@
                 <div style="text-align: left; width: 34%" :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
                 <!--<div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>-->
                 <div style="width: 32%;">
-                  <el-rate v-model="item.WEIGHTINESS" :title="'权重'+item.WEIGHTINESS+'星'" disabled style="line-height: 0.2;"></el-rate>
+                  <el-rate v-model="item.WEIGHTINESS" :title="'权重'+item.WEIGHTINESS+'星'" disabled style="line-height: 2.2;"></el-rate>
                 </div>
                 <div style="text-align: center; width: 22%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
                 <div style="text-align: right; width: 12%">
@@ -273,7 +273,7 @@ export default{
     font-size: 14px;
     color: #303030;
     >div{
-      line-height: 26px;
+      line-height: 38px;
       overflow: hidden;
       text-align: left;
       text-overflow: ellipsis;

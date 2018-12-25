@@ -745,12 +745,6 @@ export default{
 	.search{
 		margin-bottom: 0;
 	}
-	.el-dialog__body{
-		padding-bottom: 10px;
-	}
-	.el-tree-node__content{
-   height: 30px;
-}
   .join-btn{
     width: 150px;
     color: white;

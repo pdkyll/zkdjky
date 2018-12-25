@@ -16,7 +16,9 @@
       </el-form>
     </div>
     <div class="f-box">
-      <h5>统计内容</h5>
+      <h5>
+      	<!--统计内容-->
+      </h5>
       <div class="left-tree pull-left shadow">
         <el-tree :data="data"
                  :props="defaultProps"

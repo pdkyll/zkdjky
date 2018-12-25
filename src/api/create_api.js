@@ -31,7 +31,7 @@ export function createAPI () {
     if(res.data.code == 11030113 || res.code == 11030113){
         Notification({
           title: '提示信息',
-          message: 'token失效请重新登陆',
+          message: 'token失效请重新登录',
           type: 'error',
           duration: '2000'
         })

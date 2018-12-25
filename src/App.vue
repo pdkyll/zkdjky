@@ -209,4 +209,7 @@ input:-webkit-autofill:focus {
 .dialog-footer{
 	text-align: center;
 }
+.el-rate__icon{
+	margin-right: 2px !important;
+}
 </style>
