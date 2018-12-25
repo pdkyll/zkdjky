@@ -195,6 +195,7 @@ export default {
   	height:auto;
   	margin:95px auto 80px;
   	position: relative;
+  	cursor: pointer;
   }
   .el-main .changePassword i{
   	position: absolute;
@@ -219,7 +220,8 @@ export default {
   .el-main .layout{
   	width:481px;
   	height:auto;
-  	margin:0 auto 100px
+  	margin:0 auto 100px;
+  	cursor:pointer;
   }
   .el-main .layout p{
   	width:100%;
@@ -279,6 +281,7 @@ export default {
  	margin:0 auto;
  	background: #bad115;
  	border-radius: 22px;
+ 	cursor: pointer;
  }
  .el-main>div .btn p:last-of-type{
  	margin-top: 20px;

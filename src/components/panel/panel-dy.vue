@@ -57,7 +57,7 @@
           <div class="e-table">
             <el-table
               :data="item.tableData"
-              border
+              :header-cell-style="{background:'#f0f1f1'}"
               style="width: 100%">
               <el-table-column
                 prop="date"

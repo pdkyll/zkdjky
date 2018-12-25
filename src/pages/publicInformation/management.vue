@@ -23,7 +23,7 @@
             @change="searchInput">
           </el-input>
         </el-form-item>
-        <el-form-item v-if="$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1">
+        <el-form-item class="search" v-if="$store.getters.getPermissions.indexOf('queryFormulaManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
         <el-form-item v-if="$store.getters.getPermissions.indexOf('addFormulaManagement')>-1" class="pull-right no-mb">
@@ -468,7 +468,7 @@ export default{
 }
 </script>
 <style scoped lang="scss">
-	.el-form-item{
+	.search{
 		margin-bottom: 0;
 	}
   .join-btn{
