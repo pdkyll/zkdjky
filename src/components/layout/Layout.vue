@@ -19,9 +19,9 @@
             <span>{{item.name}}</span>
           </el-menu-item>
         </router-link>
-        <el-submenu v-if="item.child && item.flag" v-for="(item, index) in menu_list" index="">
+        <el-submenu  v-if="item.child && item.flag" v-for="(item, index) in menu_list" index="">
           <template slot="title">
-            <i class="iconfont" :class="item.iClass"></i>
+          	<i class="iconfont" :class="item.iClass"></i>
             <span>{{item.name}}</span>
           </template>
           <el-menu-item-group>
