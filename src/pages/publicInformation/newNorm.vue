@@ -230,7 +230,7 @@
       </div>
       <el-form :model="formData3" :rules="rules" ref="formData3" label-width="120px" class="demo-ruleForm">
         <el-form-item label="逻辑指标库" prop="indicatorIndex">
-          <el-select style="width:83.3333%" v-model="formData3.indicatorIndex" placeholder="请选择逻辑指标库">
+          <el-select style="width:83.3333%" v-model="formData3.indicatorIndex" @change="indicatorChange" placeholder="请选择逻辑指标库">
             <el-option-group
               v-for="group in formData3T.typeArr"
               :key="group.value"
@@ -487,7 +487,7 @@
         rules: {
           statisticalName: [
             { required: true, message: '请输入统计表名称', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            { min: 2, max: 40, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ],
           remarks: [
             { min: 10, max: 200, message: '统计目的长度应在10到200个字符内', trigger: 'blur' }
@@ -517,7 +517,8 @@
         pieFlag: false,
         lineFlag: false,
         mingleFlag: false,
-        mingleData:{}
+        mingleData:{},
+        viewFlag:true
       }
     },
     components: {
@@ -625,7 +626,10 @@
               vm.pieFlag = false
               vm.lineFlag = false
               vm.mingleFlag = false
-              vm.previewChart()
+              /*判断是否已经调用过预览的接口了*/
+              if(vm.viewFlag){
+                vm.previewChart()
+              }
               vm.$nextTick(_ => {
                 vm.$refs.bar.resizeChart();
               })
@@ -644,7 +648,10 @@
               vm.barFlag = false
               vm.lineFlag = false
               vm.mingleFlag = false
-              vm.previewChart()
+              /*判断是否已经调用过预览的接口了*/
+              if(vm.viewFlag){
+                vm.previewChart()
+              }
               vm.$nextTick(_ => {
                 vm.$refs.pie.resizeChart()
               })
@@ -663,7 +670,10 @@
               vm.pieFlag = false
               vm.barFlag = false
               vm.mingleFlag = false
-              vm.previewChart()
+              /*判断是否已经调用过预览的接口了*/
+              if(vm.viewFlag){
+                vm.previewChart()
+              }
               vm.$nextTick(_ => {
                 vm.$refs.line.resizeChart()
               })
@@ -682,7 +692,10 @@
               vm.pieFlag = false
               vm.lineFlag = false
               vm.barFlag = false
-              vm.previewChart()
+              /*判断是否已经调用过预览的接口了*/
+              if(vm.viewFlag){
+                vm.previewChart()
+              }
               vm.$nextTick(_ => {
                 vm.$refs.mingle.resizeChart()
               })
@@ -691,6 +704,11 @@
             console.log('error submit!')
           }
         })
+      },
+      indicatorChange(val){
+        console.log(val)
+        /*当下拉框选择变化以后可调用接口*/
+        this.viewFlag = true
       },
       /*新建指标*/
       createNorm (){
@@ -801,6 +819,8 @@
        */
       previewChart (){
         let _this = this
+        /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
+        _this.viewFlag = false
         /**
          * 处理第二页的数据
          */
@@ -1008,6 +1028,7 @@
       /*发布指标*/
       publishNorm(row){
         let vm = this
+        vm.loading=true
         let header = {
           accessToken:  sessionStorage.getItem('accessToken'),
           projectId: sessionStorage.getItem('projectId')
@@ -1066,6 +1087,7 @@
       /*订阅指标*/
       subscriberNorm(row){
         let vm = this
+        vm.loading=true
         let header = {
           accessToken:  sessionStorage.getItem('accessToken'),
           projectId: sessionStorage.getItem('projectId')
@@ -1093,6 +1115,7 @@
       /*取消订阅指标*/
       un_SubscriberNorm(row){
         let vm = this
+        vm.loading=true
         let header = {
           accessToken:  sessionStorage.getItem('accessToken'),
           projectId: sessionStorage.getItem('projectId')
@@ -1124,6 +1147,7 @@
       },
       affirmDeleteNorm(){
         let vm = this
+        vm.loading=true
         let header = {
           accessToken:  sessionStorage.getItem('accessToken'),
           projectId: sessionStorage.getItem('projectId')

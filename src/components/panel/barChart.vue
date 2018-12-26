@@ -101,7 +101,19 @@
                 formatter: function (s) {
                   return (new Date(s)).getFullYear()
                 }
-              }
+              },
+              checkpointStyle: {
+                color: '#AAABB4',
+                borderColor: 'rgba(213, 214, 85, .5)'
+              },
+              itemStyle: {
+                normal: {
+                  color: '#AAABB4'
+                },
+                emphasis: {
+                  color: '#AAABB4'
+                }
+              },
             },
             title: {
             },
@@ -145,7 +157,15 @@
             series: function () {
               let array = new Array()
               for (let p in chartData.products) {
-                array.push({ name: chartData.products[p], type: 'bar' })
+                array.push({
+                  name: chartData.products[p],
+                  type: 'bar' ,
+                  itemStyle:{
+                    normal:{
+                      color:'#d5d655'
+                    }
+                  }
+                })
               }
               return array
             }()
@@ -178,7 +198,9 @@
       },
       resizeChart(){
         let vm = this
-        if(document.getElementById(this.elId).style !== null){
+        if(document.getElementById(this.elId).style == null){
+          return
+        }else{
           document.getElementById(this.elId).style.width = '100%'
         }
         setTimeout(function () {
@@ -205,7 +227,7 @@
 <style scoped>
   .chart{
     float: left;
-    height: 440px;
-    padding:8px 20px 0
+    height: 430px;
+    padding:8px 20px 8px
   }
 </style>

@@ -15,7 +15,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="f-box">
+    <div class="f-box" v-loading="loading">
       <h5>
       	<!--统计内容-->
       </h5>
@@ -32,7 +32,6 @@
         </div>
         <div class="mt-20">
           <el-table
-            v-loading="loading"
             :data="tableData"
             :header-cell-style="{background:'#f0f1f1'}"
             style="width: 100%">
@@ -349,9 +348,6 @@ export default{
         if(res.length > 0) {
           vm.historyTableColumnHeader = res
           vm.getHistoryTableContent()
-          vm.$nextTick(() => {
-            vm.loading = false
-          })
         }
       }).catch(error => {
         console.error(error)
@@ -359,6 +355,7 @@ export default{
     },
     getHistoryTableContent () {
       let vm = this
+      this.loading = true
       let param = {
           id: vm.tableId,
           company: vm.ruleForm.companyName || '',
@@ -370,7 +367,6 @@ export default{
         projectId: sessionStorage.getItem('projectId')
       }
       vm.$store.dispatch('GET_HISTORY_INFO_BY_TABLE_NAME', {param,header}).then((res, req)=>{
-        console.log(res.data)
         vm.totalCount = res.data.pop().totalNum
         if(res.code === 16000003){
           vm.tableData = res.data;
@@ -378,6 +374,7 @@ export default{
           vm.tableData = []
           console.log('接口错误')
         }
+        this.loading = false
       }).catch(error => {
         console.error(error)
       });

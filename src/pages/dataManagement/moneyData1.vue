@@ -227,6 +227,7 @@ export default{
 </script>
 <style scoped lang="scss">
   .box-wrapper{
+    min-height: 350px;
     height:auto;
     background: white;
     position: relative;

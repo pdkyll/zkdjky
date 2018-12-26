@@ -137,6 +137,14 @@
           label="冲销标识">
         </el-table-column>
       </el-table>
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff;width: 20%">
+          {{lowerCase}}
+        </el-form-item>
+        <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff;width: 40%">
+          {{upperCase}}
+        </el-form-item>
+      </el-form>
       <div class="fy-box">
         <el-pagination
           background
@@ -189,6 +197,8 @@ export default{
           { required: true, message: '请选择类型', trigger: 'change' }
         ]
       },
+      lowerCase: '',
+      upperCase: '',
       tableData: []
     }
   },
@@ -237,7 +247,6 @@ export default{
             companyName: "全部"
           })
         }
-        _this.loading = false
       }).catch(error => {
         console.error(error)
       })
@@ -255,12 +264,16 @@ export default{
       }
       vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
         if(res.code === 16000003){
-          vm.loading= false
-          vm.totalcount = res.data.pop().totalnum
+          vm.totalcount = res.totalNum
+          vm.lowerCase = res.lowerCase
+          vm.upperCase = res.upperCase
           vm.tableData = res.data || []
         }else{
           console.log('接口错误')
         }
+        setTimeout(function () {
+          vm.loading = false
+        },1000)
       }).catch(error => {
           console.error(error);
       })

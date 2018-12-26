@@ -211,7 +211,6 @@ input:-webkit-autofill:focus {
 	margin-right: 2px !important;
 }
 .el-table__body-wrapper{
-	height: 400px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }

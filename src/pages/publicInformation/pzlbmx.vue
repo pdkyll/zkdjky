@@ -275,7 +275,7 @@
         </el-table-column>
       </el-table>
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff;width: 25%">
+        <el-form-item class="no-mb ml-10" label="总账合计金额" style="color: #3385ff;width: 20%">
           {{lowerCase}}
         </el-form-item>
         <el-form-item class="no-mb ml-10" label="金额大写" style="color: #3385ff;width: 40%">

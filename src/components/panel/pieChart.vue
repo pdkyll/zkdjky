@@ -105,7 +105,19 @@
                 formatter: function (s) {
                   return (new Date(s)).getFullYear()
                 }
-              }
+              },
+              checkpointStyle: {
+                color: '#AAABB4',
+                borderColor: 'rgba(213, 214, 85, .5)'
+              },
+              itemStyle: {
+                normal: {
+                  color: '#AAABB4'
+                },
+                emphasis: {
+                  color: '#AAABB4'
+                }
+              },
             },
             title: {
             },
@@ -123,7 +135,12 @@
                 type: 'pie',
                 //center: ['75%', '35%'],
                 radius: '50%',
-                z: 100
+                z: 100,
+                itemStyle:{
+                  normal:{
+                    color:'#d5d655'
+                  }
+                }
               });
               return array
             }()
@@ -186,7 +203,7 @@
 <style scoped>
   .chart{
     float: left;
-    height: 440px;
-    padding:8px 20px 0
+    height: 430px;
+    padding:8px 20px 8px
   }
 </style>

@@ -243,15 +243,15 @@ export default{
       rules: {
         name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 40, message: '长度在 2 到 40 个字符', trigger: 'blur' }
         ],
         pass: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
         ],
         pass2: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
         ],
         gs: [
           { required: true, message: '请选择公司', trigger: 'change' }
