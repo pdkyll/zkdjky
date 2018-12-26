@@ -552,7 +552,7 @@ export default{
 	}
 	.el-tree{
 		border:1px solid #dbdbdb;
-		height:150px;
+		height:190px;
 		overflow-y: auto;
 	}
 	.el-tree-node__content{

@@ -85,8 +85,8 @@ body .el-table th.gutter{
   clear:both;
 }
 .fy-box{
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin-top: 30px;
+  margin-bottom: 10px;
   width: 100%;
   text-align: center;
 }
@@ -211,8 +211,15 @@ input:-webkit-autofill:focus {
 	margin-right: 2px !important;
 }
 .el-table__body-wrapper{
-	height: 350px;
+	height: 400px;
 	overflow-x: hidden;
 	overflow-y: auto;
+}
+.el-submenu__title{
+  height: 40px;
+  line-height: 40px;
+}
+.el-submenu__title:hover{
+  background: #e9f4c7 !important;
 }
 </style>

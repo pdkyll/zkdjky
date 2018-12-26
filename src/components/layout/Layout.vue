@@ -222,7 +222,7 @@ export default{
               flag:this.$store.getters.getPermissions.indexOf('personnelIndex')>-1?true:false
             }
           ],
-          iClass:'icon-zhishu'
+          iClass:'icon-fenxi1'
         },
       ]
     }
