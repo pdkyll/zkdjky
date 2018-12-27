@@ -107,6 +107,7 @@ export default{
       loadingData:true,
       showMore:false,
       page:1,
+      hasMore:true,
     }
   },
   components: {
@@ -118,6 +119,7 @@ export default{
   methods: {
     open_hide (flag,dis,bar,line,pie) {
       let vm = this
+
       if (this.tjList[flag].isShow !== !this.tjList[flag].isShow) {
         this.tjList[flag].isShow = !this.tjList[flag].isShow
         let disRef = vm.$refs[dis]
@@ -126,15 +128,51 @@ export default{
         let pieRef = vm.$refs[pie]
         if(disRef!== undefined){
           disRef[0].resizeChart();
+          if(disRef[1]){
+            disRef[1].resizeChart();
+          }
+          if(disRef[2]){
+            disRef[2].resizeChart();
+          }
+          if(disRef[3]){
+            disRef[3].resizeChart();
+          }
         }
         if(barRef!== undefined){
           barRef[0].resizeChart();
+          if(barRef[1]){
+            barRef[1].resizeChart();
+          }
+          if(barRef[2]){
+            barRef[2].resizeChart();
+          }
+          if(barRef[3]){
+            barRef[3].resizeChart();
+          }
         }
         if(lineRef!== undefined){
           lineRef[0].resizeChart();
+          if(lineRef[1]){
+            lineRef[1].resizeChart();
+          }
+          if(lineRef[2]){
+            lineRef[2].resizeChart();
+          }
+          if(lineRef[3]){
+            lineRef[3].resizeChart();
+          }
         }
         if(pieRef!== undefined){
           pieRef[0].resizeChart();
+          if(pieRef[1]){
+            pieRef[1].resizeChart();
+          }
+          if(pieRef[2]){
+            pieRef[2].resizeChart();
+          }
+          if(pieRef[3]){
+            pieRef[3].resizeChart();
+          }
         }
       }
     },
@@ -150,6 +188,12 @@ export default{
           disRef[0].resizeChart();
           if(disRef[1]){
             disRef[1].resizeChart();
+          }
+          if(disRef[2]){
+            disRef[2].resizeChart();
+          }
+          if(disRef[3]){
+            disRef[3].resizeChart();
           }
         }
         if(barRef!== undefined){
@@ -259,54 +303,61 @@ export default{
     /*获取更多*/
     getMore(){
       let _this = this
-      _this.page++
-      _this.loadingData = true
-      let header = {
-        accessToken: sessionStorage.getItem('accessToken'),
-        projectId: sessionStorage.getItem('projectId')
-      }
-      let param = {
-        creator: sessionStorage.getItem('accountId'),
-        pageNum:_this.page,
-        pageSize:2
-      }
-      _this.$store.dispatch('GET_ATTENTION_LIST', {param, header}).then(res => {
-        if(res.data.code === 16000003){
-          let data = res.data.data.viewResult
-          if(data.length <1){
-            _this.$message('没有更多订阅信息了');
-          }else{
-            for(let i=0;i<data.length;i++){
-              let atlasArr = data[i].atlas.split(',')
-              let obj = {
-                isShow: false,
-                dis: atlasArr.indexOf('4')>=0?{show:true,ref:'dis_'+i+'_4'}:{show:false,ref:'dis_'+i+'_4'},
-                bar: atlasArr.indexOf('1')>=0?{show:true,ref:'bar_'+i+'_1'}:{show:false,ref:'bar_'+i+'_1'},
-                line: atlasArr.indexOf('2')>=0?{show:true,ref:'line_'+i+'_2'}:{show:false,ref:'line_'+i+'_2'},
-                pie: atlasArr.indexOf('3')>=0?{show:true,ref:'pie_'+i+'_3'}:{show:false,ref:'pie_'+i+'_3'},
-                index: i +_this.page + _this.page,
-                data_id: data[i].id,
-                type: data[i].type,
-                name: data[i].statisticalName,
-                sj: data[i].dateRange,
-                gs: data[i].companyName,
-                cp: data[i].productName,
-                bm: data[i].departmentName,
-                md: data[i].remarks,
-                view: data[i].subscribeCount,
-                like: data[i].funp,
-                chartData: data[i].financialMap,
-                tableHeader: data[i].totalTableData.headerMap,
-                tableData: data[i].totalTableData.transformData
+      if(_this.hasMore){
+        _this.page++
+        _this.loadingData = true
+        let header = {
+          accessToken: sessionStorage.getItem('accessToken'),
+          projectId: sessionStorage.getItem('projectId')
+        }
+        let param = {
+          creator: sessionStorage.getItem('accountId'),
+          pageNum:_this.page,
+          pageSize:2
+        }
+        _this.$store.dispatch('GET_ATTENTION_LIST', {param, header}).then(res => {
+          if(res.data.code === 16000003){
+            let data = res.data.data.viewResult
+            if(data.length <1){
+              _this.hasMore = false
+              _this.$message('没有更多订阅信息了');
+            }else{
+              for(let i=0;i<data.length;i++){
+                let atlasArr = data[i].atlas.split(',')
+                let obj = {
+                  isShow: false,
+                  dis: atlasArr.indexOf('4')>=0?{show:true,ref:'dis_'+i+'_4'}:{show:false,ref:'dis_'+i+'_4'},
+                  bar: atlasArr.indexOf('1')>=0?{show:true,ref:'bar_'+i+'_1'}:{show:false,ref:'bar_'+i+'_1'},
+                  line: atlasArr.indexOf('2')>=0?{show:true,ref:'line_'+i+'_2'}:{show:false,ref:'line_'+i+'_2'},
+                  pie: atlasArr.indexOf('3')>=0?{show:true,ref:'pie_'+i+'_3'}:{show:false,ref:'pie_'+i+'_3'},
+                  index: i +_this.page + _this.page,
+                  data_id: data[i].id,
+                  type: data[i].type,
+                  name: data[i].statisticalName,
+                  sj: data[i].dateRange,
+                  gs: data[i].companyName,
+                  cp: data[i].productName,
+                  bm: data[i].departmentName,
+                  md: data[i].remarks,
+                  view: data[i].subscribeCount,
+                  like: data[i].funp,
+                  chartData: data[i].financialMap,
+                  tableHeader: data[i].totalTableData.headerMap,
+                  tableData: data[i].totalTableData.transformData
+                }
+                _this.tjList.push(obj)
               }
-              _this.tjList.push(obj)
             }
           }
-        }
-        _this.loadingData = false
-      }).catch(error => {
-        console.log(error)
-      })
+          _this.loadingData = false
+        }).catch(error => {
+          console.log(error)
+        })
+      }
+      else{
+        this.$message('没有更多订阅信息了');
+      }
+
     },
     /*点赞*/
     like(dataId,type){

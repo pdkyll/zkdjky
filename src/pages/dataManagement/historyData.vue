@@ -372,7 +372,6 @@ export default{
           vm.tableData = res.data;
         }else{
           vm.tableData = []
-          console.log('接口错误')
         }
         this.loading = false
       }).catch(error => {

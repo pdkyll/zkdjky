@@ -227,13 +227,10 @@ export default {
   },
   methods: {
     handleNodeClick (data) {
-      console.log(data)
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
     },
     export2Excel (lister) {
       require.ensure([], () => {

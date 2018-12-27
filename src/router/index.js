@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const Layout = () => import('@/components/layout/Layout')
+/*const Layout = () => import('@/components/layout/Layout')
 const LayoutNoLeft = () => import('@/components/layout/layoutNoLeft')
 const Login = () => import('@/pages/login/login')
 const Home = () => import('@/pages/home/home')
@@ -21,7 +21,7 @@ const company = () => import('@/pages/jurisdiction/company')
 const department = () => import('@/pages/jurisdiction/department')
 const personCenter = () => import('@/pages/publicInformation/personCenter')       //  个人中心 12、19 gxb
 // 正在建设中
-const developing = () => import('@/components/public/developing')
+const developing = () => import('@/components/public/developing')*/
 Vue.use(Router)
 
 export default new Router({
@@ -30,123 +30,122 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component:  resolve => require(['@/pages/login/login'],resolve)
     },
     {
       path: '/home',
       name: 'Home',
-      component: Home
+      component:  resolve => require(['@/pages/home/home'],resolve)
     },
     {
       path: '/',
-      name: 'Layout',
-      component: Layout,
+      component:  resolve => require(['@/components/layout/Layout'],resolve),
       redirect: '/login',
       children: [
         {
           path: 'publicInformation',
           name: 'publicInformation',
-          component: publicInformation
+          component:  resolve => require(['@/pages/publicInformation/publicInformation'],resolve)
         },
         {
           path: 'attention',
           name: 'attention',
-          component: attention
+          component:  resolve => require(['@/pages/publicInformation/attention'],resolve)
         },
         {
           path: 'management',
           name: 'management',
-          component: management
+          component:  resolve => require(['@/pages/publicInformation/management'],resolve)
         },
         {
           path: 'newNorm',
           name: 'newNorm',
-          component: newNorm
+          component:  resolve => require(['@/pages/publicInformation/newNorm'],resolve)
         },
         {
           path: 'dataLink',
           name: 'dataLink',
-          component: dataLink
+          component:  resolve => require(['@/pages/dataManagement/dataLink'],resolve)
         },
         {
           path: 'joinUp',
           name: 'joinUp',
-          component: joinUp
+          component:  resolve => require(['@/pages/dataManagement/joinUp'],resolve)
         },
         {
           path: 'role',
           name: 'role',
-          component: role
+          component:  resolve => require(['@/pages/jurisdiction/role'],resolve)
         },
         {
           path: 'user',
           name: 'user',
-          component: user
+          component:  resolve => require(['@/pages/jurisdiction/user'],resolve)
         },
         {
           path: 'company',
           name: 'company',
-          component: company
+          component:  resolve => require(['@/pages/jurisdiction/company'],resolve)
         },
         {
           path: 'department',
           name: 'department',
-          component: department
+          component:  resolve => require(['@/pages/jurisdiction/department'],resolve)
         },
         {
           path: 'moneyData',
           name: 'moneyData',
-          component: moneyData
+          component:  resolve => require(['@/pages/dataManagement/moneyData'],resolve)
         },
         {
           path: 'moneyData1',
           name: 'moneyData1',
-          component: moneyData1
+          component:  resolve => require(['@/pages/dataManagement/moneyData1'],resolve)
         },
         {
           path: 'historyData',
           name: 'historyData',
-          component: historyData
+          component:  resolve => require(['@/pages/dataManagement/historyData'],resolve)
         },
         {
           path: 'pzlb',
           name: 'pzlb',
-          component: pzlb
+          component:  resolve => require(['@/pages/publicInformation/pzlb'],resolve)
         },
         {
           path: 'pzlbmx',
           name: 'pzlbmx',
-          component: pzlbmx
+          component:  resolve => require(['@/pages/publicInformation/pzlbmx'],resolve)
         },
         {
           path: 'developing',
           name: 'developing',
-          component: developing
+          component:  resolve => require(['@/components/public/developing'],resolve)
         }
       ]
     },
     {
       path: '/LayoutNoLeft',
       name: 'LayoutNoLeft',
-      component: LayoutNoLeft,
+      component:  resolve => require(['@/components/layout/layoutNoLeft'],resolve),
       redirect: '/home',
       children: [
         {
           path: '/',
           name: 'publicInformation',
-          component: publicInformation
+          component:  resolve => require(['@/pages/publicInformation/publicInformation'],resolve)
         },
         {
           path: 'attention',
           name: 'attention',
-          component: attention
+          component:  resolve => require(['@/pages/publicInformation/attention'],resolve)
         }
       ]
     },
     {
     	path:'/personCenter',
     	name:'personCenter',
-    	component:personCenter
+      component:  resolve => require(['@/pages/publicInformation/personCenter'],resolve)
     }
   ]
 })

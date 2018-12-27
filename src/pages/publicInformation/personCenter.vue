@@ -147,7 +147,6 @@ export default {
           }
           let urlData = sessionStorage.getItem('accountId')
           this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
-            console.log(res)
             if(res !== null && res.code == 16000003){
               this.dialog = false
             }

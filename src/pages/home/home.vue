@@ -80,7 +80,7 @@
         <li v-if="gzxx">
           <div @click="frameLink('LayoutNoLeft/attention')"  class="menu-item">
             <!--<img src="@/assets/rss.png" alt="">-->
-            <img src="@/assets/home/home_attention.png" alt="">
+            <img src="@/assets/home/home_history.png" alt="">
           </div>
           <p>订阅信息</p>
         </li>
@@ -310,7 +310,7 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://10.220.1.6:31246'
+      this.frame.src= 'http://daas-website.tpaas.youedata.com'
       /**测试地址
        * http://daas-website.tpaas.youedata.com
        */
@@ -318,7 +318,7 @@ export default{
        * http://10.220.1.6:31246
        */
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://10.220.1.6:31246');
+        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
         vm.loading = false
         vm.frameShow = true
       },1000)
@@ -547,7 +547,6 @@ export default{
           }
           let urlData = sessionStorage.getItem('accountId')
           this.$store.dispatch('UPDATE_USER_FOR_USERS', {param, header, urlData}).then(res => {
-            console.log(res)
             if(res !== null && res.code == 16000003){
               this.dialog = false
             }

@@ -14,7 +14,7 @@
               <li v-for="item in i.content" :key="item.title">
                 <div style="text-align: left; width: 34%" :title="item.INFO_NAME">{{item.INFO_NAME}}</div>
                 <!--<div style="text-align: center;" :title="item.WEIGHTINESS">{{item.WEIGHTINESS}}</div>-->
-                <div style="width: 32%;">
+                <div style="width: 32%;text-align: right;">
                   <el-rate v-model="item.WEIGHTINESS" :title="'权重'+item.WEIGHTINESS+'星'" disabled style="line-height: 2.2;"></el-rate>
                 </div>
                 <div style="text-align: center; width: 22%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
@@ -248,8 +248,8 @@ export default{
  .panel-heading{
     /*padding: 0 0 20px 0;*/
     border-bottom: 1px solid #eceff2;
-    height:145px;
-    line-height:145px;
+    height:60px;
+    line-height:60px;
     background:#bad115;
     .panel-title{
       font-size: 24px;

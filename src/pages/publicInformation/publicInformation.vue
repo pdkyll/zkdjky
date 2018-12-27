@@ -69,7 +69,6 @@ export default{
       this.$refs.myChild.getPublicMsg(this.ruleForm.companyName,this.ruleForm.start,this.ruleForm.end);
     },
     companyChange(val){
-      console.log(val)
     },
     timeChange(val){
       if(val == null){

@@ -145,6 +145,16 @@
       </div>
       <el-form :model="formData2" :rules="rules" ref="formData2" label-width="120px" class="demo-ruleForm">
         <el-form-item label="选择日期" required>
+          <el-col :span="24">
+            <el-form-item>
+              <el-radio-group v-model="formData2.dateType" @change="changeDate">
+                <el-radio label="1">天</el-radio>
+                <el-radio label="2">月</el-radio>
+                <el-radio label="3">季</el-radio>
+                <el-radio label="4">年</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
           <el-col :span="9">
             <el-form-item prop="date1">
               <el-date-picker
@@ -159,7 +169,6 @@
               <!--隐藏的季度选择-->
               <div class="startQuarter" v-if="startQuarter"></div>
             </el-form-item>
-
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">至</el-col>
           <el-col :span="9">
@@ -172,16 +181,6 @@
                 :value-format="formData2T.dateType[formData2.dateType-1].value_format"
                 v-model="formData2.date2"
                 style="width: 100%;"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item>
-              <el-radio-group v-model="formData2.dateType" @change="changeDate">
-                <el-radio label="1">天</el-radio>
-                <el-radio label="2">月</el-radio>
-                <el-radio label="3">季</el-radio>
-                <el-radio label="4">年</el-radio>
-              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -265,10 +264,10 @@
                   <el-button size="small" class="ml-20" @click="mingleShow">预览图形</el-button>
                 </div>
               </el-checkbox-group>
-              <bar-chart ref="bar" class="mb-10" :data="chartData" v-if="barFlag"></bar-chart>
-              <pie-chart ref="pie" class="mb-10" :data="chartData" v-if="pieFlag"></pie-chart>
-              <line-chart ref="line" class="mb-10" :data="chartData" v-if="lineFlag"></line-chart>
-              <mingle-chart ref="mingle" class="mb-10" :data="chartData" v-if="mingleFlag"></mingle-chart>
+              <bar-chart ref="bar" class="mb-10" v-loading="barLoading" :data="chartData" v-if="barFlag"></bar-chart>
+              <pie-chart ref="pie" class="mb-10" v-loading="pieLoading" :data="chartData" v-if="pieFlag"></pie-chart>
+              <line-chart ref="line" class="mb-10" v-loading="lineLoading" :data="chartData" v-if="lineFlag"></line-chart>
+              <mingle-chart ref="mingle" class="mb-10" v-loading="mingleLoading" :data="chartData" v-if="mingleFlag"></mingle-chart>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -518,7 +517,12 @@
         lineFlag: false,
         mingleFlag: false,
         mingleData:{},
-        viewFlag:true
+        viewFlag:true,
+        barLoading:true,
+        pieLoading:true,
+        lineLoading:true,
+        mingleLoading:true
+
       }
     },
     components: {
@@ -573,7 +577,55 @@
         _this.$refs['formData3'].validate((valid) => {
           if (valid) {
             _this.createNorm()
-            this.formData1.remarks = ''
+            this.barFlag = false
+            this.pieFlag = false
+            this.lineFlag = false
+            this.mingleFlag = false
+            this.formData1={
+              remarks: '',
+              statisticalName: ''
+            }
+            this.formData2= {
+              date1: '',
+              date2: '',
+              cpccs: [],
+              departments: [],
+              products: [],
+              dateType: '1'
+            }
+            this.formData2T= {
+              dateType: [{
+                type: 'date',
+                format: 'yyyy 年 MM 月 dd 日',
+                value_format: 'yyyy-MM-dd'
+              },{
+                type: 'month',
+                format: 'yyyy 年 MM 月',
+                value_format: 'yyyy-MM'
+              },{
+                type: 'quarter',
+                format: 'yyyy 年 M 季',
+                value_format: 'yyyy-M'
+              },{
+                type: 'year',
+                format: 'yyyy 年',
+                value_format: 'yyyy'
+              }],
+              companyTransfer: [],
+              departmentsTree: [],
+              productsArr: [],
+            }
+            this.formData3= {
+              indicatorIndex: '',
+              atlas: []
+            }
+            this.formData3T= {
+              typeArr: [],
+              typeOld: {}
+            }
+            this.$refs['formData1'].resetFields()
+            this.$refs['formData2'].resetFields()
+            this.$refs['formData3'].resetFields()
           } else {
             console.log('error submit!')
           }
@@ -597,24 +649,161 @@
       },
       handleClose () {
         this.dialogVisible = false
-        this.formData1.remarks = ''
+        this.barFlag = false
+        this.pieFlag = false
+        this.lineFlag = false
+        this.mingleFlag = false
+        this.formData1={
+          remarks: '',
+          statisticalName: ''
+        }
+        this.formData2= {
+          date1: '',
+          date2: '',
+          cpccs: [],
+          departments: [],
+          products: [],
+          dateType: '1'
+        }
+        this.formData2T= {
+          dateType: [{
+            type: 'date',
+            format: 'yyyy 年 MM 月 dd 日',
+            value_format: 'yyyy-MM-dd'
+          },{
+            type: 'month',
+            format: 'yyyy 年 MM 月',
+            value_format: 'yyyy-MM'
+          },{
+            type: 'quarter',
+            format: 'yyyy 年 M 季',
+            value_format: 'yyyy-M'
+          },{
+            type: 'year',
+            format: 'yyyy 年',
+            value_format: 'yyyy'
+          }],
+          companyTransfer: [],
+          departmentsTree: [],
+          productsArr: [],
+        }
+        this.formData3= {
+          indicatorIndex: '',
+          atlas: []
+        }
+        this.formData3T= {
+          typeArr: [],
+          typeOld: {}
+        }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
       },
       handleClose2 () {
         this.dialogVisible2 = false
-        this.formData1.remarks = ''
+        this.barFlag = false
+        this.pieFlag = false
+        this.lineFlag = false
+        this.mingleFlag = false
+        this.formData1={
+          remarks: '',
+          statisticalName: ''
+        }
+        this.formData2= {
+          date1: '',
+          date2: '',
+          cpccs: [],
+          departments: [],
+          products: [],
+          dateType: '1'
+        }
+        this.formData2T= {
+          dateType: [{
+            type: 'date',
+            format: 'yyyy 年 MM 月 dd 日',
+            value_format: 'yyyy-MM-dd'
+          },{
+            type: 'month',
+            format: 'yyyy 年 MM 月',
+            value_format: 'yyyy-MM'
+          },{
+            type: 'quarter',
+            format: 'yyyy 年 M 季',
+            value_format: 'yyyy-M'
+          },{
+            type: 'year',
+            format: 'yyyy 年',
+            value_format: 'yyyy'
+          }],
+          companyTransfer: [],
+          departmentsTree: [],
+          productsArr: [],
+        }
+        this.formData3= {
+          indicatorIndex: '',
+          atlas: []
+        }
+        this.formData3T= {
+          typeArr: [],
+          typeOld: {}
+        }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
       },
       handleClose3 () {
         this.dialogVisible3 = false
-        this.formData1.remarks = ''
+        this.barFlag = false
+        this.pieFlag = false
+        this.lineFlag = false
+        this.mingleFlag = false
+        /*清空数据以及校验*/
+        this.formData1={
+          remarks: '',
+          statisticalName: ''
+        }
+        this.formData2= {
+          date1: '',
+          date2: '',
+          cpccs: [],
+          departments: [],
+          products: [],
+          dateType: '1'
+        }
+        this.formData2T= {
+          dateType: [{
+            type: 'date',
+            format: 'yyyy 年 MM 月 dd 日',
+            value_format: 'yyyy-MM-dd'
+          },{
+            type: 'month',
+            format: 'yyyy 年 MM 月',
+            value_format: 'yyyy-MM'
+          },{
+            type: 'quarter',
+            format: 'yyyy 年 M 季',
+            value_format: 'yyyy-M'
+          },{
+            type: 'year',
+            format: 'yyyy 年',
+            value_format: 'yyyy'
+          }],
+          companyTransfer: [],
+          departmentsTree: [],
+          productsArr: [],
+        }
+        this.formData3= {
+          indicatorIndex: '',
+          atlas: []
+        }
+        this.formData3T= {
+          typeArr: [],
+          typeOld: {}
+        }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
+        this.chartData = {}
       },
       /*预览图标的隐藏展示*/
       barShow () {
@@ -706,13 +895,11 @@
         })
       },
       indicatorChange(val){
-        console.log(val)
         /*当下拉框选择变化以后可调用接口*/
         this.viewFlag = true
       },
       /*新建指标*/
       createNorm (){
-
         let _this = this
         /**
          * 处理第二页的数据
@@ -723,7 +910,6 @@
           departments: '',
           products: ''
         }
-        console.log(_this.formData2)
         searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
         searchCondition.companys = _this.formData2.cpccs.join(',') || ''
         searchCondition.departments = _this.formData2.departments.join(',') || ''
@@ -821,6 +1007,11 @@
         let _this = this
         /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
         _this.viewFlag = false
+        _this.barLoading = true
+        _this.pieLoading = true
+        _this.lineLoading = true
+        _this.mingleLoading = true
+        _this.chartData = {}
         /**
          * 处理第二页的数据
          */
@@ -866,6 +1057,23 @@
         _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
           if(res.code == 16000003){
             _this.chartData = res.data
+            /*if (_this.barFlag) {
+              _this.$nextTick(_ => {
+                  _this.$refs.bar.resizeChart();
+              })
+            }else if(_this.pieFlag){
+              _this.$nextTick(_ => {
+                  _this.$refs.pie.resizeChart();
+              })
+            }else if(_this.lineFlag){
+              _this.$nextTick(_ => {
+                  _this.$refs.line.resizeChart();
+              })
+            }else if(_this.mingleFlag){
+              _this.$nextTick(_ => {
+                  _this.$refs.mingle.resizeChart();
+              })
+            }*/
           }else{
             _this.$notify({
               title: '提示信息',
@@ -874,6 +1082,10 @@
               duration: '1000'
             })
           }
+          _this.barLoading = false
+          _this.pieLoading = false
+          _this.lineLoading = false
+          _this.mingleLoading = false
         }).catch(error => {
           console.log(error)
         })
@@ -913,7 +1125,6 @@
             type:'财务'
           }
           _this.$store.dispatch('GET_NORM_SELECT', {param, header}).then(res => {
-            console.log(res.data.data)
             if(res.data.code === 16000003){
               _this.formData3T.typeOld = res.data.data
               _this.formData3T.typeArr.push({
@@ -990,7 +1201,6 @@
               }
             }
           }else{
-            console.log('接口错误')
           }
         }).catch(error => {
           console.log(error)
@@ -1098,7 +1308,7 @@
           type:row.type
         }
         this.$store.dispatch('SUBSCRIBER_NORM', {param, header}).then(res => {
-          console.log(res.data)
+
           if(res.data.code == 16000003){
             vm.getNormTable()
           }

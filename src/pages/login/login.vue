@@ -191,9 +191,6 @@ export default{
           type: res.code === 16000003 ? 'success' : 'error',
           duration: '2000'
         })
-        setTimeout(function () {
-          _this.loading = false
-        },2000)
       }).catch((error) => {
         console.error(error)
       })

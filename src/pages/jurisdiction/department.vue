@@ -284,6 +284,7 @@
        */
       search_param_list () {
         let _this = this
+        _this.loading = true
         if(_this.ruleForm.companyName === 'all'){
           _this.pageShow = true
           _this.search_list()
@@ -300,7 +301,6 @@
           projectId :sessionStorage.getItem('projectId'),
         }
         _this.$store.dispatch('PROVIDER_MANAGE_BY_CODE', { param, header }).then((res, req) => {
-          console.log(res)
           _this.tableData = []
           if(res.data.code !== 16000003){
             return
@@ -319,12 +319,7 @@
               departmentName: resultData[i].name
             })
           }
-          _this.$notify({
-            title: '提示信息',
-            message: res.data.code === 16000003 ? '部门列表加载成功' : '部门列表加载失败',
-            type: res.data.code === 16000003 ? 'success' : 'error',
-            duration: '2000'
-          })
+          _this.loading = false
         }).catch((error) => {
           console.error(error)
         })

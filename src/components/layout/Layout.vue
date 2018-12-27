@@ -275,7 +275,6 @@ export default{
       if(vm.menu_list[i].flag){
         vm.menuTitle = vm.menu_list[i].name
         vm.activeIndex = i + ''
-        console.log(vm.menuTitle)
         return
       }
     }

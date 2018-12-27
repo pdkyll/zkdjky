@@ -264,12 +264,11 @@ export default{
       }
       vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
         if(res.code === 16000003){
-          vm.totalcount = res.totalNum
-          vm.lowerCase = res.lowerCase
-          vm.upperCase = res.upperCase
-          vm.tableData = res.data || []
+          vm.totalcount = res.data.totalNum
+          vm.lowerCase = res.data.lowerCase
+          vm.upperCase = res.data.upperCase
+          vm.tableData = res.data.maps || []
         }else{
-          console.log('接口错误')
         }
         setTimeout(function () {
           vm.loading = false

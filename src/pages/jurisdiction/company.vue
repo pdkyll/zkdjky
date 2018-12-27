@@ -133,11 +133,11 @@ export default{
       rules: {
         name: [
           { required: true, message: '请输入公司名称', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
         ],
         cpcc: [
           { required: true, message: '请输入数据代码', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ]
       },
       ruleFormUpdate:{
@@ -190,7 +190,6 @@ export default{
             _this.loading = false
           })
         }else{
-          console.log("接口错误")
         }
 
       }).catch((error) => {
@@ -241,11 +240,11 @@ export default{
           }
           this.$store.dispatch('PROVIDER_MANAGE_INSERT', { param, header }).then((res, req) => {
             if(res.code === 16000003){
-              this.ruleFormModule.desc = ""
-              this.ruleFormModule.name = ""
-              this.ruleFormModule.cpcc = ""
               _this.search_list()
             }
+            this.ruleFormModule.desc = ""
+            this.ruleFormModule.name = ""
+            this.ruleFormModule.cpcc = ""
             _this.$notify({
               title: '提示信息',
               message: res.msg,
@@ -265,10 +264,12 @@ export default{
     },
     gsClose () {
       this.dialog_gs = false
+      this.ruleFormModule.desc = ""
       this.$refs['ruleFormModule'].resetFields()
     },
     cancelInsert(formName){
       this.dialog_gs = false
+      this.ruleFormModule.desc = ""
       this.$refs[formName].resetFields()
     },
     /*修改公司*/
@@ -335,7 +336,6 @@ export default{
           this.search_list()
           this.dialogDelete = false
         }else{
-          console.log("接口错误")
         }
         _this.$notify({
           title: '提示信息',

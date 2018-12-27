@@ -151,10 +151,8 @@ export default{
   },
   methods: {
     onSubmit () {
-      console.log(this.ruleForm.companyName, this.ruleForm.date1, this.ruleForm.date2)
     },
     handleClick (row) {
-      console.log(row)
     }
   },
   mounted () {

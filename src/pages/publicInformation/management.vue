@@ -279,7 +279,6 @@ export default{
       this.deleteDialogVisible = true;
     },
     qz_change (val) {
-      console.log(val)
     },
     handleSizeChange (val) {
       this.ruleForm.pageNum = val
@@ -290,7 +289,6 @@ export default{
       this.publicInformationList()
     },
     isEmpty (str) {
-      console.log(str)
       if(str === undefined || str === null || str === '') {
         return false
       }else{

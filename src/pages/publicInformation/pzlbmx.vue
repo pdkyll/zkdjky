@@ -351,7 +351,6 @@ export default{
           vm.lowerCase = res.data.data.lowerCase
           vm.upperCase = res.data.data.upperCase
         }else{
-          console.log(res.data.code)
         }
         vm.loading.close()
       }).catch(error => {
