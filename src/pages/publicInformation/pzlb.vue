@@ -22,6 +22,14 @@
               v-model="ruleForm.belnr">
             </el-input>
           </el-form-item>
+          <el-form-item class="no-mb" label="凭证类型">
+            <el-input
+              size="small"
+              placeholder="输入类型"
+              style="width: 150px"
+              v-model="ruleForm.blart">
+            </el-input>
+          </el-form-item>
           <el-form-item class="no-mb" label="成员企业">
             <el-select size="small" v-model="ruleForm.cpcc" style="width: 150px" placeholder="请选择成员企业" @change="companyChange">
               <el-option v-for="item in ptCompany" :key="item.code" :label="item.companyName" :value="item.cPCC"></el-option>
@@ -178,6 +186,7 @@ export default{
         cpcc: '',
         childCpcc: '',
         belnr: '',
+        blart:'',
         pageNum:1,
         pageSize:10
       },
@@ -264,8 +273,9 @@ export default{
       }
       vm.$store.dispatch('GET_FINANCE_TABLE', {param, header}).then((res, req) => {
         if(res.code === 16000003){
+          let money = vm.toMoney(res.data.lowerCase)
           vm.totalcount = res.data.totalNum
-          vm.lowerCase = res.data.lowerCase
+          vm.lowerCase = money
           vm.upperCase = res.data.upperCase
           vm.tableData = res.data.maps || []
         }else{
@@ -276,6 +286,13 @@ export default{
       }).catch(error => {
           console.error(error);
       })
+    },
+    /*转换金额模式*/
+    toMoney(num){
+      num = num.toFixed(2);
+      num = parseFloat(num)
+      num = num.toLocaleString();
+      return num;//返回的是字符串23,245.12保留2位小数
     },
     getListDetails (belnr) {
       let vm = this

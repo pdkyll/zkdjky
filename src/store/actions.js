@@ -118,6 +118,17 @@ export default {
     return
   },
   /**
+   * 存储预览chart数据
+   * @param commit
+   * @param state
+   * @param name
+   * @constructor
+   */
+  CHARTS_DATA:({commit, state}, {data}) =>{
+    commit('SET_CHARTS_DATA',{data})
+    return
+  },
+  /**
    * 登陆接口
    * @param commit
    * @param state

@@ -74,7 +74,7 @@
           </div>
         </div>
         <div style="width: 100%;text-align: center">
-          <el-button type="text"  @click="getMore" v-if="showMore">点击加载更多  </el-button>
+          <el-button type="text" v-loading="loadingBtn" element-loading-text="拼命加载中"  @click="getMore" v-if="showMore">点击加载更多  </el-button>
         </div>
 
         <el-dialog
@@ -105,6 +105,7 @@ export default{
       dialogDelete:false,
       tjList: [],
       loadingData:true,
+      loadingBtn:false,
       showMore:false,
       page:1,
       hasMore:true,
@@ -305,7 +306,7 @@ export default{
       let _this = this
       if(_this.hasMore){
         _this.page++
-        _this.loadingData = true
+        _this.loadingBtn = true
         let header = {
           accessToken: sessionStorage.getItem('accessToken'),
           projectId: sessionStorage.getItem('projectId')
@@ -349,7 +350,7 @@ export default{
               }
             }
           }
-          _this.loadingData = false
+          _this.loadingBtn = false
         }).catch(error => {
           console.log(error)
         })

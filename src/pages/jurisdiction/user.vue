@@ -11,6 +11,11 @@
             v-model.trim="ruleForm.input">
           </el-input>
         </el-form-item>
+        <el-form-item class="no-mb" label="用户角色">
+          <el-select size="small" v-model="ruleForm.roles" placeholder="请选择角色" @change="roleChange">
+            <el-option v-for="item in ruleForm.roleList" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item class="search" v-if="$store.getters.getPermissions.indexOf('queryUserManagement')>-1">
           <el-button type="primary" size="small" @click="search" class="green-btn">查询</el-button>
         </el-form-item>
@@ -210,7 +215,10 @@ export default{
         companyName: '',
         date1: '',
         date2: '',
-        input: ''
+        input: '',
+        roles:'全部',
+        rolesCode:'',
+        roleList:['全部']
       },
       ruleFormModule: {
         name: '',
@@ -301,13 +309,54 @@ export default{
     region_change (val) {
       this.ruleFormModule.region = val
     },
+
+    roles () {
+      let _this = this
+      let param = {
+        type: '1',
+        sortby:'updatetime',
+        order:'desc',
+        pageNumber:1,
+        pageSize:10000,
+      }
+      let header = {
+        accessToken:  sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      this.$store.dispatch('ROLES', { param, header }).then((res, req) => {
+        _this.ruleForm.roleList = ['全部']
+        if(res !== null && res.data.code == 16000003){
+          console.log(res)
+          let data = res.data.data.datas
+          for(let i =0;i<data.length;i++){
+            _this.ruleForm.roleList.push(data[i].rolename)
+          }
+        }
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
+    roleChange(val){
+      if(val == '全部'){
+        this.ruleForm.rolesCode = ''
+      }else{
+        this.ruleForm.rolesCode = val
+      }
+      this.ruleForm.roles = val
+      console.log(val)
+    },
     /*用户列表展示*/
     users () {
       this.loading = true
       let _this = this
+      /*let roles = {
+        region: this.ruleForm.rolesCode
+      }
+      roles = JSON.stringify(roles)*/
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
+        /*vague:roles,*/
         accountNames:this.ruleForm.input,
         filter:'status!=2'
       }
@@ -315,7 +364,6 @@ export default{
         accessToken: sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('USERS', { param, header }).then((res, req) => {
-        console.log(res)
         this.tableData = []
         if(res !== null && res.data.code == 16000003 ){
           this.totalCount = res.data.data.totalNum
@@ -355,7 +403,6 @@ export default{
     },
     search(){
       this.pageNum = 1
-      console.log(this.pageNum)
       this.users()
       /*this.loading = true
       let param = {
@@ -738,6 +785,7 @@ export default{
     this.users()
     this.getCompany()
     this.getRegion()
+    this.roles()
   }
 }
 </script>

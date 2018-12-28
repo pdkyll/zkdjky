@@ -188,7 +188,6 @@
             }
             return array
           }()
-
         }
         return option
       },

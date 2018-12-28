@@ -1,7 +1,6 @@
 <template>
-   <el-container>
     <el-container>
-      <el-main>
+      <el-main v-loading="loading">
       	 <div v-if="showUser">
       		<div class="downBoxImg">
             <span class="circleImage">
@@ -55,9 +54,7 @@
          	</div>
          </div>
       </el-main>
-
     </el-container>
-  </el-container>
 </template>
 
 <script>
@@ -84,6 +81,7 @@ export default {
       }
     };
     return {
+      loading:false,
     	userMsg:{},
     	showUser:true,
     	ruleFormModule:{
@@ -111,11 +109,13 @@ export default {
   methods: {
     logout(){
       let _this = this
+      _this.loading = true
       let header = {
         accessToken:sessionStorage.getItem('accessToken')
       }
       this.$store.dispatch('LOGOUT', { header }).then((res, req) => {
 //      this.$router.push('/login')
+        _this.loading = false
         _this.$notify({
           title: '提示信息',
           message: res.msg,

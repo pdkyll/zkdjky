@@ -188,7 +188,8 @@
           <el-transfer
             v-model="formData2.cpccs"
             :titles="['全部','全部']"
-            :data="formData2T.companyTransfer"></el-transfer>
+            :data="formData2T.companyTransfer">
+          </el-transfer>
         </el-form-item>
         <el-form-item label="部门">
           <el-tree
@@ -498,7 +499,7 @@
             { required: true, message: '请选择结束日期', trigger: 'change' }
           ],
           cpccs: [
-            { type: 'array', required: true, message: '请选择公司', trigger: 'change' }
+            { type: 'array', required: true, message: '请选择公司', trigger: 'blur' }
           ],
           products: [
             { type: 'array', max: 6, message: '最多选择6款产品', trigger: 'change' }
@@ -521,8 +522,7 @@
         barLoading:true,
         pieLoading:true,
         lineLoading:true,
-        mingleLoading:true
-
+        mingleLoading:true,
       }
     },
     components: {
@@ -563,7 +563,6 @@
         _this.$refs['formData2'].validate((valid) => {
           if (valid) {
             _this.$nextTick(() => {
-              _this.getNormSelect()
               _this.dialogVisible2 = false
               _this.dialogVisible3 = true
             })
@@ -618,10 +617,6 @@
             this.formData3= {
               indicatorIndex: '',
               atlas: []
-            }
-            this.formData3T= {
-              typeArr: [],
-              typeOld: {}
             }
             this.$refs['formData1'].resetFields()
             this.$refs['formData2'].resetFields()
@@ -691,10 +686,6 @@
           indicatorIndex: '',
           atlas: []
         }
-        this.formData3T= {
-          typeArr: [],
-          typeOld: {}
-        }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
@@ -742,10 +733,6 @@
         this.formData3= {
           indicatorIndex: '',
           atlas: []
-        }
-        this.formData3T= {
-          typeArr: [],
-          typeOld: {}
         }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
@@ -796,10 +783,6 @@
           indicatorIndex: '',
           atlas: []
         }
-        this.formData3T= {
-          typeArr: [],
-          typeOld: {}
-        }
         this.$refs['formData1'].resetFields()
         this.$refs['formData2'].resetFields()
         this.$refs['formData3'].resetFields()
@@ -818,10 +801,11 @@
               /*判断是否已经调用过预览的接口了*/
               if(vm.viewFlag){
                 vm.previewChart()
+              }else{
+                vm.$nextTick(() => {
+                  vm.$refs.bar.resizeChart();
+                })
               }
-              vm.$nextTick(_ => {
-                vm.$refs.bar.resizeChart();
-              })
             }
           } else {
             console.log('error submit!')
@@ -840,10 +824,11 @@
               /*判断是否已经调用过预览的接口了*/
               if(vm.viewFlag){
                 vm.previewChart()
+              }else{
+                vm.$nextTick(() => {
+                  vm.$refs.pie.resizeChart()
+                })
               }
-              vm.$nextTick(_ => {
-                vm.$refs.pie.resizeChart()
-              })
             }
           } else {
             console.log('error submit!')
@@ -862,10 +847,11 @@
               /*判断是否已经调用过预览的接口了*/
               if(vm.viewFlag){
                 vm.previewChart()
+              }else{
+                vm.$nextTick(() => {
+                  vm.$refs.line.resizeChart()
+                })
               }
-              vm.$nextTick(_ => {
-                vm.$refs.line.resizeChart()
-              })
             }
           } else {
             console.log('error submit!')
@@ -884,10 +870,12 @@
               /*判断是否已经调用过预览的接口了*/
               if(vm.viewFlag){
                 vm.previewChart()
+              }else{
+                vm.$nextTick(() => {
+                  vm.$refs.mingle.resizeChart()
+                })
               }
-              vm.$nextTick(_ => {
-                vm.$refs.mingle.resizeChart()
-              })
+
             }
           } else {
             console.log('error submit!')
@@ -991,10 +979,6 @@
               indicatorIndex: '',
                 atlas: []
             }
-            _this.formData3T= {
-              typeArr: [],
-                typeOld: {}
-            }
           }
         }).catch(error => {
           console.log(error)
@@ -1057,23 +1041,6 @@
         _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
           if(res.code == 16000003){
             _this.chartData = res.data
-            /*if (_this.barFlag) {
-              _this.$nextTick(_ => {
-                  _this.$refs.bar.resizeChart();
-              })
-            }else if(_this.pieFlag){
-              _this.$nextTick(_ => {
-                  _this.$refs.pie.resizeChart();
-              })
-            }else if(_this.lineFlag){
-              _this.$nextTick(_ => {
-                  _this.$refs.line.resizeChart();
-              })
-            }else if(_this.mingleFlag){
-              _this.$nextTick(_ => {
-                  _this.$refs.mingle.resizeChart();
-              })
-            }*/
           }else{
             _this.$notify({
               title: '提示信息',
@@ -1082,10 +1049,22 @@
               duration: '1000'
             })
           }
-          _this.barLoading = false
-          _this.pieLoading = false
-          _this.lineLoading = false
-          _this.mingleLoading = false
+          _this.$nextTick(() => {
+            if (_this.barFlag) {
+              _this.$refs.bar.resizeChart();
+            }else if(_this.pieFlag){
+              _this.$refs.pie.resizeChart();
+            }else if(_this.lineFlag){
+              _this.$refs.line.resizeChart();
+            }else if(_this.mingleFlag){
+              _this.$refs.mingle.resizeChart();
+            }
+            _this.barLoading = false
+            _this.pieLoading = false
+            _this.lineLoading = false
+            _this.mingleLoading = false
+          })
+
         }).catch(error => {
           console.log(error)
         })
@@ -1388,6 +1367,7 @@
     },
     created () {
       this.getNormTable()
+      this.getNormSelect()
     },
     mounted () {
     }

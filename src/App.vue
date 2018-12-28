@@ -221,4 +221,10 @@ input:-webkit-autofill:focus {
 .el-submenu__title:hover{
   background: #e9f4c7 !important;
 }
+.el-transfer-panel{
+  width: 37%;
+}
+.el-transfer__buttons {
+  padding: 0px 17px;
+}
 </style>

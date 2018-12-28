@@ -184,6 +184,8 @@ export default{
           let userMsg = JSON.stringify(name);
           sessionStorage.setItem('userMsg', userMsg)
           this.getJurisdiction()
+        }else{
+          _this.loading = false
         }
         _this.$notify({
           title: '提示信息',

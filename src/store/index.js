@@ -11,6 +11,7 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     state: {
+      chartsData:'',
       publicName:'',
       companyArr: [],
       permissions:[],

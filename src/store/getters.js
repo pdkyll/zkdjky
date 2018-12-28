@@ -23,5 +23,10 @@ export default {
   getPermissions (state) {
     const { permissions } = state
     return permissions
+  },
+  /*获取预览echart数据*/
+  getChartData(state){
+    const {chartsData} = state
+    return chartsData
   }
 }

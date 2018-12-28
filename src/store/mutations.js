@@ -55,6 +55,16 @@ export default {
     state.companyName = name.companyName
     state.departmentName = name.departmentName
   },
+
+  /**
+   * 存储预览的echart数据
+   * @param state
+   * @param data
+   * @constructor
+   */
+  SET_CHARTS_DATA :(state, {data}) => {
+    state.chartsData = data
+  },
   /**
    * 示例代码，用于引用类型(数组/对象)值改变时
    * Vue.set(target, key, value)

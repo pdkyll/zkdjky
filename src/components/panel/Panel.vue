@@ -20,11 +20,11 @@
                 <div style="text-align: center; width: 22%;" :title="item.CREATION_TIME">{{item.CREATION_TIME}}</div>
                 <div style="text-align: right; width: 12%">
                   <!--<i class="el-icon-view" @click="showItem(item.ID,item.DATA_TYPE)"></i>-->
-                  <i class="el-icon-download" v-if="$store.getters.getPermissions.indexOf('downloFormulaSetting')>-1" style="cursor: pointer" @click="downItem(item.ID)"></i>
-                  <i v-if="item.DATA_TYPE===1" class="el-icon-document"></i>
-                  <i v-if="item.DATA_TYPE===2" class="el-icon-service"></i>
-                  <i v-if="item.DATA_TYPE===3" class="el-icon-caret-right"></i>
-                  <i v-if="item.DATA_TYPE===4" class="el-icon-picture"></i>
+                  <i class="el-icon-download" title="下载" v-if="$store.getters.getPermissions.indexOf('downloFormulaSetting')>-1" style="cursor: pointer" @click="downItem(item.ID)"></i>
+                  <i v-if="item.DATA_TYPE===1" title="文本" class="el-icon-document"></i>
+                  <i v-if="item.DATA_TYPE===2" title="音频" class="el-icon-service"></i>
+                  <i v-if="item.DATA_TYPE===3" title="视频" class="el-icon-caret-right"></i>
+                  <i v-if="item.DATA_TYPE===4" title="图片" class="el-icon-picture"></i>
                 </div>
               </li>
             </ul>
@@ -230,7 +230,7 @@ export default{
   }
 .panel-publicInformation{
   /*height:450px;*/
- height:auto;
+ height:650px;
   /*padding: 20px 20px;*/
   margin-bottom: 20px;
   background-color: #fff;
