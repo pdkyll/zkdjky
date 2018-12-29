@@ -316,6 +316,33 @@
   import mingleChart from '../../components/panel/mingleChart.vue'
   export default{
     data () {
+      /*自定义时间校验，开始时间不能大于结束时间*/
+      let date1 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择开始日期'));
+        } else if (value > this.formData2.date2) {
+          if(this.formData2.date2 !== ''){
+            callback(new Error('开始日期不能大于结束日期'));
+          }else{
+            callback();
+          }
+        } else {
+          callback();
+        }
+      }
+      let date2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择结束日期'));
+        } else if (value < this.formData2.date1) {
+          if(this.formData2.date1 !== ''){
+            callback(new Error('结束日期不能小于开始日期'));
+          }else{
+            callback();
+          }
+        } else {
+          callback();
+        }
+      }
       return {
         startQuarter:false,
         dialogVisible: false,
@@ -487,16 +514,16 @@
         rules: {
           statisticalName: [
             { required: true, message: '请输入统计表名称', trigger: 'blur' },
-            { min: 2, max: 40, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
           ],
           remarks: [
             { min: 10, max: 200, message: '统计目的长度应在10到200个字符内', trigger: 'blur' }
           ],
           date1: [
-            { required: true, message: '请选择开始日期', trigger: 'change' }
+            { validator: date1, trigger: 'change' }
           ],
           date2: [
-            { required: true, message: '请选择结束日期', trigger: 'change' }
+            { validator: date2, trigger: 'change' }
           ],
           cpccs: [
             { type: 'array', required: true, message: '请选择公司', trigger: 'blur' }

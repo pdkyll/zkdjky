@@ -172,6 +172,9 @@ export default{
     /*获取公司信息*/
     getPublicMsg(company,start,end){
       this.dialogVisible = true
+      if(company == '全部'){
+        company = ''
+      }
       let param = {
         startDate:start,
         endDate:end,
@@ -213,7 +216,6 @@ export default{
         console.error(error)
       })
     },
-
   },
   created () {
     /*this.dom = document.getElementById('iframeBox')*/

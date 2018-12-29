@@ -265,10 +265,20 @@ export default{
      * 打开修改的模态窗口
      */
     handleClick (row) {
+      let type = row.DATA_TYPE
+      if(type = 1){
+        type = '文本'
+      }else if(type= 2){
+        type = "音频"
+      }else if(type= 3){
+        type = '视频'
+      }else{
+        type = '图片'
+      }
       this.updateForm = {
         id: row.ID,
         info_name: row.INFO_NAME,
-        data_type: row.DATA_TYPE,
+        data_type: type,
         describe_info: row.DESCRIBE_INFO,
         weightiness: row.WEIGHTINESS
       },

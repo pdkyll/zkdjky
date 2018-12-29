@@ -74,9 +74,9 @@
           </div>
         </div>
         <div style="width: 100%;text-align: center">
-          <el-button type="text" v-loading="loadingBtn" element-loading-text="拼命加载中"  @click="getMore" v-if="showMore">点击加载更多  </el-button>
+          <el-button type="text" v-loading="loadingBtn" element-loading-text="拼命加载中"  @click="getMore" v-if="showMore">点击加载更多</el-button>
+          <el-button type="text" v-if="noData">没有订阅信息</el-button>
         </div>
-
         <el-dialog
           title="提示信息"
           :visible.sync="dialogDelete"
@@ -107,6 +107,7 @@ export default{
       loadingData:true,
       loadingBtn:false,
       showMore:false,
+      noData:false,
       page:1,
       hasMore:true,
     }
@@ -294,6 +295,8 @@ export default{
           }
           if(data.length > 0){
             _this.showMore = true
+          }else{
+            _this.noData = true
           }
         }
         _this.loadingData = false
@@ -418,6 +421,8 @@ export default{
       }
       _this.$store.dispatch('CANCEL_ALL_ATTENTION', {param, header}).then(res => {
         _this.tjList = []
+        _this.showMore = false
+        _this.noData = true
         _this.$notify({
           title: '提示信息',
           message: '取消全部订阅成功',
@@ -449,6 +454,10 @@ export default{
             return dataId !== obj.data_id;
           });
           vm.tjList = newArr
+          if(vm.tjList.length<1){
+            vm.showMore = false
+            vm.noData = true
+          }
           vm.loadingData = false
         }
         vm.$notify({

@@ -251,7 +251,7 @@ export default{
       rules: {
         name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 40, message: '长度在 2 到 40 个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         pass: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -343,20 +343,20 @@ export default{
         this.ruleForm.rolesCode = val
       }
       this.ruleForm.roles = val
-      console.log(val)
     },
     /*用户列表展示*/
     users () {
       this.loading = true
       let _this = this
-      /*let roles = {
+      let roles = {
         region: this.ruleForm.rolesCode
       }
-      roles = JSON.stringify(roles)*/
+      roles =  encodeURI(JSON.stringify(roles))
+      console.log(typeof roles)
       let param = {
         pageNumber:this.pageNum,
         pageSize:this.pageSize,
-        /*vague:roles,*/
+        vague:roles,
         accountNames:this.ruleForm.input,
         filter:'status!=2'
       }
