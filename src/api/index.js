@@ -361,6 +361,15 @@ export function getNormTable (param, header) {
 }
 
 /**
+ * 新建指标-指标名称校验
+ * @param param
+ * @param header
+ * @returns {*|Promise}
+ */
+export function NameValidator (param, header) {
+  return api.get('/apis/dataStatisticsService/checkStatisticalName', param, header)
+}
+/**
  * 新建指标-发布指标
  * @param param
  * @param header

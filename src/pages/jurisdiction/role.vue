@@ -127,6 +127,7 @@
         <el-form-item label="权限选择">
           <el-tree
             :data="treeDataForUpdate"
+            v-loading="treeLoading"
             accordion
             show-checkbox
             node-key="id"
@@ -153,6 +154,7 @@ export default{
       activeNames: [],
       loading:true,
       dialogVisible: false,
+      treeLoading:false,
       ruleForm: {
         companyName: '',
         date1: '',
@@ -391,7 +393,6 @@ export default{
         ],
         permissionList:_this.checkIdListForUpdate
       }
-      console.log(param)
       let header = {
         accessToken: sessionStorage.getItem('accessToken')
       }
@@ -415,6 +416,7 @@ export default{
     },
     updateClick (row) {
       let _this = this
+      _this.treeLoading = true
       this.xg_jsmc = row.name
       this.xg_jsms = row.description
       this.xg_id = row.id
@@ -434,6 +436,7 @@ export default{
             _this.echoList.push(res.data.data[i]*1)
           }
         }
+        _this.treeLoading = false
         _this.echoList = backLook(_this.echoList,_this.originalTree)
         _this.$refs.treeForUpdate.setCheckedKeys(_this.echoList)
       }).catch(error=>{

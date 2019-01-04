@@ -34,7 +34,7 @@
           <el-table
             :data="tableData"
             :header-cell-style="{background:'#f0f1f1'}"
-            style="width: 100%">
+            style="width: 100%;height: 90%">
             <el-table-column
               v-for="cols in historyTableColumnHeader"
               :resizable=false

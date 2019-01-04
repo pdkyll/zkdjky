@@ -44,12 +44,17 @@ export default new Router({
       children: [
         {
           path: 'publicInformation',
-          name: 'publicInformation',
+          redirect: {
+            name: 'publicInformation'
+          },
           component:  resolve => require(['@/pages/publicInformation/publicInformation'],resolve)
         },
         {
           path: 'attention',
-          name: 'attention',
+          redirect: {
+            name: 'attention'
+          },
+
           component:  resolve => require(['@/pages/publicInformation/attention'],resolve)
         },
         {

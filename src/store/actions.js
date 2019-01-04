@@ -55,6 +55,7 @@ import {
   getFinanceDetails,
   /*新建指标*/
   newNorm,
+  NameValidator,
   getNormSelect,
   getNormTable,
   publishNorm,
@@ -643,6 +644,21 @@ export default {
       return res
     })
   },
+  /**
+   * 新建指标-指标名称校验
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  NAME_VALIDATOR: ({commit, state}, {param, header}) => {
+    return NameValidator(param, header).then((res, req) => {
+      return res
+    })
+  },
+
   /**
    * 新建指标-获取逻辑指标库下拉菜单
    * @param commit

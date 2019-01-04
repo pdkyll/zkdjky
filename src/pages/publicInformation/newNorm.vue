@@ -316,6 +316,34 @@
   import mingleChart from '../../components/panel/mingleChart.vue'
   export default{
     data () {
+      /*自定义新建统计表名称校验规则*/
+      let statistical = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入统计表名称'));
+        } else if (value.length <2 ||value.length >10) {
+          callback(new Error('长度在 2 到 10 个字符'));
+        } else if (value !=='') {
+            let _this = this
+            let header = {
+              accessToken: sessionStorage.getItem('accessToken'),
+              projectId: sessionStorage.getItem('projectId')
+            }
+            let param = {
+              statisticalName:value
+            }
+            _this.$store.dispatch('NAME_VALIDATOR', {param, header}).then(res => {
+              if(res.data.code === 16000003){
+                callback();
+              }else{
+                callback(new Error('指标名称已存在'));
+              }
+            }).catch(error => {
+              console.log(error)
+            })
+        } else {
+          callback();
+        }
+      }
       /*自定义时间校验，开始时间不能大于结束时间*/
       let date1 = (rule, value, callback) => {
         if (value === '') {
@@ -513,8 +541,9 @@
         },
         rules: {
           statisticalName: [
-            { required: true, message: '请输入统计表名称', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+            { validator: statistical, trigger: 'blur' }
+            /*{ required: true, message: '请输入统计表名称', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }*/
           ],
           remarks: [
             { min: 10, max: 200, message: '统计目的长度应在10到200个字符内', trigger: 'blur' }
