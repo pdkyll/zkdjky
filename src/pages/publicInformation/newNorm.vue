@@ -155,10 +155,11 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="9">
+          <el-col :span="9" v-clickoutside="quarterStartClose">
             <el-form-item prop="date1">
               <el-date-picker
                 size="small"
+                v-if="formData2.dateType == 1 ||formData2.dateType == 2 ||formData2.dateType == 4  "
                 :type="formData2T.dateType[formData2.dateType-1].type"
                 placeholder="选择开始日期"
                 :format="formData2T.dateType[formData2.dateType-1].format"
@@ -166,21 +167,89 @@
                 v-model="formData2.date1"
                 style="width: 100%;">
               </el-date-picker>
-              <!--隐藏的季度选择-->
-              <div class="startQuarter" v-if="startQuarter"></div>
+                <!--隐藏的季度选择-->
+              <el-input
+                placeholder="选择开始日期"
+                size="small"
+                v-if="formData2.dateType == 3"
+                prefix-icon="el-icon-date"
+                @focus="startFocus"
+                v-model="formData2.date1">
+              </el-input>
+              <div class="quarter" v-if="startQuarter">
+                <div class="quarterHeader">
+                  <button type="button" class="el-picker-panel__icon-btn el-date-picker__prev-btn el-icon-d-arrow-left" @click="startLeftSearch"></button>
+                  <span role="button" class="el-date-picker__prev-btn el-date-picker__header-label">{{startQuarterYear}} 年</span>
+                  <button type="button" class="el-picker-panel__icon-btn el-date-picker__prev-btn el-icon-d-arrow-right" @click="startRightSearch"></button>
+                </div>
+                <table class="el-month-table" style="margin: 0 auto">
+                  <tbody>
+                  <tr>
+                    <td class="today" @click="change_start_quarter(1)">
+                      <a class="cell">一季度</a>
+                    </td>
+                    <td class="" @click="change_start_quarter(2)">
+                      <a class="cell">二季度</a>
+                    </td>
+                    <td class="" @click="change_start_quarter(3)">
+                      <a class="cell">三季度</a>
+                    </td>
+                    <td class="" @click="change_start_quarter(4)">
+                      <a class="cell">四季度</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2" style="text-align: center">至</el-col>
-          <el-col :span="9">
+          <el-col :span="9" v-clickoutside="quarterEndClose">
             <el-form-item prop="date2">
               <el-date-picker
                 size="small"
+                v-if="formData2.dateType == 1 ||formData2.dateType == 2 ||formData2.dateType == 4  "
                 :type="formData2T.dateType[formData2.dateType-1].type"
                 placeholder="选择结束日期"
                 :format="formData2T.dateType[formData2.dateType-1].format"
                 :value-format="formData2T.dateType[formData2.dateType-1].value_format"
                 v-model="formData2.date2"
-                style="width: 100%;"></el-date-picker>
+                style="width: 100%;">
+              </el-date-picker>
+              <!--隐藏的季度选择-->
+              <el-input
+                placeholder="选择开始日期"
+                size="small"
+                v-if="formData2.dateType == 3"
+                prefix-icon="el-icon-date"
+                @focus="endFocus"
+                v-model="formData2.date2">
+              </el-input>
+              <div class="quarter" v-if="endQuarter">
+                <div class="quarterHeader">
+                  <button type="button" class="el-picker-panel__icon-btn el-date-picker__prev-btn el-icon-d-arrow-left" @click="endLeftSearch"></button>
+                  <span role="button" class="el-date-picker__prev-btn el-date-picker__header-label">{{endQuarterYear}} 年</span>
+                  <button type="button" class="el-picker-panel__icon-btn el-date-picker__prev-btn el-icon-d-arrow-right" @click="endRightSearch"></button>
+                </div>
+                <table class="el-month-table" style="margin: 0 auto">
+                  <tbody>
+                  <tr>
+                    <td class="today" @click="change_end_quarter(1)">
+                      <a class="cell">一季度</a>
+                    </td>
+                    <td class="" @click="change_end_quarter(2)">
+                      <a class="cell">二季度</a>
+                    </td>
+                    <td class="" @click="change_end_quarter(3)">
+                      <a class="cell">三季度</a>
+                    </td>
+                    <td class="" @click="change_end_quarter(4)">
+                      <a class="cell">四季度</a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -275,7 +344,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="last3">上一步</el-button>
-        <el-button type="primary" @click="next3">确 定</el-button>
+        <el-button type="primary" @click="next3" v-loading="submitting">确 定</el-button>
       </div>
     </el-dialog>
     <!--取消发布提示-->
@@ -310,6 +379,31 @@
    * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
    * import loginButton from './components/loginButton.vue';
    */
+  const clickoutside = {
+    // 初始化指令
+    bind(el, binding, vnode) {
+      function documentHandler(e) {
+        // 这里判断点击的元素是否是本身，是本身，则返回
+        if (el.contains(e.target)) {
+          return false;
+        }
+        // 判断指令中是否绑定了函数
+        if (binding.expression) {
+          // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+          binding.value(e);
+        }
+      }
+      // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+      el.__vueClickOutside__ = documentHandler;
+      document.addEventListener('click', documentHandler);
+    },
+    unbind(el, binding) {
+      // 解除事件监听
+      document.removeEventListener('click', el.__vueClickOutside__);
+      delete el.__vueClickOutside__;
+    },
+  };
+
   import barChart from '../../components/panel/barChart.vue'
   import pieChart from '../../components/panel/pieChart.vue'
   import lineChart from '../../components/panel/lineChart.vue'
@@ -372,7 +466,11 @@
         }
       }
       return {
+        submitting:false,
         startQuarter:false,
+        startQuarterYear:2018,
+        endQuarter:false,
+        endQuarterYear:2018,
         dialogVisible: false,
         dialogVisible2: false,
         dialogVisible3: false,
@@ -581,6 +679,7 @@
         mingleLoading:true,
       }
     },
+    directives: {clickoutside},
     components: {
       barChart,
       pieChart,
@@ -684,9 +783,50 @@
       },
       changeDate(){
         let _this = this
+        this.startQuarter = false
+        this.endQuarter = false
         _this.formData2.date1 = ''
         _this.formData2.date2 = ''
       },
+
+      /*开始季度的选择于处理*/
+      startFocus(val){
+        this.startQuarter = true
+        this.endQuarter = false
+      },
+      quarterStartClose(){
+        this.startQuarter = false
+      },
+      startLeftSearch(){
+        this.startQuarterYear--
+      },
+      startRightSearch(){
+        this.startQuarterYear++
+      },
+      change_start_quarter(val){
+        this.formData2.date1 = this.startQuarterYear + '-' + val
+        this.startQuarter = false
+      },
+
+      /*结束季度的选择于处理*/
+      endFocus(val){
+        this.endQuarter = true
+        this.startQuarter = false
+      },
+      quarterEndClose(){
+        this.endQuarter = false
+      },
+      endLeftSearch(){
+        this.endQuarterYear--
+      },
+      endRightSearch(){
+        this.endQuarterYear++
+      },
+      change_end_quarter(val){
+        this.formData2.date2 = this.endQuarterYear + '-' + val
+        this.endQuarter = false
+      },
+
       last2 () {
         this.dialogVisible2 = false
         this.dialogVisible = true
@@ -948,6 +1088,7 @@
         /**
          * 处理第二页的数据
          */
+        _this.submitting = true
         let searchCondition = {
           dateRange: '',
           companys: '',
@@ -971,6 +1112,7 @@
          * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
          */
         let param = {
+          dataSegment:'0',
           //private Integer id  				//主键
           //"cpcc":"002", 					//公司编码
           searchCondition: '',    //检索条件
@@ -1036,6 +1178,7 @@
                 atlas: []
             }
           }
+          _this.submitting = false
         }).catch(error => {
           console.log(error)
         })
@@ -1461,14 +1604,41 @@
   .center-form{
     text-align: center;
   }
-  .startQuarter{
-    width: 140%;
-    height: 200px;
-    border-radius: 2px;
-    border: 1px solid #ccc;
+  .quarter{
+    width: 110%;
+    height: 286px;
     position: absolute;
+    padding: 12px;
     top: 50px;
     z-index: 100;
+    color: #606266;
+    border: 1px solid #e4e7ed;
+    -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    background: #fff;
+    border-radius: 4px;
+    line-height: 30px;
+    margin: 5px 0;
+    .quarterHeader{
+      width: 100%;
+      text-align: center;
+      span{
+        width: 90% ;
+      }
+    }
+  }
+  .quarter:after{
+   display: block;
+    content: '';
+    height: 10px;
+    width: 10px;
+    position: absolute;
     background: white;
+    top:-5px;
+    left: 10%;
+    transform: rotate(45deg);
+    border: 1px solid #e4e7ed;
+    border-bottom:none ;
+    border-right:none ;
   }
 </style>
