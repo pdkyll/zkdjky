@@ -10,7 +10,7 @@
           </el-row>-->
           <el-row :gutter="20">
             <el-col :span="24">
-              <panel-dy></panel-dy>
+              <attention-panel></attention-panel>
             </el-col>
           </el-row>
         </el-tab-pane>
@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import PanelDy from '@/components/panel/PanelDy'
+// import PanelDy from '@/components/panel/PanelDy'
+import attentionPanel from '@/components/panel/attentionPanel'
 export default {
   data () {
     return {
@@ -27,7 +28,7 @@ export default {
     }
   },
   components: {
-    PanelDy
+    attentionPanel
   },
   methods: {
     handleClick (tab, event) {
