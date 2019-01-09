@@ -113,6 +113,7 @@ function ParseData(data) {
       allCompany[company].allDateTime = new Set();
       allCompany[company].allProducts = new Set();
       allCompany[company].allValues = new Map();
+      allCompany[company].companyName = company;
     }
     if(!allCompany[company].allDateTime.has(dateTime)){
       allCompany[company].allDateTime.add(dateTime)
@@ -149,7 +150,6 @@ function ParseData(data) {
     companyObj.allDateTime = Array.from(companyObj.allDateTime);
     companyObj.allProducts = Array.from(companyObj.allProducts);
   }
-  console.log(allCompany)
   return allCompany
 }
 export default{

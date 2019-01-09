@@ -25,6 +25,9 @@
           return item.stack
         });
         let option = {
+          title: {
+            text: chartData.companyName
+          },
           tooltip : {
             trigger: 'axis',
             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -68,14 +71,25 @@
             }
           },
           legend: {
-            data: chartData.allProducts
+            data: chartData.allProducts,
+            x: 'right',
           },
           grid: {
             left: '3%',
             right: '4%',
-            bottom: '3%',
+            bottom: '10%',
             containLabel: true
           },
+          dataZoom: [{
+            show: true,
+            height: 30,
+            xAxisIndex: [
+              0
+            ],
+            bottom: 0,
+            start: 10,
+            end: 80,
+          }],
           xAxis : [
             {
               type : 'category',
@@ -92,6 +106,7 @@
         return option
       },
       createdChart(){
+        console.log('chart', this.data)
         let option = this.builderChartOptions(this.data)
         this.chartInstance.setOption(option)
       },

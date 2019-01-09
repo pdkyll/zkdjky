@@ -404,10 +404,64 @@
     },
   };
 
-  import barChart from '../../components/panel/barChart.vue'
+  import barChart from '../../components/panel/barChartByCompany.vue'
   import pieChart from '../../components/panel/pieChart.vue'
   import lineChart from '../../components/panel/lineChart.vue'
   import mingleChart from '../../components/panel/mingleChart.vue'
+  function ParseData(data) {
+    var allCompany = {};
+    for(var item in data){
+      var arr = item.split('^');
+      var product = arr[0],
+        dateTime = arr[1],
+        company = arr[2],
+        department = arr[3],
+        value = data[item];
+      if(!allCompany.hasOwnProperty(company)){
+        allCompany[company] = {};
+        allCompany[company].allDepartment = new Set();
+        allCompany[company].allDateTime = new Set();
+        allCompany[company].allProducts = new Set();
+        allCompany[company].allValues = new Map();
+        allCompany[company].companyName = company;
+      }
+      if(!allCompany[company].allDateTime.has(dateTime)){
+        allCompany[company].allDateTime.add(dateTime)
+      }
+      if(!allCompany[company].allDepartment.has(department)){
+        allCompany[company].allDepartment.add(department)
+      }
+      if(!allCompany[company].allProducts.has(product)){
+        allCompany[company].allProducts.add(product)
+      }
+      allCompany[company].allValues.set(dateTime +'_'+ department +'_'+ product, value);
+    }
+
+    for(var companyName in allCompany){
+      let companyObj = allCompany[companyName];
+      let companyResultArr = [];
+      companyObj.allProducts.forEach(function (product_value, product_name) {
+        companyObj.allDepartment.forEach(function (department_value, department_name) {
+          let resultTempArr = [];
+          companyObj.allDateTime.forEach(function (dateTime_value, dateTime_name) {
+            resultTempArr.push(companyObj.allValues.get(dateTime_value +'_'+ department_value +'_'+ product_value));
+          });
+          companyResultArr.push({
+            name: product_value,
+            stack: department_value,
+            type:'bar',
+            barWidth : 20,
+            data: resultTempArr
+          });
+        });
+      });
+      companyObj.result = companyResultArr;
+      companyObj.allDepartment = Array.from(companyObj.allDepartment);
+      companyObj.allDateTime = Array.from(companyObj.allDateTime);
+      companyObj.allProducts = Array.from(companyObj.allProducts);
+    }
+    return allCompany
+  }
   export default{
     data () {
       /*自定义新建统计表名称校验规则*/
@@ -668,6 +722,7 @@
         tableData: [],
         barFlag: false,
         chartData: {},
+        chartType:'',
         pieFlag: false,
         lineFlag: false,
         mingleFlag: false,
@@ -989,20 +1044,22 @@
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
-            vm.barFlag = !vm.barFlag
-            if (vm.barFlag) {
-              vm.pieFlag = false
-              vm.lineFlag = false
-              vm.mingleFlag = false
-              /*判断是否已经调用过预览的接口了*/
-              if(vm.viewFlag){
-                vm.previewChart()
-              }else{
-                vm.$nextTick(() => {
-                  vm.$refs.bar.resizeChart();
-                })
+            vm.chartType = 'bar'
+            /*判断是否已经调用过预览的接口了*/
+            if(vm.viewFlag){
+              vm.previewChart()
+            }else{
+              vm.barFlag = !vm.barFlag
+              if (vm.barFlag) {
+                vm.pieFlag = false
+                vm.lineFlag = false
+                vm.mingleFlag = false
               }
+              vm.$nextTick(() => {
+                vm.$refs.bar.resizeChart();
+              })
             }
+
           } else {
             console.log('error submit!')
           }
@@ -1012,19 +1069,21 @@
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
-            vm.pieFlag = !vm.pieFlag
-            if (vm.pieFlag) {
-              vm.barFlag = false
-              vm.lineFlag = false
-              vm.mingleFlag = false
-              /*判断是否已经调用过预览的接口了*/
-              if(vm.viewFlag){
-                vm.previewChart()
-              }else{
-                vm.$nextTick(() => {
-                  vm.$refs.pie.resizeChart()
-                })
+
+            vm.chartType = 'pie'
+            /*判断是否已经调用过预览的接口了*/
+            if(vm.viewFlag){
+              vm.previewChart()
+            }else{
+              vm.pieFlag = !vm.pieFlag
+              if (vm.pieFlag) {
+                vm.barFlag = false
+                vm.lineFlag = false
+                vm.mingleFlag = false
               }
+              vm.$nextTick(() => {
+                vm.$refs.pie.resizeChart();
+              })
             }
           } else {
             console.log('error submit!')
@@ -1035,19 +1094,20 @@
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
-            vm.lineFlag = !vm.lineFlag
-            if (vm.lineFlag) {
-              vm.pieFlag = false
-              vm.barFlag = false
-              vm.mingleFlag = false
-              /*判断是否已经调用过预览的接口了*/
-              if(vm.viewFlag){
-                vm.previewChart()
-              }else{
-                vm.$nextTick(() => {
-                  vm.$refs.line.resizeChart()
-                })
+            vm.chartType = 'line'
+            /*判断是否已经调用过预览的接口了*/
+            if(vm.viewFlag){
+              vm.previewChart()
+            }else{
+              vm.lineFlag = !vm.lineFlag
+              if (vm.lineFlag) {
+                vm.barFlag = false
+                vm.pieFlag = false
+                vm.mingleFlag = false
               }
+              vm.$nextTick(() => {
+                vm.$refs.line.resizeChart();
+              })
             }
           } else {
             console.log('error submit!')
@@ -1058,20 +1118,20 @@
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
-            vm.mingleFlag = !vm.mingleFlag
-            if (vm.mingleFlag) {
-              vm.pieFlag = false
-              vm.lineFlag = false
-              vm.barFlag = false
-              /*判断是否已经调用过预览的接口了*/
-              if(vm.viewFlag){
-                vm.previewChart()
-              }else{
-                vm.$nextTick(() => {
-                  vm.$refs.mingle.resizeChart()
-                })
+            vm.chartType = 'mingle'
+            /*判断是否已经调用过预览的接口了*/
+            if(vm.viewFlag){
+              vm.previewChart()
+            }else{
+              vm.mingleFlag = !vm.mingleFlag
+              if (vm.mingleFlag) {
+                vm.barFlag = false
+                vm.pieFlag = false
+                vm.lineFlag = false
               }
-
+              vm.$nextTick(() => {
+                vm.$refs.mingle.resizeChart();
+              })
             }
           } else {
             console.log('error submit!')
@@ -1081,6 +1141,149 @@
       indicatorChange(val){
         /*当下拉框选择变化以后可调用接口*/
         this.viewFlag = true
+      },
+
+      /*预览图表的方法*/
+      previewChart (){
+        let _this = this
+        _this.barLoading = true
+        _this.pieLoading = true
+        _this.lineLoading = true
+        _this.mingleLoading = true
+        /*_this.chartData = {}*/
+        /**
+         * 处理第二页的数据
+         */
+        let searchCondition = {
+          dateRange: '',
+          companys: '',
+          departments: '',
+          products: ''
+        }
+        searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
+        searchCondition.companys = _this.formData2.cpccs.join(',') || ''
+        searchCondition.departments = _this.formData2.departments.join(',') || ''
+        searchCondition.products = _this.formData2.products.join(',') || ''
+        searchCondition = JSON.stringify(searchCondition)
+        /**
+         * 请求头的数据拼接
+         * @type {{accessToken}}
+         */
+        let header = {
+          accessToken: sessionStorage.getItem('accessToken'),
+        }
+        /**
+         * 请求传递的参数整理
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         */
+        let param = {
+          //private Integer id  				//主键
+          //"cpcc":"002", 					//公司编码
+          searchCondition: '',    //检索条件
+          indicatorIndex: '', 		//指标索引
+          indicatorName: '', 		//指标名称
+          type: 1, 							//数据类型;1:财务
+          atlas: '', 					  //展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
+          //"ifPublish":"默认未发布",			//是否发布;0:未发布;1:发布
+          //"creator":"343433535"				//创建人    accountId
+          //"creationTime":"自动维护"			//创建时间
+        }
+        param.searchCondition = searchCondition
+        param.atlas = _this.formData3.atlas.join(',') || ''
+        param.indicatorIndex = _this.formData3.indicatorIndex || ''
+        param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
+        param = Object.assign({}, param, _this.formData1)
+        _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
+          if(res.code == 16000003){
+            if(res.data !== null){
+              let passData = ParseData(res.data)
+              console.log(passData)
+              for(let item in passData){
+                _this.chartData = item
+                if(_this.chartType == 'bar'){
+                  if (_this.barFlag) {
+                    _this.pieFlag = false
+                    _this.lineFlag = false
+                    _this.mingleFlag = false
+                    _this.$refs.bar.createdChart();
+                    _this.$refs.bar.resizeChart();
+                  }
+                  _this.barFlag = !_this.barFlag
+                }
+                else if(_this.chartType == 'pie'){
+                  if (_this.pieFlag) {
+                    _this.barFlag = false
+                    _this.lineFlag = false
+                    _this.mingleFlag = false
+                    _this.$refs.pie.createdChart();
+                    _this.$refs.pie.resizeChart();
+                  }
+                  _this.pieFlag = !_this.pieFlag
+                }
+                else if(_this.chartType == 'line'){
+                  if (_this.lineFlag) {
+                    _this.barFlag = false
+                    _this.pieFlag = false
+                    _this.mingleFlag = false
+                    _this.$refs.line.createdChart();
+                    _this.$refs.line.resizeChart();
+                  }
+                  _this.lineFlag = !_this.lineFlag
+                }
+                else if(_this.chartType == 'mingle'){
+                  if (_this.mingleFlag) {
+                    _this.barFlag = false
+                    _this.lineFlag = false
+                    _this.pieFlag = false
+                    _this.$refs.mingle.createdChart();
+                    _this.$refs.mingle.resizeChart();
+                  }
+                  _this.mingleFlag = !_this.mingleFlag
+                }
+                return
+              }
+            }else{
+              _this.$notify({
+                title: '提示信息',
+                message:'预览图表失败',
+                type: 'error',
+                duration: '1000'
+              })
+              return
+            }
+            /*setTimeout(function () {
+              if (_this.barFlag) {
+                _this.$refs.bar.createdChart();
+                _this.$refs.bar.resizeChart();
+              }else if(_this.pieFlag){
+                _this.$refs.pie.createdChart();
+                _this.$refs.pie.resizeChart();
+              }else if(_this.lineFlag){
+                _this.$refs.line.createdChart();
+                _this.$refs.line.resizeChart();
+              }else if(_this.mingleFlag){
+                _this.$refs.mingle.createdChart();
+                _this.$refs.mingle.resizeChart();
+              }
+            },500)*/
+            /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
+            _this.barLoading = false
+            _this.pieLoading = false
+            _this.lineLoading = false
+            _this.mingleLoading = false
+            _this.viewFlag = false
+          }else{
+            _this.$notify({
+              title: '提示信息',
+              message:'预览图表失败',
+              type: 'error',
+              duration: '1000'
+            })
+          }
+
+        }).catch(error => {
+          console.log(error)
+        })
       },
       /*新建指标*/
       createNorm (){
@@ -1183,94 +1386,8 @@
           console.log(error)
         })
       },
-      /**
-       * 预览图表的方法
-       */
-      previewChart (){
-        let _this = this
-        /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
-        _this.viewFlag = false
-        _this.barLoading = true
-        _this.pieLoading = true
-        _this.lineLoading = true
-        _this.mingleLoading = true
-        _this.chartData = {}
-        /**
-         * 处理第二页的数据
-         */
-        let searchCondition = {
-          dateRange: '',
-          companys: '',
-          departments: '',
-          products: ''
-        }
-        searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
-        searchCondition.companys = _this.formData2.cpccs.join(',') || ''
-        searchCondition.departments = _this.formData2.departments.join(',') || ''
-        searchCondition.products = _this.formData2.products.join(',') || ''
-        searchCondition = JSON.stringify(searchCondition)
-        /**
-         * 请求头的数据拼接
-         * @type {{accessToken}}
-         */
-        let header = {
-          accessToken: sessionStorage.getItem('accessToken'),
-        }
-        /**
-         * 请求传递的参数整理
-         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
-         */
-        let param = {
-          //private Integer id  				//主键
-          //"cpcc":"002", 					//公司编码
-          searchCondition: '',    //检索条件
-          indicatorIndex: '', 		//指标索引
-          indicatorName: '', 		//指标名称
-          type: 1, 							//数据类型;1:财务
-          atlas: '', 					  //展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
-          //"ifPublish":"默认未发布",			//是否发布;0:未发布;1:发布
-          //"creator":"343433535"				//创建人    accountId
-          //"creationTime":"自动维护"			//创建时间
-        }
-        param.searchCondition = searchCondition
-        param.atlas = _this.formData3.atlas.join(',') || ''
-        param.indicatorIndex = _this.formData3.indicatorIndex || ''
-        param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
-        param = Object.assign({}, param, _this.formData1)
-        _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
-          if(res.code == 16000003){
-            _this.chartData = res.data
-          }else{
-            _this.$notify({
-              title: '提示信息',
-              message:'预览图表失败',
-              type: 'error',
-              duration: '1000'
-            })
-          }
-          _this.$nextTick(() => {
-            if (_this.barFlag) {
-              _this.$refs.bar.resizeChart();
-            }else if(_this.pieFlag){
-              _this.$refs.pie.resizeChart();
-            }else if(_this.lineFlag){
-              _this.$refs.line.resizeChart();
-            }else if(_this.mingleFlag){
-              _this.$refs.mingle.resizeChart();
-            }
-            _this.barLoading = false
-            _this.pieLoading = false
-            _this.lineLoading = false
-            _this.mingleLoading = false
-          })
 
-        }).catch(error => {
-          console.log(error)
-        })
-      },
-      /**
-       * 获取公司的列表
-       */
+      /*获取公司的列表*/
       getCompanysArr(){
         let _this = this
         if(_this.$store.state.companyArr.length == 0){
