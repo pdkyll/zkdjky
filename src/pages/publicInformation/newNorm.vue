@@ -413,9 +413,9 @@
       /*自定义新建统计表名称校验规则*/
       let statistical = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入统计表名称'));
-        } else if (value.length <2 ||value.length >10) {
-          callback(new Error('长度在 2 到 10 个字符'));
+          callback(new Error('请输入指标名称'));
+        } else if (value.length <2 ||value.length >20) {
+          callback(new Error('长度在 2 到 40 个字符'));
         } else if (value !=='') {
             let _this = this
             let header = {

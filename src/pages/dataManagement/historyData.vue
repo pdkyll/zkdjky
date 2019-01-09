@@ -35,14 +35,14 @@
             :data="tableData"
             :header-cell-style="{background:'#f0f1f1'}"
             style="width: 100%;height: 90%">
-            <el-table-column
-              v-for="cols in historyTableColumnHeader"
-              :resizable=false
-              :key="'col' + cols.column_name"
-              :prop="cols.column_name"
-              align="center"
-              :label="cols.column_comment">
-            </el-table-column>
+              <el-table-column
+                v-for="cols in historyTableColumnHeader"
+                :resizable=false
+                :key="'col' + cols.column_name"
+                :prop="cols.column_name"
+                align="center"
+                :label="cols.column_comment">
+              </el-table-column>
           </el-table>
           <div class="fy-box">
             <el-pagination
@@ -394,10 +394,15 @@ export default{
     },
     //数据导出方法
     export2Excel(lister) {
+      let _this = this
       require.ensure([], () => {
         const { export_json_to_excel } = require('../../vendor/Export2Excel');
-        const tHeader = ['国家','学院', '合作机构', '负责人姓名', '电话','邮箱','启动日期','邮寄地址']; //对应表格输出的title
-        const filterVal = ['city','name', 'address', 'people', 'phone','mailbox', 'runTime','yjdz']; // 对应表格输出的数据
+        let tHeader = []
+        let filterVal = []
+        for(let i = 0; i<_this.historyTableColumnHeader.length;i++){
+          tHeader.push(_this.historyTableColumnHeader[i].column_comment)
+          filterVal.push(_this.historyTableColumnHeader[i].column_name)
+        }
         const list = lister;
         const data = this.formatJson(filterVal, list);
         export_json_to_excel(tHeader, data, '数据分析列表excel'); //对应下载文件的名字
