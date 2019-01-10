@@ -109,32 +109,37 @@ function ParseData(data) {
       value = data[item];
     if(!allCompany.hasOwnProperty(company)){
       allCompany[company] = {};
-      allCompany[company].allDepartment = new Set();
-      allCompany[company].allDateTime = new Set();
-      allCompany[company].allProducts = new Set();
-      allCompany[company].allValues = new Map();
+      allCompany[company].allDepartment = new Array();
+      allCompany[company].allDateTime = new Array();
+      allCompany[company].allProducts = new Array();
+      allCompany[company].allValues = new Object();
       allCompany[company].companyName = company;
     }
-    if(!allCompany[company].allDateTime.has(dateTime)){
-      allCompany[company].allDateTime.add(dateTime)
+    if(allCompany[company].allDateTime.indexOf(dateTime)<0){
+      allCompany[company].allDateTime.push(dateTime)
     }
-    if(!allCompany[company].allDepartment.has(department)){
-      allCompany[company].allDepartment.add(department)
+    if(allCompany[company].allDepartment.indexOf(department)<0){
+      allCompany[company].allDepartment.push(department)
     }
-    if(!allCompany[company].allProducts.has(product)){
-      allCompany[company].allProducts.add(product)
+    if(allCompany[company].allProducts.indexOf(product)<0){
+      allCompany[company].allProducts.push(product)
     }
-    allCompany[company].allValues.set(dateTime +'_'+ department +'_'+ product, value);
+    allCompany[company].allValues[dateTime +'_'+ department +'_'+ product] = value;
   }
 
   for(var companyName in allCompany){
     let companyObj = allCompany[companyName];
     let companyResultArr = [];
+    companyObj.allDateTime = companyObj.allDateTime.sort(function(item,item2){
+      let itemTemp = new Date(item).getTime();
+      let item2Temp = new Date(item2).getTime();
+      return itemTemp-item2Temp
+    })
     companyObj.allProducts.forEach(function (product_value, product_name) {
       companyObj.allDepartment.forEach(function (department_value, department_name) {
         let resultTempArr = [];
         companyObj.allDateTime.forEach(function (dateTime_value, dateTime_name) {
-          resultTempArr.push(companyObj.allValues.get(dateTime_value +'_'+ department_value +'_'+ product_value));
+          resultTempArr.push(companyObj.allValues[dateTime_value +'_'+ department_value +'_'+ product_value]);
         });
         companyResultArr.push({
           name: product_value,
@@ -146,9 +151,9 @@ function ParseData(data) {
       });
     });
     companyObj.result = companyResultArr;
-    companyObj.allDepartment = Array.from(companyObj.allDepartment);
-    companyObj.allDateTime = Array.from(companyObj.allDateTime);
-    companyObj.allProducts = Array.from(companyObj.allProducts);
+    companyObj.allDepartment = companyObj.allDepartment;
+    companyObj.allDateTime = companyObj.allDateTime;
+    companyObj.allProducts = companyObj.allProducts;
   }
   return allCompany
 }
@@ -183,51 +188,23 @@ export default{
         let lineRef = vm.$refs[line]
         let pieRef = vm.$refs[pie]
         if(disRef!== undefined){
-          disRef[0].resizeChart();
-          if(disRef[1]){
-            disRef[1].resizeChart();
-          }
-          if(disRef[2]){
-            disRef[2].resizeChart();
-          }
-          if(disRef[3]){
-            disRef[3].resizeChart();
+          for(let i = 0;i<disRef.length;i++){
+            disRef[i].resizeChart();
           }
         }
         if(barRef!== undefined){
-          barRef[0].resizeChart();
-          if(barRef[1]){
-            barRef[1].resizeChart();
-          }
-          if(barRef[2]){
-            barRef[2].resizeChart();
-          }
-          if(barRef[3]){
-            barRef[3].resizeChart();
+          for(let i = 0;i<barRef.length;i++){
+            barRef[i].resizeChart();
           }
         }
         if(lineRef!== undefined){
-          lineRef[0].resizeChart();
-          if(lineRef[1]){
-            lineRef[1].resizeChart();
-          }
-          if(lineRef[2]){
-            lineRef[2].resizeChart();
-          }
-          if(lineRef[3]){
-            lineRef[3].resizeChart();
+          for(let i = 0;i<lineRef.length;i++){
+            lineRef[i].resizeChart();
           }
         }
         if(pieRef!== undefined){
-          pieRef[0].resizeChart();
-          if(pieRef[1]){
-            pieRef[1].resizeChart();
-          }
-          if(pieRef[2]){
-            pieRef[2].resizeChart();
-          }
-          if(pieRef[3]){
-            pieRef[3].resizeChart();
+          for(let i = 0;i<pieRef.length;i++){
+            pieRef[i].resizeChart();
           }
         }
       }
@@ -241,52 +218,23 @@ export default{
         let lineRef = vm.$refs['line_'+i+'_2']
         let pieRef = vm.$refs['pie_'+i+'_3']
         if(disRef!== undefined){
-          disRef[0].resizeChart();
-          if(disRef[1]){
-            disRef[1].resizeChart();
-          }
-          if(disRef[2]){
-            disRef[2].resizeChart();
-          }
-          if(disRef[3]){
-            disRef[3].resizeChart();
+          for(let i = 0;i<disRef.length;i++){
+            disRef[i].resizeChart();
           }
         }
         if(barRef!== undefined){
-          barRef[0].resizeChart();
-          if(barRef[1]){
-            barRef[1].resizeChart();
-          }
-          if(barRef[2]){
-            barRef[2].resizeChart();
-          }
-          if(barRef[3]){
-            barRef[3].resizeChart();
+          for(let i = 0;i<barRef.length;i++){
+            barRef[i].resizeChart();
           }
         }
         if(lineRef!== undefined){
-          lineRef[0].resizeChart();
-          if(lineRef[1]){
-            lineRef[1].resizeChart();
+          for(let i = 0;i<lineRef.length;i++){
+            lineRef[i].resizeChart();
           }
-          if(lineRef[2]){
-            lineRef[2].resizeChart();
-          }
-          if(lineRef[3]){
-            lineRef[3].resizeChart();
-          }
-
         }
         if(pieRef!== undefined){
-          pieRef[0].resizeChart();
-          if(pieRef[1]){
-            pieRef[1].resizeChart();
-          }
-          if(pieRef[2]){
-            pieRef[2].resizeChart();
-          }
-          if(pieRef[3]){
-            pieRef[3].resizeChart();
+          for(let i = 0;i<pieRef.length;i++){
+            pieRef[i].resizeChart();
           }
         }
       }

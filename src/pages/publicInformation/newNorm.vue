@@ -313,31 +313,38 @@
             </el-option-group>
           </el-select>
         </el-form-item>
+        <el-form-item label="数据切分" required>
+          <el-radio-group v-model="formData3.dataType" @change="changeData">
+            <el-radio label="0">是</el-radio>
+            <el-radio label="1">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="展现方式" prop="atlas">
           <el-col :span="24">
             <el-form-item>
               <el-checkbox-group v-model="formData3.atlas">
                 <div>
                   <el-checkbox label="1" name="atlas" class="w100">柱状图</el-checkbox>
-                  <el-button size="small" class="ml-20" @click="barShow">预览图形</el-button>
+                  <el-button size="small" class="ml-20" v-loading="barLoading" @click="barShow">预览图形</el-button>
                 </div>
                 <div>
                   <el-checkbox label="3" name="atlas" class="w100">饼状图</el-checkbox>
-                  <el-button size="small" class="ml-20" @click="pieShow">预览图形</el-button>
+                  <el-button size="small" class="ml-20" v-loading="pieLoading"  @click="pieShow">预览图形</el-button>
                 </div>
                 <div>
                   <el-checkbox label="2" name="atlas" class="w100">折现图</el-checkbox>
-                  <el-button size="small" class="ml-20" @click="lineShow">预览图形</el-button>
+                  <el-button size="small" class="ml-20" v-loading="lineLoading" @click="lineShow">预览图形</el-button>
                 </div>
                 <div>
                   <el-checkbox label="4" name="atlas" class="w100">组合图</el-checkbox>
-                  <el-button size="small" class="ml-20" @click="mingleShow">预览图形</el-button>
+                  <el-button size="small" class="ml-20" v-loading="mingleLoading" @click="mingleShow">预览图形</el-button>
                 </div>
               </el-checkbox-group>
-              <bar-chart ref="bar" class="mb-10" v-loading="barLoading" :data="chartData" v-if="barFlag"></bar-chart>
-              <pie-chart ref="pie" class="mb-10" v-loading="pieLoading" :data="chartData" v-if="pieFlag"></pie-chart>
-              <line-chart ref="line" class="mb-10" v-loading="lineLoading" :data="chartData" v-if="lineFlag"></line-chart>
-              <mingle-chart ref="mingle" class="mb-10" v-loading="mingleLoading" :data="chartData" v-if="mingleFlag"></mingle-chart>
+              <bar-chart ref="bar" class="mb-10" :data="chartData" v-if="barFlag"></bar-chart>
+              <bar-chart1 ref="bar1" class="mb-10" :data="chartData" v-if="barFlag1"></bar-chart1>
+              <pie-chart ref="pie" class="mb-10" :data="chartData" v-if="pieFlag"></pie-chart>
+              <line-chart ref="line" class="mb-10" :data="chartData" v-if="lineFlag"></line-chart>
+              <mingle-chart ref="mingle" class="mb-10"  :data="chartData" v-if="mingleFlag"></mingle-chart>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -404,7 +411,8 @@
     },
   };
 
-  import barChart from '../../components/panel/barChartByCompany.vue'
+  import barChart from '../../components/panel/barChart.vue'
+  import barChart1 from '../../components/panel/barChartByCompany.vue'
   import pieChart from '../../components/panel/pieChart.vue'
   import lineChart from '../../components/panel/lineChart.vue'
   import mingleChart from '../../components/panel/mingleChart.vue'
@@ -440,6 +448,11 @@
     for(var companyName in allCompany){
       let companyObj = allCompany[companyName];
       let companyResultArr = [];
+      /*companyObj.allDateTime = companyObj.allDateTime.sort(function(item,item2){
+        let itemTemp = new Date(item).getTime();
+        let item2Temp = new Date(item2).getTime();
+        return itemTemp-item2Temp
+      })*/
       companyObj.allProducts.forEach(function (product_value, product_name) {
         companyObj.allDepartment.forEach(function (department_value, department_name) {
           let resultTempArr = [];
@@ -572,6 +585,7 @@
         },
         formData3: {
           indicatorIndex: '',
+          dataType:'0',
           atlas: []
         },
         formData3T: {
@@ -720,23 +734,26 @@
           ]
         },
         tableData: [],
-        barFlag: false,
+
         chartData: {},
         chartType:'',
+        barFlag: false,
+        barFlag1: false,
         pieFlag: false,
         lineFlag: false,
         mingleFlag: false,
         mingleData:{},
         viewFlag:true,
-        barLoading:true,
-        pieLoading:true,
-        lineLoading:true,
-        mingleLoading:true,
+        barLoading:false,
+        pieLoading:false,
+        lineLoading:false,
+        mingleLoading:false,
       }
     },
     directives: {clickoutside},
     components: {
       barChart,
+      barChart1,
       pieChart,
       lineChart,
       mingleChart
@@ -1040,26 +1057,25 @@
         this.chartData = {}
       },
       /*预览图标的隐藏展示*/
+
       barShow () {
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
             vm.chartType = 'bar'
-            /*判断是否已经调用过预览的接口了*/
-            if(vm.viewFlag){
-              vm.previewChart()
+            if (!vm.barFlag) {
+              /*判断是那种预览方法*/
+              /*if(this.viewFlag){
+                vm.barLoading = true
+                vm.previewChart()
+              }else{
+                vm.barLoading = true
+                vm.previewChart1()
+              }*/
             }else{
+              vm.barLoading = false
               vm.barFlag = !vm.barFlag
-              if (vm.barFlag) {
-                vm.pieFlag = false
-                vm.lineFlag = false
-                vm.mingleFlag = false
-              }
-              vm.$nextTick(() => {
-                vm.$refs.bar.resizeChart();
-              })
             }
-
           } else {
             console.log('error submit!')
           }
@@ -1069,21 +1085,13 @@
         let vm = this
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
-
             vm.chartType = 'pie'
-            /*判断是否已经调用过预览的接口了*/
-            if(vm.viewFlag){
+            if (!vm.pieFlag) {
+              vm.pieLoading = true
               vm.previewChart()
             }else{
+              vm.pieLoading = false
               vm.pieFlag = !vm.pieFlag
-              if (vm.pieFlag) {
-                vm.barFlag = false
-                vm.lineFlag = false
-                vm.mingleFlag = false
-              }
-              vm.$nextTick(() => {
-                vm.$refs.pie.resizeChart();
-              })
             }
           } else {
             console.log('error submit!')
@@ -1095,19 +1103,12 @@
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
             vm.chartType = 'line'
-            /*判断是否已经调用过预览的接口了*/
-            if(vm.viewFlag){
+            if (!vm.lineFlag) {
+              vm.lineLoading = true
               vm.previewChart()
             }else{
+              vm.lineLoading = false
               vm.lineFlag = !vm.lineFlag
-              if (vm.lineFlag) {
-                vm.barFlag = false
-                vm.pieFlag = false
-                vm.mingleFlag = false
-              }
-              vm.$nextTick(() => {
-                vm.$refs.line.resizeChart();
-              })
             }
           } else {
             console.log('error submit!')
@@ -1119,19 +1120,12 @@
         vm.$refs['formData3'].validate((valid) => {
           if (valid) {
             vm.chartType = 'mingle'
-            /*判断是否已经调用过预览的接口了*/
-            if(vm.viewFlag){
+            if (!vm.mingleFlag) {
+              vm.mingleLoading = true
               vm.previewChart()
             }else{
+              vm.mingleLoading = false
               vm.mingleFlag = !vm.mingleFlag
-              if (vm.mingleFlag) {
-                vm.barFlag = false
-                vm.pieFlag = false
-                vm.lineFlag = false
-              }
-              vm.$nextTick(() => {
-                vm.$refs.mingle.resizeChart();
-              })
             }
           } else {
             console.log('error submit!')
@@ -1140,16 +1134,29 @@
       },
       indicatorChange(val){
         /*当下拉框选择变化以后可调用接口*/
-        this.viewFlag = true
+        this.barLoading = false
+        this.pieLoading = false
+        this.lineLoading = false
+        this.mingleLoading = false
+      },
+      changeData(val){
+        let _this = this
+        _this.formData3.dataType  = val
+        _this.barFlag = false
+        _this.barFlag1 = false
+        _this.pieFlag = false
+        _this.lineFlag = false
+        _this.mingleFlag = false
+        if(val == '0'){
+          _this.viewFlag = true
+        }else{
+          _this.viewFlag = false
+        }
       },
 
       /*预览图表的方法*/
       previewChart (){
         let _this = this
-        _this.barLoading = true
-        _this.pieLoading = true
-        _this.lineLoading = true
-        _this.mingleLoading = true
         /*_this.chartData = {}*/
         /**
          * 处理第二页的数据
@@ -1196,53 +1203,79 @@
         _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
           if(res.code == 16000003){
             if(res.data !== null){
-              let passData = ParseData(res.data)
-              console.log(passData)
-              for(let item in passData){
-                _this.chartData = item
-                if(_this.chartType == 'bar'){
-                  if (_this.barFlag) {
-                    _this.pieFlag = false
-                    _this.lineFlag = false
-                    _this.mingleFlag = false
-                    _this.$refs.bar.createdChart();
+              if(_this.chartType == 'bar'){
+                _this.chartData = res.data
+                _this.barFlag = !_this.barFlag
+                if(_this.barFlag){
+                  _this.barFlag1 = false
+                  _this.pieFlag = false
+                  _this.lineFlag = false
+                  _this.mingleFlag = false
+                  _this.barLoading = false
+                  _this.$nextTick(() => {
                     _this.$refs.bar.resizeChart();
-                  }
-                  _this.barFlag = !_this.barFlag
+                  })
+                }else{
+                  _this.barLoading = false
                 }
-                else if(_this.chartType == 'pie'){
-                  if (_this.pieFlag) {
-                    _this.barFlag = false
-                    _this.lineFlag = false
-                    _this.mingleFlag = false
-                    _this.$refs.pie.createdChart();
-                    _this.$refs.pie.resizeChart();
-                  }
-                  _this.pieFlag = !_this.pieFlag
-                }
-                else if(_this.chartType == 'line'){
-                  if (_this.lineFlag) {
-                    _this.barFlag = false
-                    _this.pieFlag = false
-                    _this.mingleFlag = false
-                    _this.$refs.line.createdChart();
-                    _this.$refs.line.resizeChart();
-                  }
-                  _this.lineFlag = !_this.lineFlag
-                }
-                else if(_this.chartType == 'mingle'){
-                  if (_this.mingleFlag) {
-                    _this.barFlag = false
-                    _this.lineFlag = false
-                    _this.pieFlag = false
-                    _this.$refs.mingle.createdChart();
-                    _this.$refs.mingle.resizeChart();
-                  }
-                  _this.mingleFlag = !_this.mingleFlag
-                }
-                return
               }
-            }else{
+              else if(_this.chartType == 'pie'){
+                _this.pieFlag = !_this.pieFlag
+                _this.chartData = res.data
+                if(_this.pieFlag){
+                  _this.barFlag = false
+                  _this.barFlag1 = false
+                  _this.lineFlag = false
+                  _this.mingleFlag = false
+                  _this.pieLoading = false
+                  _this.$nextTick(() => {
+                    _this.$refs.pie.resizeChart();
+                  })
+                }else{
+                  _this.pieLoading = false
+                }
+
+              }
+              else if(_this.chartType == 'line'){
+                _this.lineFlag = !_this.lineFlag
+                _this.chartData = res.data
+                  if(_this.lineFlag ){
+                    _this.barFlag = false
+                    _this.barFlag1 = false
+                    _this.pieFlag = false
+                    _this.mingleFlag = false
+                    _this.lineLoading = false
+                    _this.$nextTick(() => {
+                      _this.$refs.line.resizeChart();
+                    })
+                  }else{
+                    _this.lineLoading = false
+                  }
+
+              }
+              else if(_this.chartType == 'mingle'){
+                _this.mingleFlag = !_this.mingleFlag
+                _this.chartData = res.data
+               if(_this.mingleFlag){
+                 _this.barFlag = false
+                 _this.barFlag1 = false
+                 _this.lineFlag = false
+                 _this.pieFlag = false
+                 _this.mingleLoading = false
+                 _this.$nextTick(() => {
+                   _this.$refs.mingle.resizeChart();
+                 })
+               }else {
+                 _this.mingleLoading = false
+               }
+
+              }
+            }
+            else{
+              _this.barLoading = false
+              _this.pieLoading = false
+              _this.lineLoading = false
+              _this.mingleLoading = false
               _this.$notify({
                 title: '提示信息',
                 message:'预览图表失败',
@@ -1267,12 +1300,12 @@
               }
             },500)*/
             /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
+          }
+          else{
             _this.barLoading = false
             _this.pieLoading = false
             _this.lineLoading = false
             _this.mingleLoading = false
-            _this.viewFlag = false
-          }else{
             _this.$notify({
               title: '提示信息',
               message:'预览图表失败',
@@ -1285,6 +1318,125 @@
           console.log(error)
         })
       },
+
+      /*根据第二种树蕨切割方式进行带缩放的echart预览图表的方法*/
+      previewChart1 (){
+        let _this = this
+        /*_this.chartData = {}*/
+        /**
+         * 处理第二页的数据
+         */
+        let searchCondition = {
+          dateRange: '',
+          companys: '',
+          departments: '',
+          products: ''
+        }
+        searchCondition.dateRange = _this.formData2.date1 + 'H' + _this.formData2.date2
+        searchCondition.companys = _this.formData2.cpccs.join(',') || ''
+        searchCondition.departments = _this.formData2.departments.join(',') || ''
+        searchCondition.products = _this.formData2.products.join(',') || ''
+        searchCondition = JSON.stringify(searchCondition)
+        /**
+         * 请求头的数据拼接
+         * @type {{accessToken}}
+         */
+        let header = {
+          accessToken: sessionStorage.getItem('accessToken'),
+        }
+        /**
+         * 请求传递的参数整理
+         * @type {{statisticalName: string, remarks: string, searchCondition: {dateRange: string, cpccs: string, departments: string, products: string}, indicatorIndex: string, indicatorName: string, type: number, atlas: string}}
+         */
+        let param = {
+          //private Integer id  				//主键
+          //"cpcc":"002", 					//公司编码
+          searchCondition: '',    //检索条件
+          indicatorIndex: '', 		//指标索引
+          indicatorName: '', 		//指标名称
+          type: 1, 							//数据类型;1:财务
+          atlas: '', 					  //展现图集;1: 柱状图;2:折线图;3:饼状图;4:组合图
+          //"ifPublish":"默认未发布",			//是否发布;0:未发布;1:发布
+          //"creator":"343433535"				//创建人    accountId
+          //"creationTime":"自动维护"			//创建时间
+        }
+        param.searchCondition = searchCondition
+        param.atlas = _this.formData3.atlas.join(',') || ''
+        param.indicatorIndex = _this.formData3.indicatorIndex || ''
+        param.indicatorName = _this.formData3T.typeOld[_this.formData3.indicatorIndex] || ''
+        param = Object.assign({}, param, _this.formData1)
+        _this.$store.dispatch('PREVIEW_NORM', {param, header}).then(res => {
+          if(res.code == 16000003){
+            if(res.data !== null){
+              if(_this.chartType == 'bar'){
+                let passData = ParseData(res.data)
+                for(let item in passData){
+                  _this.chartData = passData[item]
+                  _this.barFlag1 = !_this.barFlag1
+                  if(_this.barFlag1){
+                    _this.barFlag = false
+                    _this.pieFlag = false
+                    _this.lineFlag = false
+                    _this.mingleFlag = false
+                    _this.barLoading = false
+                    _this.$nextTick(() => {
+                      _this.$refs.bar1.resizeChart();
+                    })
+                  }else{
+                    _this.barLoading = false
+                  }
+                  return
+                }
+              }
+            }
+            else{
+              _this.barLoading = false
+              _this.pieLoading = false
+              _this.lineLoading = false
+              _this.mingleLoading = false
+              _this.$notify({
+                title: '提示信息',
+                message:'预览图表失败',
+                type: 'error',
+                duration: '1000'
+              })
+              return
+            }
+            /*setTimeout(function () {
+              if (_this.barFlag) {
+                _this.$refs.bar.createdChart();
+                _this.$refs.bar.resizeChart();
+              }else if(_this.pieFlag){
+                _this.$refs.pie.createdChart();
+                _this.$refs.pie.resizeChart();
+              }else if(_this.lineFlag){
+                _this.$refs.line.createdChart();
+                _this.$refs.line.resizeChart();
+              }else if(_this.mingleFlag){
+                _this.$refs.mingle.createdChart();
+                _this.$refs.mingle.resizeChart();
+              }
+            },500)*/
+            /*请求第一次预览的时候把标志变为false，再次执行方法的时候不走接口了*/
+          }
+          else{
+            _this.barLoading = false
+            _this.pieLoading = false
+            _this.lineLoading = false
+            _this.mingleLoading = false
+            _this.$notify({
+              title: '提示信息',
+              message:'预览图表失败',
+              type: 'error',
+              duration: '1000'
+            })
+          }
+
+        }).catch(error => {
+          console.log(error)
+        })
+      },
+
       /*新建指标*/
       createNorm (){
         let _this = this

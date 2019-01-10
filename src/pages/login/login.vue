@@ -144,6 +144,12 @@ export default{
       let param = {}
       this.$store.dispatch('GET_JURISDICTION', { param, header }).then((res, req) => {
         sessionStorage.setItem('userPermissions',res.data.data)
+        _this.$notify({
+          title: '提示信息',
+          message: '登录成功',
+          type: 'success',
+          duration: '2000'
+        })
         _this.$nextTick(() => {
           _this.loading = false
           _this.$router.push('/home')
@@ -185,14 +191,14 @@ export default{
           sessionStorage.setItem('userMsg', userMsg)
           this.getJurisdiction()
         }else{
+          _this.$notify({
+            title: '提示信息',
+            message: res.msg,
+            type: res.code === 16000003 ? 'success' : 'error',
+            duration: '2000'
+          })
           _this.loading = false
         }
-        _this.$notify({
-          title: '提示信息',
-          message: res.msg,
-          type: res.code === 16000003 ? 'success' : 'error',
-          duration: '2000'
-        })
       }).catch((error) => {
         console.error(error)
       })

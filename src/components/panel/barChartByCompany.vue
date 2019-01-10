@@ -106,7 +106,6 @@
         return option
       },
       createdChart(){
-        console.log('chart', this.data)
         let option = this.builderChartOptions(this.data)
         this.chartInstance.setOption(option)
       },
