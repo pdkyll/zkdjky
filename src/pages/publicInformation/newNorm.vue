@@ -1088,7 +1088,7 @@
             vm.chartType = 'pie'
             if (!vm.pieFlag) {
               vm.pieLoading = true
-              vm.previewChart()
+              //vm.previewChart()
             }else{
               vm.pieLoading = false
               vm.pieFlag = !vm.pieFlag
