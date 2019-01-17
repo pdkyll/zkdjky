@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(echarts)
 const store = createStore()
-/* eslint-disable no-new */
+/* eslint-disable no-new 判断是否登陆跳转路由*/
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()

@@ -283,23 +283,25 @@ export function publicInformationUpload(param, header) {
  * @returns {*|Promise}
  */
 export function historyTree (param, header) {
-  return api.get('/apis/history/tree', param, header)
+  return api.get('/apis/history/tree2', param, header)
 }
 /**
  * 历史数据-列表信息展示
  * @param param
  * @returns {*|Promise}
+ * getHistoryInfoByTableName  原接口
  */
 export function getHistoryInfoByTableName (param,header) {
-  return api.post('/apis/history/getHistoryInfoByTableName', param,header)
+  return api.post('/apis/history/getHistoryInfo', param,header)
 }
 /**
  * 历史数据-列表头展示
  * @param param
  * @returns {*|Promise}
+ * getHistoryNotesByTableName   之前的接口
  */
 export function getHistoryNotesByTableName (param,header) {
-  return api.post('/apis/history/getHistoryNotesByTableName', param,header)
+  return api.post('/apis/history/getHistoryHeadTableInfo', param,header)
 }
 /**
  * 历史数据-公司信息

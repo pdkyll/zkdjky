@@ -211,6 +211,7 @@ export default{
             }
           }
         }
+        console.log(this.panel)
         this.dialogVisible = false
       }).catch((error) => {
         console.error(error)
@@ -222,7 +223,7 @@ export default{
     this.getPublicMsg("","","")
   },
   mounted () {
-  },
+  }
 }
 </script>
 <style scoped lang="scss">

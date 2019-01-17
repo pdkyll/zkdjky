@@ -22,16 +22,23 @@
       <div class="left-tree pull-left shadow">
         <el-tree :data="data"
                  :props="defaultProps"
-                 :default-checked-keys="['product']"
+                 accordion
+                 highlight-current
+                 :default-checked-keys="['hc_balance']"
                  node-key="id"
                  @node-click="handleNodeClick"></el-tree>
       </div>
       <div class="right-table pull-left shadow">
         <div class="clearFix">
+          <el-radio-group v-model="radio" @change="radioChange" v-if="radioShow">
+            <el-radio-button label="3">资产表</el-radio-button>
+            <el-radio-button label="4">负债表</el-radio-button>
+            <el-radio-button label="5">所有者权益</el-radio-button>
+          </el-radio-group>
           <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="export2Excel(tableData)">导出</el-button>
         </div>
         <div class="mt-20">
-          <el-table
+         <!-- <el-table
             :data="tableData"
             :header-cell-style="{background:'#f0f1f1'}"
             style="width: 100%;height: 90%">
@@ -43,7 +50,10 @@
                 align="center"
                 :label="cols.column_comment">
               </el-table-column>
-          </el-table>
+          </el-table>-->
+          <my-table :col="historyTableColumnHeader"
+                    :data="tableData">
+          </my-table>
           <div class="fy-box">
             <el-pagination
               background
@@ -58,7 +68,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -67,6 +76,7 @@
  * import "vue-style-loader!css-loader!sass-loader!../../assets/vendor/iCkeck-v1.0.2/css/skins/square/blue.css";
  * import loginButton from './components/loginButton.vue';
  */
+import MyTable from '../../components/panel/MyTable.vue'
 export default{
   data () {
     const generateData = _ => {
@@ -88,7 +98,7 @@ export default{
       totalCount:0,
       companyOptions:[],
       historyTableColumnHeader: [],
-      tableId: 'product',
+      tableId: 'hc_balance',
       ruleForm: {
         companyName: '',
         time:'',
@@ -247,65 +257,93 @@ export default{
         ]
       },
       data: [
-        {
+        /*{
           id: 'product',
           label: '收入产品表',
           children: []
-        }
+        }*/
       ],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      tableData: [
+      radio: '3',
+      radioShow:true,
+      tableData: [],
+      col_test: [
+        {
+          column_name: 'date',
+          column_comment: '日期'
+        },
+        {
+          column_comment: '配送信息',
+          children: [
+            {
+              column_name: 'name',
+              column_comment: '姓名'
+            },
+            {
+              column_comment: '地址',
+              children: [
+                {
+                  column_name: 'province',
+                  column_comment: '省份'
+                },
+                {
+                  column_name: 'city',
+                  column_comment: '市区'
+                },
+                {
+                  column_name: 'address',
+                  column_comment: '地址'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      data_test: [
         {
           date: '2016-05-03',
           name: '王小虎',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333,
-          dy: '订阅'
-        }, {
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
+        },
+        {
           date: '2016-05-02',
           name: '王小虎',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333,
-          dy: '订阅'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333,
-          dy: '订阅'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路',
-          zip: 200333,
-          dy: '取消订阅'
+          address: '上海市普陀区金沙江路 1518 弄',
+          zip: 200333
         }
-      ],
+      ]
     }
   },
+  components: {
+    MyTable
+  },
   methods: {
-    /**
-     * 左侧树状菜单点击事件的方法
-     * @param data
-     */
+    /*资产负债表，选择表类型的单选框*/
+    radioChange(val){
+      this.radio = val
+      this.getHistoryTableHeader()
+    },
+    /*左侧树状菜单点击事件的方法*/
     handleNodeClick (data) {
+      let vm = this
       this.tableId = data.id;
+      let flag = this.tableId.slice(0,10)
+      if(flag !== 'hc_balance'){
+        vm.radioShow = false
+      }else{
+        vm.radioShow = true
+      }
       this.getHistoryTableHeader();
     },
-    /**
-     * 获取树状菜单的内容
-     */
+    /*获取树状菜单的内容*/
     getTreeData () {
       let vm = this;
       let param = {}
@@ -321,6 +359,7 @@ export default{
           console.error(error)
       });
     },
+    /*获取公司下拉菜单*/
     getCompanysData () {
       let vm = this;
       let param = {}
@@ -336,13 +375,14 @@ export default{
         console.error(error)
       });
     },
+    /*获取列表头信息*/
     getHistoryTableHeader () {
       let vm = this
-      vm.loading = true
+      this.loading = true
       let param = vm.tableId
       let header = {
         accessToken: sessionStorage.getItem('accessToken'),
-        projectId: sessionStorage.getItem('projectId')
+        projectId: sessionStorage.getItem('projectId'),
       }
       vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param,header}).then((res, req)=>{
         if(res.length > 0) {
@@ -353,27 +393,30 @@ export default{
         console.error(error)
       });
     },
+    /*获取列表主体信息*/
     getHistoryTableContent () {
       let vm = this
-      this.loading = true
+      vm.loading = true
       let param = {
           id: vm.tableId,
           company: vm.ruleForm.companyName || '',
           pageNum: vm.pageNum,
-          pageSize: vm.pageSize
+          pageSize: vm.pageSize,
+          type:vm.radio
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken'),
         projectId: sessionStorage.getItem('projectId')
       }
       vm.$store.dispatch('GET_HISTORY_INFO_BY_TABLE_NAME', {param,header}).then((res, req)=>{
-        vm.totalCount = res.data.pop().totalNum
+        vm.loading = false
         if(res.code === 16000003){
+          vm.totalCount = res.data.pop().totalNum
           vm.tableData = res.data;
         }else{
           vm.tableData = []
         }
-        this.loading = false
+        vm.loading = false
       }).catch(error => {
         console.error(error)
       });

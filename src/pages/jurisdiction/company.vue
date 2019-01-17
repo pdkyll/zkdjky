@@ -214,6 +214,7 @@ export default{
     /*新增公司*/
     insert_GS(formName){
       let _this = this
+      _this.loading = true
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           this.dialog_gs = false

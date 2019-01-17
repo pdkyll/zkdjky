@@ -1065,13 +1065,13 @@
             vm.chartType = 'bar'
             if (!vm.barFlag) {
               /*判断是那种预览方法*/
-              /*if(this.viewFlag){
+              if(this.viewFlag){
                 vm.barLoading = true
                 vm.previewChart()
               }else{
                 vm.barLoading = true
                 vm.previewChart1()
-              }*/
+              }
             }else{
               vm.barLoading = false
               vm.barFlag = !vm.barFlag
@@ -1088,7 +1088,7 @@
             vm.chartType = 'pie'
             if (!vm.pieFlag) {
               vm.pieLoading = true
-              //vm.previewChart()
+              vm.previewChart()
             }else{
               vm.pieLoading = false
               vm.pieFlag = !vm.pieFlag
