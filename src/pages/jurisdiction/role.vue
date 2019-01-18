@@ -96,7 +96,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelInsert('ruleForm')">取 消</el-button>
-        <el-button type="primary" @click="insertRole('ruleForm')">确 定</el-button>
+        <el-button type="primary" v-loading="loadingBtn" @click="insertRole('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
     <!--弹框删除列表项-->
@@ -151,6 +151,7 @@
 export default{
   data () {
     return {
+      loadingBtn:false,
       activeNames: [],
       loading:true,
       dialogVisible: false,
@@ -311,6 +312,7 @@ export default{
     /*新增角色*/
     insertUserForRoles (){
       let _this = this
+      _this.loadingBtn = true
       let param = {
         roles:[
           {
@@ -329,6 +331,7 @@ export default{
         if(res !== null && res.code == 16000003){
           _this.roles()
           _this.dialogVisible = false
+          _this.loadingBtn = false
           _this.ruleFormModule.name = ''
           _this.ruleFormModule.desc = ''
           _this.checkIdList = []

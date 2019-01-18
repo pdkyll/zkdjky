@@ -482,7 +482,7 @@ export default{
   }
   .f-box{
     width: 100%;
-    height:530px;
+    height:700px;
     h5{
     	font-size: 14px;
     	margin: 10px 0;
