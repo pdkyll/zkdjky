@@ -22,7 +22,7 @@ let transformRequest = function (data) {
  */
 export function createAPI () {
   axios.defaults.withCredentials = true
-  axios.defaults.timeout = 60000
+  axios.defaults.timeout = 10000
   axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
   // axios.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
   axios.defaults.headers.delete['Content-Type'] = 'application/json;charset=UTF-8'
@@ -51,7 +51,7 @@ export function createAPI () {
     }
     return Promise.reject(res)
   }, err => {
-    return Promise.reject(new Error({err: err}))
+    return Promise.reject(new Error(err))
   })
   let api = {
     /**
@@ -101,6 +101,24 @@ export function createAPI () {
           reject(err)
         })
       })
+    },
+    loadXMLDoc(target, params = {}, header = {}) {
+      var xmlhttp;
+      if (window.XMLHttpRequest) {
+        //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+        xmlhttp = new XMLHttpRequest();
+      } else {
+        // IE6, IE5 浏览器执行代码
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      xmlhttp.setRequestHeader("Content-type","application/json;charset=UTF-8");
+      xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        }
+      }
+      xmlhttp.open("POST", target,true);
+      xmlhttp.send(transformRequest(params));
     },
     /**
      * put请求

@@ -201,6 +201,13 @@ export default{
         }
       }).catch((error) => {
         console.error(error)
+        _this.$notify({
+          title: '提示信息',
+          message: "请求超时",
+          type: 'error',
+          duration: '2000'
+        })
+        _this.loading = false
       })
     }
   },
