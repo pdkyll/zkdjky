@@ -1,8 +1,8 @@
 
 <template>
   <div>
-    <div class="shadow-box">
-      <el-form :inline="true" :model="ruleForm" class="demo-form-inline"  v-if="$store.getters.getPermissions.indexOf('queryHistoricalData')>-1">
+    <div class="shadow-box" v-if="$store.getters.getPermissions.indexOf('queryHistoricalData')>-1">
+      <el-form :inline="true" :model="ruleForm" class="demo-form-inline">
         <el-form-item label="公司名称" class="no-mb ml-10">
           <el-select size="small" v-model="ruleForm.companyName" @change="selectChange" placeholder="请选择公司">
             <el-option
@@ -35,7 +35,7 @@
             <el-radio-button label="4">负债表</el-radio-button>
             <el-radio-button label="5">所有者权益</el-radio-button>
           </el-radio-group>
-          <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="export2Excel(tableData)">导出</el-button>
+          <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="export2Excel(ExportTableData)">导出</el-button>
         </div>
         <div class="mt-20">
          <!-- <el-table
@@ -54,12 +54,16 @@
           <my-table :col="historyTableColumnHeader"
                     :data="tableData">
           </my-table>
+          <my-table :col="historyTableColumnHeaderExport"
+                    :data="ExportTableData"
+                    v-show="false">
+          </my-table>
           <div class="fy-box">
             <el-pagination
               background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page.sync="ruleForm.pageNum"
+              :current-page.sync="pageNum"
               :page-size=pageSize
               layout="total, prev, pager, next"
               :total=totalCount>
@@ -98,6 +102,7 @@ export default{
       totalCount:0,
       companyOptions:[],
       historyTableColumnHeader: [],
+      historyTableColumnHeaderExport:[],
       tableId: 'hc_balance',
       ruleForm: {
         companyName: '',
@@ -270,6 +275,7 @@ export default{
       radio: '3',
       radioShow:true,
       tableData: [],
+      ExportTableData:[],
       col_test: [
         {
           column_name: 'date',
@@ -333,20 +339,27 @@ export default{
     },
     /*左侧树状菜单点击事件的方法*/
     handleNodeClick (data) {
-      let vm = this
-      this.tableId = data.id;
-      let flag = this.tableId.slice(0,10)
-      if(flag !== 'hc_balance'){
-        vm.radioShow = false
-      }else{
-        vm.radioShow = true
-      }
-      this.getHistoryTableHeader();
+       let vm = this
+       this.tableId = data.id;
+       if(this.tableId.indexOf("+") > 0){
+         let flag = this.tableId.slice(0,10)
+         if(flag !== 'hc_balance'){
+           vm.radioShow = false
+         }else{
+           vm.radioShow = true
+         }
+         vm.pageNum = 1
+         this.getHistoryTableHeader();
+         this.exportHistoryDateHead()
+       }
     },
     /*获取树状菜单的内容*/
     getTreeData () {
       let vm = this;
-      let param = {}
+      let param = {
+        company: vm.ruleForm.companyName || '',
+      }
+      vm.data = []
       let header = {
         accessToken: sessionStorage.getItem('accessToken'),
         projectId: sessionStorage.getItem('projectId')
@@ -364,12 +377,14 @@ export default{
       let vm = this;
       let param = {}
       let header = {
+        accountId: sessionStorage.getItem('accountId'),
         accessToken: sessionStorage.getItem('accessToken'),
-        projectId: sessionStorage.getItem('projectId')
+        projectId :sessionStorage.getItem('projectId'),
       }
       vm.$store.dispatch('GET_HISTORY_COMPANY', {param,header}).then((res, req)=>{
-        if(res.data.length > 0) {
+        if(res.data.length>0) {
           vm.companyOptions = res.data
+          vm.getPeopleCompany()
         }
       }).catch(error => {
         console.error(error)
@@ -379,7 +394,9 @@ export default{
     getHistoryTableHeader () {
       let vm = this
       this.loading = true
-      let param = vm.tableId
+      let param = {
+        id:vm.tableId
+      }
       let header = {
         accessToken: sessionStorage.getItem('accessToken'),
         projectId: sessionStorage.getItem('projectId'),
@@ -412,7 +429,7 @@ export default{
         vm.loading = false
         if(res.code === 16000003){
           vm.totalCount = res.data.pop().totalNum
-          vm.tableData = res.data;
+          vm.tableData = res.data == null?[]:res.data;
         }else{
           vm.tableData = []
         }
@@ -421,10 +438,13 @@ export default{
         console.error(error)
       });
     },
+
     /*下拉菜单选择以后查询数据*/
     selectChange(){
       this.pageNum = 1
-      this.getHistoryTableContent()
+      this.getTreeData()
+      this.getHistoryTableHeader()
+      this.exportHistoryDateHead()
     },
     /*分页点击查询*/
     handleSizeChange (val) {
@@ -435,6 +455,42 @@ export default{
       this.pageNum = val
       this.getHistoryTableContent()
     },
+
+    /*获取导出的数据列表*/
+    exportHistoryDateHead () {
+      let vm = this
+      let param = {
+        id:vm.tableId
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId'),
+      }
+      vm.$store.dispatch('EXPORT_HISTORY_DATA_HEAD', {param,header}).then((res, req)=>{
+        if(res.length > 0) {
+          vm.historyTableColumnHeaderExport = res
+          vm.getExportHistoryData()
+        }
+      }).catch(error => {
+        console.error(error)
+      });
+    },
+    getExportHistoryData(){
+      let vm = this
+      let param = {
+        id: vm.tableId,
+        company: vm.ruleForm.companyName || '',
+      }
+      let header = {
+        accessToken: sessionStorage.getItem('accessToken'),
+        projectId: sessionStorage.getItem('projectId')
+      }
+      vm.$store.dispatch('EXPORT_HISTORY_DATA', {param,header}).then((res, req)=>{
+        vm.ExportTableData = res.data
+      }).catch(error => {
+        console.error(error)
+      });
+    },
     //数据导出方法
     export2Excel(lister) {
       let _this = this
@@ -442,25 +498,36 @@ export default{
         const { export_json_to_excel } = require('../../vendor/Export2Excel');
         let tHeader = []
         let filterVal = []
-        for(let i = 0; i<_this.historyTableColumnHeader.length;i++){
-          tHeader.push(_this.historyTableColumnHeader[i].column_comment)
-          filterVal.push(_this.historyTableColumnHeader[i].column_name)
+        for(let i = 0; i<_this.historyTableColumnHeaderExport.length;i++){
+          tHeader.push(_this.historyTableColumnHeaderExport[i].column_comment)
+          filterVal.push(_this.historyTableColumnHeaderExport[i].column_name)
         }
         const list = lister;
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '数据分析列表excel'); //对应下载文件的名字
+        export_json_to_excel(tHeader, data, '历史数据列表excel'); //对应下载文件的名字
       })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     },
+    /*匹配当前用户是那个公司的，显示哪个公司的数据*/
+    getPeopleCompany(){
+      let vm = this
+      let company = sessionStorage.getItem('company')
+      for(let i = 0;i < vm.companyOptions.length;i++){
+        if(vm.companyOptions[i].label == company){
+          vm.ruleForm.companyName =vm.companyOptions[i].value
+          this.getTreeData()
+          this.getHistoryTableHeader()
+          this.exportHistoryDateHead()
+        }
+      }
+    }
   },
   created () {
   },
   mounted () {
-      this.getTreeData()
-      this.getCompanysData()
-      this.getHistoryTableHeader()
+    this.getCompanysData()
   }
 }
 </script>

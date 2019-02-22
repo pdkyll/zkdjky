@@ -200,7 +200,6 @@ export default{
           _this.loading = false
         }
       }).catch((error) => {
-        console.error(error)
         _this.$notify({
           title: '提示信息',
           message: "请求超时",

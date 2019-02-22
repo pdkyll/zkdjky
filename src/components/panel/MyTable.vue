@@ -2,7 +2,7 @@
   <div class="my-table">
     <el-table :data="data"
               border>
-      <my-column v-for="(item,index) in col" :key="index" :col="item"></my-column>
+      <my-column v-for="(item,index) in col"  :key="index" :col="item"></my-column>
     </el-table>
   </div>
 </template>
@@ -24,4 +24,7 @@
   }
 </script>
 <style scoped>
+  .w300{
+    width: 300px;
+  }
 </style>

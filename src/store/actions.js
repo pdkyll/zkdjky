@@ -53,6 +53,8 @@ import {
   getFinanceList,
   getFinanceTable,
   getFinanceDetails,
+  exportHistoryDate,
+  exportHistoryDateHead,
   /*新建指标*/
   newNorm,
   NameValidator,
@@ -588,6 +590,34 @@ export default {
    */
   GET_HISTORY_NOTES_BY_TABLE_NAME: ({commit, state}, {param,header}) => {
     return getHistoryNotesByTableName(param,header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 历史数据-导出
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  EXPORT_HISTORY_DATA: ({commit, state}, {param,header}) => {
+    return exportHistoryDate(param,header).then((res, req) => {
+      return res
+    })
+  },
+  /**
+   * 历史数据-导出表头
+   * @param commit
+   * @param state
+   * @param param
+   * @param header
+   * @returns {Promise.<TResult>}
+   * @constructor
+   */
+  EXPORT_HISTORY_DATA_HEAD: ({commit, state}, {param,header}) => {
+    return exportHistoryDateHead(param,header).then((res, req) => {
       return res
     })
   },

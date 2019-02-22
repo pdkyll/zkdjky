@@ -22,12 +22,13 @@ let transformRequest = function (data) {
  */
 export function createAPI () {
   axios.defaults.withCredentials = true
-  axios.defaults.timeout = 10000
+  axios.defaults.timeout = 60000
   axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
   // axios.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
   axios.defaults.headers.delete['Content-Type'] = 'application/json;charset=UTF-8'
   axios.defaults.headers.put['Content-Type'] = 'application/json;charset=UTF-8'
   axios.interceptors.response.use(res => {
+    let vm = this
     if(res.data.code == 11030113 || res.code == 11030113){
         Notification({
           title: '提示信息',
@@ -35,14 +36,10 @@ export function createAPI () {
           type: 'error',
           duration: '2000'
         })
+        history.go(0)
         setTimeout(function () {
           sessionStorage.clear()
-          history.go(0)
-          //parent.location.href="http://localhost:8080";
-          //正式环境跳转
-          //parent.location.href="http://10.220.1.6:30940";
-          //测试环境跳转
-          parent.location.href="http://healthcloudweb.tpaas.youedata.com/login";
+          parent.location.href = vm.$store.state.login_url;
         },2000)
         return false
       }

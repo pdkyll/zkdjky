@@ -11,7 +11,7 @@ module.exports = {
     proxyTable: {
       '/apis': {
         //60.205.231.241
-        target: 'http://172.168.17.52:8082/yyqxzx',          //目标接口域名
+        target: 'http://localhost:8086/yyqxzx',          //目标接口域名
         changeOrigin: true,  //重写接口
         pathRewrite: {
           '^/apis': '/api'  //重写接口

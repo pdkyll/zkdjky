@@ -71,7 +71,7 @@
       <ul class="menu">
         <li v-if="gsxx">
           <!--:to="{path:'/LayoutNoLeft', query:{flag:'公示信息'}}"-->
-          <div  @click="frameLink('LayoutNoLeft')" class="menu-item">
+          <div @click="frameLink('LayoutNoLeft')" class="menu-item">
             <!--<img src="@/assets/monitor.png" alt="">-->
             <img src="@/assets/home/home_public.png" alt="">
           </div>
@@ -146,7 +146,7 @@
 	      	</ul>
 	      </div>
       </div>
-<div class="logo_position">
+      <div class="logo_position">
       	<div class="logo_contain"></div>
       </div>
     </el-main>
@@ -184,7 +184,7 @@
             <i class="iconfont icon-jianhao1 pull-right titBtn ml-10" @click="smallFrame"></i>
           </div>
         </div>
-        <iframe src="/LayoutNoLeft" class="frame" id="frame" frameborder="0"></iframe>
+        <iframe src="" class="frame" id="frame" frameborder="0"></iframe>
       </div>
   </el-container>
 </template>
@@ -310,15 +310,9 @@ export default{
         accountToken:  sessionStorage.getItem('accessToken'),
         accountId: sessionStorage.getItem('accountId')
       }
-      this.frame.src= 'http://daas-website.tpaas.youedata.com'
-      /**测试地址
-       * http://daas-website.tpaas.youedata.com
-       */
-      /**线上地址
-       * http://10.220.1.6:31246
-       */
+      this.frame.src= vm.$store.state.data_url
       setTimeout(function () {
-        window.frames[0].postMessage(data, 'http://daas-website.tpaas.youedata.com');
+        window.frames[0].postMessage(data, vm.$store.state.data_url);
         vm.loading = false
         vm.frameShow = true
       },1000)
