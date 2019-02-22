@@ -35,7 +35,7 @@
             <el-radio-button label="4">负债表</el-radio-button>
             <el-radio-button label="5">所有者权益</el-radio-button>
           </el-radio-group>
-          <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="export2Excel(ExportTableData)">导出</el-button>
+          <el-button class="qx pull-right" v-if="$store.getters.getPermissions.indexOf('exportHistoricalData')>-1" size="small" @click="getExportHistoryData()">导出</el-button>
         </div>
         <div class="mt-20">
          <!-- <el-table
@@ -96,7 +96,7 @@ export default{
     return {
       dy: '取消订阅',
       msg: '123',
-      loading:true,
+      loading:false,
       pageNum:1,
       pageSize:10,
       totalCount:0,
@@ -121,117 +121,22 @@ export default{
         data: generateData(),
         value: [],
         typeRadio: 1,
-        tree_bm: [
-          {
-            id: 1,
-            label: '一级 1'
-          }, {
-            id: 2,
-            label: '一级 2',
-            children: [{
-              id: 5,
-              label: '二级 2-1'
-            }, {
-              id: 6,
-              label: '二级 2-2'
-            }]
-          }
-        ],
+        tree_bm: [],
         defaultProps_bm: {
           children: 'children',
           label: 'label'
         },
         cp: '',
-        cp_options: [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          }, {
-            value: '选项2',
-            label: '双皮奶'
-          }, {
-            value: '选项3',
-            label: '蚵仔煎'
-          }, {
-            value: '选项4',
-            label: '龙须面'
-          }, {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ],
+        cp_options: [],
         cp2: '',
-        cp_options2: [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          }, {
-            value: '选项2',
-            label: '双皮奶'
-          }, {
-            value: '选项3',
-            label: '蚵仔煎'
-          }, {
-            value: '选项4',
-            label: '龙须面'
-          }, {
-            value: '选项5',
-            label: '北京烤鸭'
-          }
-        ],
-        tree_zb: [
-          {
-            id: 1,
-            label: '一级 1'
-          }, {
-            id: 2,
-            label: '一级 2',
-            children: [{
-              id: 5,
-              label: '二级 2-1'
-            }, {
-              id: 6,
-              label: '二级 2-2'
-            }]
-          }
-        ],
+        cp_options2: [],
+        tree_zb: [],
         defaultProps_zb: {
           children: 'children',
           label: 'label'
         },
         zb: '',
-        zb_options: [
-          {
-            label: '销售',
-            options: [
-              {
-                value: 'Shanghai',
-                label: '上海'
-              }, {
-                value: 'Beijing',
-                label: '北京'
-              }
-            ]
-          },
-          {
-            label: '财务',
-            options: [
-              {
-                value: 'Chengdu',
-                label: '成都'
-              }, {
-                value: 'Shenzhen',
-                label: '深圳'
-              }, {
-                value: 'Guangzhou',
-                label: '广州'
-              }, {
-                value: 'Dalian',
-                label: '大连'
-              }
-            ]
-          }
-        ]
+        zb_options: []
       },
       rules: {
         name: [
@@ -276,56 +181,8 @@ export default{
       radioShow:true,
       tableData: [],
       ExportTableData:[],
-      col_test: [
-        {
-          column_name: 'date',
-          column_comment: '日期'
-        },
-        {
-          column_comment: '配送信息',
-          children: [
-            {
-              column_name: 'name',
-              column_comment: '姓名'
-            },
-            {
-              column_comment: '地址',
-              children: [
-                {
-                  column_name: 'province',
-                  column_comment: '省份'
-                },
-                {
-                  column_name: 'city',
-                  column_comment: '市区'
-                },
-                {
-                  column_name: 'address',
-                  column_comment: '地址'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      data_test: [
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }
-      ]
+      col_test: [],
+      data_test: []
     }
   },
   components: {
@@ -350,7 +207,7 @@ export default{
          }
          vm.pageNum = 1
          this.getHistoryTableHeader();
-         this.exportHistoryDateHead()
+         // this.exportHistoryDateHead()
        }
     },
     /*获取树状菜单的内容*/
@@ -393,17 +250,18 @@ export default{
     /*获取列表头信息*/
     getHistoryTableHeader () {
       let vm = this
-      this.loading = true
+      vm.loading = true
       let param = {
-        id:vm.tableId
+        id: vm.tableId
       }
       let header = {
         accessToken: sessionStorage.getItem('accessToken'),
         projectId: sessionStorage.getItem('projectId'),
       }
-      vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param,header}).then((res, req)=>{
+      vm.$store.dispatch('GET_HISTORY_NOTES_BY_TABLE_NAME', {param, header}).then((res, req)=>{
         if(res.length > 0) {
           vm.historyTableColumnHeader = res
+          vm.historyTableColumnHeaderExport = res
           vm.getHistoryTableContent()
         }
       }).catch(error => {
@@ -430,6 +288,7 @@ export default{
         if(res.code === 16000003){
           vm.totalCount = res.data.pop().totalNum
           vm.tableData = res.data == null?[]:res.data;
+          vm.ExportTableData = res.data == null?[]:res.data
         }else{
           vm.tableData = []
         }
@@ -444,7 +303,7 @@ export default{
       this.pageNum = 1
       this.getTreeData()
       this.getHistoryTableHeader()
-      this.exportHistoryDateHead()
+      // this.exportHistoryDateHead()
     },
     /*分页点击查询*/
     handleSizeChange (val) {
@@ -477,6 +336,7 @@ export default{
     },
     getExportHistoryData(){
       let vm = this
+      vm.loading = true
       let param = {
         id: vm.tableId,
         company: vm.ruleForm.companyName || '',
@@ -487,12 +347,13 @@ export default{
       }
       vm.$store.dispatch('EXPORT_HISTORY_DATA', {param,header}).then((res, req)=>{
         vm.ExportTableData = res.data
+        vm.export2Excel()
       }).catch(error => {
         console.error(error)
       });
     },
     //数据导出方法
-    export2Excel(lister) {
+    export2Excel() {
       let _this = this
       require.ensure([], () => {
         const { export_json_to_excel } = require('../../vendor/Export2Excel');
@@ -502,9 +363,10 @@ export default{
           tHeader.push(_this.historyTableColumnHeaderExport[i].column_comment)
           filterVal.push(_this.historyTableColumnHeaderExport[i].column_name)
         }
-        const list = lister;
-        const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, '历史数据列表excel'); //对应下载文件的名字
+        const list = _this.ExportTableData;
+        const data = _this.formatJson(filterVal, list);
+        _this.loading = false
+        export_json_to_excel(tHeader, data, '历史数据列表'); //对应下载文件的名字
       })
     },
     formatJson(filterVal, jsonData) {
@@ -519,7 +381,7 @@ export default{
           vm.ruleForm.companyName =vm.companyOptions[i].value
           this.getTreeData()
           this.getHistoryTableHeader()
-          this.exportHistoryDateHead()
+          // this.exportHistoryDateHead()
         }
       }
     }
@@ -556,7 +418,7 @@ export default{
     	text-indent: 14px;
     }
     .shadow{
-      height:100%;
+      /*height:100%;*/
       box-shadow: 0 0 10px rgba(#b1c4d0, .48);
     }
     .left-tree{
@@ -571,7 +433,7 @@ export default{
       padding: 10px;
       width: 78%;
       margin-left: 2%;
-      height:100%;
+      min-height:100%;
       background: white;
     }
   }

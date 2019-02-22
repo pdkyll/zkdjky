@@ -20,6 +20,8 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     if (!sessionStorage.getItem('isOk')) {
+      let loginOut = 'layout';
+      window.parent.postMessage(loginOut,'*');
       next({ path: '/login' })
     } else {
       next()

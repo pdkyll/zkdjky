@@ -36,7 +36,8 @@ export function createAPI () {
           type: 'error',
           duration: '2000'
         })
-        history.go(0)
+        let loginOut = 'layout';
+        window.parent.postMessage(loginOut,'*');
         setTimeout(function () {
           sessionStorage.clear()
           parent.location.href = vm.$store.state.login_url;
