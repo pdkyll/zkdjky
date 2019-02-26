@@ -262,6 +262,7 @@ export default{
         if(res.length > 0) {
           vm.historyTableColumnHeader = res
           vm.historyTableColumnHeaderExport = res
+          console.log(res)
           vm.getHistoryTableContent()
         }
       }).catch(error => {
@@ -328,6 +329,7 @@ export default{
       vm.$store.dispatch('EXPORT_HISTORY_DATA_HEAD', {param,header}).then((res, req)=>{
         if(res.length > 0) {
           vm.historyTableColumnHeaderExport = res
+
           vm.getExportHistoryData()
         }
       }).catch(error => {
@@ -360,9 +362,18 @@ export default{
         let tHeader = []
         let filterVal = []
         for(let i = 0; i<_this.historyTableColumnHeaderExport.length;i++){
-          tHeader.push(_this.historyTableColumnHeaderExport[i].column_comment)
-          filterVal.push(_this.historyTableColumnHeaderExport[i].column_name)
+          if(_this.historyTableColumnHeaderExport[i].children){
+            for(let j = 0;j<_this.historyTableColumnHeaderExport[i].children.length;j++){
+              tHeader.push(_this.historyTableColumnHeaderExport[i].column_comment + ":" + _this.historyTableColumnHeaderExport[i].children[j].column_comment)
+              filterVal.push(_this.historyTableColumnHeaderExport[i].children[j].column_name)
+            }
+          }else{
+            tHeader.push(_this.historyTableColumnHeaderExport[i].column_comment)
+            filterVal.push(_this.historyTableColumnHeaderExport[i].column_name)
+          }
         }
+        console.log(tHeader)
+        console.log(filterVal)
         const list = _this.ExportTableData;
         const data = _this.formatJson(filterVal, list);
         _this.loading = false
