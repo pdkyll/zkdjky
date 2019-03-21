@@ -32,6 +32,11 @@
         </div>
       </el-col>
     </el-row>
+    <el-row v-show="isNoData">
+      <el-col>
+        <img src="../../assets/noData.png" alt="" style="width:320px;height: auto;margin: auto;display: block">
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -97,7 +102,7 @@ export default{
       },
       docSrc:'',
       imgShow:'',
-
+      isNoData:false,
     }
   },
   components: {
@@ -171,6 +176,7 @@ export default{
     },
     /*获取公司信息*/
     getPublicMsg(company,start,end){
+      let vm = this
       this.dialogVisible = true
       if(company == '全部'){
         company = ''
@@ -211,7 +217,13 @@ export default{
             }
           }
         }
-        console.log(this.panel)
+
+        if(vm.panel.length == 0){
+          vm.isNoData = true
+        }else{
+          vm.isNoData = false
+        }
+        console.log('chang:',this.panel.length)
         this.dialogVisible = false
       }).catch((error) => {
         console.error(error)
